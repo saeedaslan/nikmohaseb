@@ -1,0 +1,194 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TicketStatus {
+  NEW
+  IN_PROGRESS
+  ANSWERED
+  CLOSED
+}
+
+enum TicketPriority {
+  NORMAL
+  HIGH
+  URGENT
+  CRITICAL
+}
+
+enum CategoryType {
+  SERVICE
+  ARTICLE
+  CIRCULAR
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  phone         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+  active        Boolean   @default(true)
+  lastLoginAt   DateTime? @db.Timestamptz(3)
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime  @updatedAt @db.Timestamptz(3)
+
+  tickets      Ticket[]
+  messages     TicketMessage[]
+  attachments  TicketAttachment[]
+  articles     Article[]
+  resetTokens  ResetToken[]
+}
+
+model ResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime @db.Timestamptz(3)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  type      CategoryType
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  services   Service[]
+  articles   Article[]
+  circulars  Circular[]
+}
+
+model Service {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  summary   String?
+  content   String?
+  icon      String?
+  image     String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  categoryId String?
+  category  Category? @relation(fields: [categoryId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Article {
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  summary       String?
+  content       String?
+  image         String?
+  published     Boolean  @default(false)
+  publishedAt   DateTime? @db.Timestamptz(3)
+  seoTitle      String?
+  seoDescription String?
+  authorId      String?
+  author        User?    @relation(fields: [authorId], references: [id])
+  categoryId    String?
+  category      Category? @relation(fields: [categoryId], references: [id])
+  createdAt     DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Circular {
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  number        String?
+  date          DateTime? @db.Timestamptz(3)
+  issuer        String?
+  summary       String?
+  content       String?
+  file          String?
+  published     Boolean  @default(false)
+  publishedAt   DateTime? @db.Timestamptz(3)
+  categoryId    String?
+  category      Category? @relation(fields: [categoryId], references: [id])
+  createdAt     DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Banner {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  buttonText  String?
+  buttonLink  String?
+  image       String?
+  active      Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Ticket {
+  id         String        @id @default(cuid())
+  subject    String
+  category   String
+  priority   TicketPriority @default(NORMAL)
+  status     TicketStatus   @default(NEW)
+  userId     String
+  user       User          @relation(fields: [userId], references: [id])
+  createdAt  DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime      @updatedAt @db.Timestamptz(3)
+
+  messages    TicketMessage[]
+  attachments TicketAttachment[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([userId])
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  content   String?
+  ticketId  String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  attachments TicketAttachment[]
+
+  @@index([ticketId])
+  @@index([userId])
+}
+
+model TicketAttachment {
+  id               String  @id @default(cuid())
+  filename         String
+  path             String
+  mime             String?
+  size             Int?
+  ticketId         String?
+  ticket           Ticket? @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  ticketMessageId  String?
+  ticketMessage    TicketMessage? @relation(fields: [ticketMessageId], references: [id], onDelete: Cascade)
+  userId           String?
+  user             User? @relation(fields: [userId], references: [id])
+  createdAt        DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([ticketId])
+  @@index([ticketMessageId])
+}

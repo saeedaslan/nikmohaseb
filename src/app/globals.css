@@ -1,1 +1,198 @@
 @import "tailwindcss";
+
+/* =========================================================
+   IRANSansWeb
+   ========================================================= */
+
+@font-face {
+  font-family: "IRANSansWeb";
+  src: url("/fonts/iransans/IRANSansWeb_UltraLight.woff2")
+    format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansWeb";
+  src: url("/fonts/iransans/IRANSansWeb_Light.woff2")
+    format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansWeb";
+  src: url("/fonts/iransans/IRANSansWeb-Regular.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansWeb";
+  src: url("/fonts/iransans/IRANSansWeb_Medium.woff2")
+    format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansWeb";
+  src: url("/fonts/iransans/IRANSansWeb_Bold.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IRANSansWeb";
+  src: url("/fonts/iransans/IRANSansWeb_Black.woff2")
+    format("woff2");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+/* =========================================================
+   Tailwind Source
+   ========================================================= */
+
+@source "./src/**/*.{ts,tsx}";
+
+
+/* =========================================================
+   Design System
+   ========================================================= */
+
+@theme {
+
+  /* -------------------------------------------------------
+     Typography
+     ------------------------------------------------------- */
+
+  --font-sans: "IRANSansWeb", system-ui, sans-serif;
+
+
+  /* -------------------------------------------------------
+      Primary - سورمه‌ی (deep emerald / kohl green)
+      ------------------------------------------------------- */
+
+  --color-primary-navy: #9ca5a3;
+  --color-primary-navy-light: #107866;
+
+
+  /* -------------------------------------------------------
+      Accent - سبز سرو (cypress green) — contrast-safe both modes
+      ------------------------------------------------------- */
+
+  --color-accent-green: #158858;
+  --color-accent-green-light: #dcf2ec;
+
+
+  /* -------------------------------------------------------
+      Surfaces
+      ------------------------------------------------------- */
+
+  --color-surface-background: #f4f7f6;
+  --color-surface-card: #ffffff;
+
+
+  /* -------------------------------------------------------
+     Typography Colors
+     ------------------------------------------------------- */
+
+  --color-text: #17212b;
+  --color-text-muted: #64748b;
+
+
+  /* -------------------------------------------------------
+     Borders
+     ------------------------------------------------------- */
+
+  --color-border: #dbe2ea;
+
+
+  /* -------------------------------------------------------
+     Animation
+     ------------------------------------------------------- */
+
+  --animate-fade-in-up: fade-in-up 0.4s ease-out forwards;
+}
+
+
+/* =========================================================
+   Animations
+   ========================================================= */
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   Base
+   ========================================================= */
+
+@layer base {
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface-background font-sans text-text antialiased;
+  }
+
+
+  /* -------------------------------------------------------
+     Dark Mode
+     ------------------------------------------------------- */
+
+  html.dark {
+
+    /* Backgrounds */
+    --color-surface-background: #0a100e;
+    --color-surface-card: #121a19;
+
+    /* Text */
+    --color-text: #babec4;
+    --color-text-muted: #9ba7b8;
+
+    /* Borders */
+    --color-border: #2a3a38;
+
+    /* Primary - light سورمه‌ی for readable headings on dark */
+    --color-primary-navy: #4dd3a9;
+    --color-primary-navy-light: #9ca5a3;
+
+    /* Accent - سبز سرو stays contrast-safe (white-on passes) */
+    --color-accent-green: #0c4930;
+    --color-accent-green-light: #e6f7f0;
+  }
+}
+
+
+/* =========================================================
+   Selection
+   ========================================================= */
+
+@layer base {
+
+  ::selection {
+    @apply bg-accent-green/30;
+  }
+}
