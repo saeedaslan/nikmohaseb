@@ -10,14 +10,8 @@ export const metadata = {
   description: "جزئیات مقاله",
 };
 
-export async function generateStaticParams() {
-  const articles = await prisma.article.findMany({
-    where: { published: true },
-    select: { slug: true },
-  });
-  if (!articles.length) return [{ slug: "__placeholder__" }];
-  return articles.map((a) => ({ slug: a.slug }));
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function ArticlePage({
   params,

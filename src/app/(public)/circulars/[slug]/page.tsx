@@ -11,14 +11,8 @@ export const metadata = {
   description: "جزئیات بخشنامه",
 };
 
-export async function generateStaticParams() {
-  const circulars = await prisma.circular.findMany({
-    where: { published: true },
-    select: { slug: true },
-  });
-  if (!circulars.length) return [{ slug: "__placeholder__" }];
-  return circulars.map((c) => ({ slug: c.slug }));
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function CircularPage({
   params,

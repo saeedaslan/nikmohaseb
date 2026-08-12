@@ -1,7 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import type { Service } from "@/lib/queries";
 import { Briefcase } from "lucide-react";
 import { ServiceIcon } from "./service-icon";
@@ -10,8 +8,8 @@ export async function ServicesSection({ services }: { services: Service[] }) {
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
-        <h2 className="mb-2 flex items-center justify-center gap-2 text-center text-2xl font-bold text-primary-navy sm:text-3xl">
-          <Briefcase className="h-6 w-6 text-accent-green" />
+        <h2 className="mb-2 flex items-center justify-center gap-2 text-center text-2xl font-bold text-primary-navy dark:text-primary-navy-light sm:text-3xl">
+          <Briefcase className="h-6 w-6 text-accent-yellow" />
           <span>خدمات ما</span>
         </h2>
         <p className="mx-auto mb-8 max-w-xl text-center text-sm text-text-muted sm:text-base">
@@ -31,8 +29,8 @@ export async function ServicesSection({ services }: { services: Service[] }) {
                 className="group block"
               >
                 <div className="flex h-full flex-col rounded-xl border border-border bg-surface-card p-6 shadow-sm transition-shadow hover:shadow-md">
-                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-green/30 ring-1 ring-inset ring-accent-green/25 dark:bg-accent-green-light/45 dark:ring-accent-green-light/40">
-                      <ServiceIcon slug={s.slug} className="h-6 w-6 text-gray-500 dark:text-gray-300" />
+           <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary-navy/20 ring-1 ring-inset ring-primary-navy/10 dark:bg-accent-green-light/45 dark:ring-accent-green-light/40">
+                      <ServiceIcon slug={s.slug} className="h-6 w-6 text-accent-yellow dark:text-gray-300" />
                     </div>
                   <h3 className="mb-1 text-lg font-semibold text-primary-navy">
                     {s.title}
@@ -42,7 +40,7 @@ export async function ServicesSection({ services }: { services: Service[] }) {
                       {s.summary}
                     </p>
                   )}
-                  <span className="mt-auto pt-4 text-sm font-medium text-accent-green">
+                  <span className="mt-auto pt-4 text-sm font-medium text-accent-yellow hover:text-accent-green">
                     مشاهده جزئیات
                   </span>
                 </div>

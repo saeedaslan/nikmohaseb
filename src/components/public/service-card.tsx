@@ -17,7 +17,7 @@ interface ServiceCardProps {
 
 export function ServiceCard({ service }: ServiceCardProps) {
   return (
-    <Card className="group flex flex-col bg-[#1a3a33] text-white dark:bg-[#1a3a33] border-[#2e5a4f]">
+    <Card className="group flex flex-col bg-surface-card text-text border-border dark:bg-primary-navy/5 dark:border-primary-navy/20">
       {service.image ? (
         <div className="relative h-40 w-full overflow-hidden rounded-t-xl">
           <img
@@ -27,14 +27,14 @@ export function ServiceCard({ service }: ServiceCardProps) {
           />
         </div>
       ) : (
-          <div className="flex h-40 w-full items-center justify-center rounded-t-xl bg-[#2e5a4f]">
-            <ServiceIcon slug={service.slug} className="h-12 w-12 text-gray-300" />
+          <div className="flex h-40 w-full items-center justify-center rounded-t-xl bg-accent-green/30 dark:bg-accent-green/20">
+            <ServiceIcon slug={service.slug} className="h-12 w-12 text-gray-500 dark:text-gray-300" />
           </div>
       )}
       <CardHeader>
         <CardTitle className="text-right">{service.title}</CardTitle>
         {service.summary && (
-          <CardDescription className="text-white/70 line-clamp-2">
+          <CardDescription className="text-text-muted line-clamp-2">
             {service.summary}
           </CardDescription>
         )}
@@ -42,7 +42,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
       <div className="mt-auto p-6 pt-0">
           <Link
             href={`/services/${service.slug}`}
-            className="flex items-center justify-end gap-1 text-sm font-medium text-gray-300 hover:text-gray-200 hover:underline"
+            className="flex items-center justify-end gap-1 text-sm font-medium text-text-muted hover:text-accent-green hover:underline"
           >
           مطالعه بیشتر
           <ArrowLeft className="h-4 w-4" />

@@ -27,8 +27,8 @@ export async function Hero({ banner }: { banner: Banner | null }) {
         className="object-cover"
       />
 
-      {/* سورمه‌ی green melt overlay for legibility (پشت رنگی با نوشته سفید) */}
-      <div className="absolute inset-0 bg-[#0b5f4f]/60" />
+      {/* Green melt overlay for legibility (پشت رنگی با نوشته سفید) */}
+      <div className="absolute inset-0 bg-primary-navy/60" />
 
       {/* All text: white, neat, centered */}
       <div className="relative z-10 container mx-auto px-4 text-center">
@@ -48,7 +48,7 @@ export async function Hero({ banner }: { banner: Banner | null }) {
             <Button
               asChild
               size="lg"
-              className="bg-white text-[#0b5f4f] hover:bg-white/90"
+              className="bg-white text-primary-navy hover:bg-white/90"
             >
               <Link href={data.buttonLink}>{data.buttonText}</Link>
             </Button>

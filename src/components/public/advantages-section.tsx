@@ -31,8 +31,8 @@ export function AdvantagesSection() {
   return (
     <section className="bg-surface-card py-12">
       <div className="container mx-auto px-4">
-        <h2 className="mb-2 flex items-center justify-center gap-2 text-center text-2xl font-bold text-primary-navy sm:text-3xl">
-          <ShieldCheck className="h-6 w-6 text-accent-green" />
+        <h2 className="mb-2 flex items-center justify-center gap-2 text-center text-2xl font-bold text-primary-navy dark:text-primary-navy-light sm:text-3xl">
+          <ShieldCheck className="h-6 w-6 text-accent-yellow" />
           <span>چرا نیک محاسب سرو؟</span>
         </h2>
         <p className="mx-auto mb-8 max-w-xl text-center text-sm text-text-muted sm:text-base">
@@ -45,7 +45,7 @@ export function AdvantagesSection() {
               key={a.title}
               className="flex flex-col items-center gap-3 border-0 p-6 text-center shadow-sm"
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent-green/20 text-accent-green">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary-navy/20 text-primary-navy">
                 <a.Icon className="h-6 w-6" />
               </div>
               <h3 className="text-primary-navy">{a.title}</h3>

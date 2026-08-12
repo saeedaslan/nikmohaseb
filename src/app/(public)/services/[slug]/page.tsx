@@ -10,14 +10,8 @@ export const metadata = {
   description: "جزئیات خدمات حسابداری و مالیاتی",
 };
 
-export async function generateStaticParams() {
-  const services = await prisma.service.findMany({
-    where: { published: true },
-    select: { slug: true },
-  });
-  if (!services.length) return [{ slug: "__placeholder__" }];
-  return services.map((s) => ({ slug: s.slug }));
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

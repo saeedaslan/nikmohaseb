@@ -45,9 +45,9 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
               key={link.href}
               href={link.href}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-accent-green",
+                 "text-sm font-medium transition-colors hover:text-accent-yellow",
                 pathname === link.href
-                  ? "text-accent-green"
+                  ? "text-accent-yellow"
                   : "text-text",
               )}
             >
@@ -86,8 +86,8 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
                 href={link.href}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "py-2 text-sm font-medium transition-colors hover:text-accent-green",
-                  pathname === link.href ? "text-accent-green" : "text-text",
+                "py-2 text-sm font-medium transition-colors hover:text-accent-yellow",
+                pathname === link.href ? "text-accent-yellow" : "text-text",
                 )}
               >
                 {link.label}
@@ -132,7 +132,7 @@ function UserMenu({
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 text-sm font-medium text-text hover:text-accent-green"
+         className="flex items-center gap-2 text-sm font-medium text-text hover:text-accent-yellow"
       >
         {user.image ? (
           <img src={user.image} alt={user.name ?? ""} className="h-8 w-8 rounded-full" />

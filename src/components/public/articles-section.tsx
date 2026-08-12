@@ -9,8 +9,8 @@ export async function ArticlesSection({ articles }: { articles: Article[] }) {
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
-        <h2 className="mb-2 flex items-center justify-center gap-2 text-center text-2xl font-bold text-primary-navy sm:text-3xl">
-          <FileText className="h-6 w-6 text-accent-green" />
+        <h2 className="mb-2 flex items-center justify-center gap-2 text-center text-2xl font-bold text-primary-navy dark:text-primary-navy-light sm:text-3xl">
+          <FileText className="h-6 w-6 text-accent-yellow" />
           <span>آخرین مقالات</span>
         </h2>
         <p className="mx-auto mb-8 max-w-xl text-center text-sm text-text-muted sm:text-base">
@@ -34,7 +34,7 @@ export async function ArticlesSection({ articles }: { articles: Article[] }) {
                 )}
                 <CardHeader>
                   {a.category && (
-                    <span className="text-xs text-accent-green">
+                    <span className="text-xs text-accent-yellow">
                       {a.category.name}
                     </span>
                   )}
