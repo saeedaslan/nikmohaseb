@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import type { Banner } from "@/lib/queries";
 
@@ -18,13 +17,10 @@ export async function Hero({ banner }: { banner: Banner | null }) {
   return (
     <section className="relative flex min-h-[60vh] min-h-[560px] items-center justify-center">
       {/* Cover image */}
-      <Image
+      <img
         src={imageSrc}
         alt={data.title}
-        fill
-        sizes="100vw"
-        priority
-        className="object-cover"
+        className="absolute inset-0 h-full w-full object-cover"
       />
 
       {/* Green melt overlay for legibility (پشت رنگی با نوشته سفید) */}

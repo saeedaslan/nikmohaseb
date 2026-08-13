@@ -32,7 +32,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - uploads:/app/public/uploads
+      - ./uploads:/app/public/uploads
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://localhost:3000 || exit 1"]
       interval: 10s
@@ -41,4 +41,3 @@ services:
 
 volumes:
   db-data:
-  uploads:

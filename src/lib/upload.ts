@@ -42,7 +42,7 @@ export async function saveUploadedFile(file: File): Promise<SavedFile> {
   await writeFile(filePath, Buffer.from(bytes));
 
   const relativePath = `${uploadDir.startsWith("public/") ? "/uploads" : uploadDir}/${safeName}`;
-  const url = `/uploads/${safeName}`;
+  const url = `/api/uploads/${safeName}`;
 
   return {
     filename: safeName,

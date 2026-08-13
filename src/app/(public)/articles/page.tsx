@@ -62,7 +62,7 @@ export default async function ArticlesPage({
                   )}
                   <CardHeader>
                     {a.category && (
-                      <span className="text-xs text-accent-green">
+                      <span className="text-xs text-accent-yellow">
                         {a.category.name}
                       </span>
                     )}

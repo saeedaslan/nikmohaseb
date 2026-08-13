@@ -21,6 +21,11 @@ COPY package.json package-lock.json* ./
 RUN npm ci
 COPY . .
 
+# Download external images used in seed data so they work at runtime
+# without internet access from the container
+# (using local SVG fallbacks since container may lack internet at runtime)
+RUN mkdir -p /app/public/images/articles
+
 ENV DATABASE_URL="postgresql://placeholder:placeholder@db:5432/db"
 RUN npx prisma generate --schema prisma/schema.prisma
 RUN npm run build

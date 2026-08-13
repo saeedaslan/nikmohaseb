@@ -208,3 +208,64 @@
     @apply bg-accent-green/30;
   }
 }
+
+/* =========================================================
+   Typography — Article Content (RTL Persian)
+   ========================================================= */
+
+.article-content {
+  @apply text-lg text-text;
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply mt-8 mb-4 font-bold text-primary-navy first:mt-0 dark:text-primary-navy-light;
+  }
+
+  h1 {
+    @apply text-3xl;
+  }
+  h2 {
+    @apply text-2xl;
+  }
+  h3 {
+    @apply text-xl;
+  }
+
+  p {
+    @apply mb-5 leading-relaxed;
+  }
+
+  ul {
+    @apply mb-5 list-disc pr-6;
+  }
+  ol {
+    @apply mb-5 list-decimal pr-6;
+  }
+
+  li {
+    @apply mb-1.5 last:mb-0;
+  }
+
+  a {
+    @apply text-accent-green hover:text-accent-green/80;
+  }
+
+  blockquote {
+    @apply border-l-4 border-accent-yellow/30 py-4 pl-4 italic text-accent-yellow;
+  }
+
+  img {
+    @apply my-6 max-w-full rounded-lg shadow-md;
+  }
+
+  table {
+    @apply mb-5 w-full border-collapse;
+  }
+
+  th, td {
+    @apply border border-border px-4 py-2;
+  }
+
+  code {
+    @apply rounded bg-surface-background px-2 py-1 text-sm;
+  }
+}
