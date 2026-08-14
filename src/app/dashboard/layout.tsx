@@ -1,28 +1,38 @@
+import type { ReactNode } from "react";
 import { getCurrentUser } from "@/lib/auth";
-import DashboardLayout from "@/components/layout/dashboard-layout";
+import Header from "@/components/layout/header";
+import DashboardContent from "@/components/layout/dashboard-content";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default async function DashboardRootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const user = await getCurrentUser();
   if (!user) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <p className="mb-4 text-text-muted">
-            برای دسترسی به این بخش وارد شوید.
-          </p>
-          <Button asChild variant="primary">
-            <Link href="/login?callbackUrl=/dashboard">ورود / ثبت‌نام</Link>
-          </Button>
+      <>
+        <Header />
+        <div className="flex min-h-[calc(100vh-56px)] items-center justify-center bg-surface-background p-4">
+          <div className="text-center">
+            <p className="mb-4 text-text-muted">
+              برای دسترسی به این بخش وارد شوید.
+            </p>
+            <Button asChild variant="primary">
+              <Link href="/login?callbackUrl=/dashboard">ورود / ثبت‌نام</Link>
+            </Button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return (
+    <>
+      <Header />
+      <DashboardContent>{children}</DashboardContent>
+    </>
+  );
 }

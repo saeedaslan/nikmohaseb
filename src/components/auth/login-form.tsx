@@ -24,13 +24,13 @@ export default function LoginForm({ callbackUrl = "/dashboard" }: { callbackUrl?
     formState: { isSubmitting },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { identifier: "", password: "" },
   });
 
   const onSubmit = async (data: LoginInput) => {
     const result = await signIn("credentials", {
       redirect: false,
-      email: data.email,
+      identifier: data.identifier,
       password: data.password,
       callbackUrl,
     });
@@ -46,19 +46,18 @@ export default function LoginForm({ callbackUrl = "/dashboard" }: { callbackUrl?
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <FormField
-        name="email"
-        label="ایمیل"
         control={control}
+        name="identifier"
+        label="ایمیل / شماره موبایل"
         render={({ field }) => (
           <Input
             {...field}
-            type="email"
-            placeholder="example@nikmohaseb.ir"
-            autoComplete="email"
+            type="text"
+            placeholder="example@nikmohaseb.ir یا 09123456789"
+            autoComplete="username"
           />
         )}
       />
-
       <FormField
         name="password"
         label="رمز عبور"

@@ -11,17 +11,22 @@ export const authOptions: AuthOptions = {
       id: "credentials",
       name: "credentials",
       credentials: {
-        email: {
-          label: "ایمیل",
-          type: "email",
-          placeholder: "example@nikmohaseb.ir",
+        identifier: {
+          label: "ایمیل یا شماره موبایل",
+          type: "text",
+          placeholder: "example@nikmohaseb.ir یا 09123456789",
         },
         password: { label: "رمز عبور", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
-        const user = await prisma.user.findUnique({
-          where: { email: String(credentials.email) },
+        if (!credentials?.identifier || !credentials?.password) return null;
+        const user = await prisma.user.findFirst({
+          where: {
+            OR: [
+              { email: String(credentials.identifier) },
+              { phone: String(credentials.identifier) },
+            ],
+          },
         });
         if (!user || !user.password) return null;
         const isValid = await comparePasswords(

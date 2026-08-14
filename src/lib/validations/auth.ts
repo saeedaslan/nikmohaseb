@@ -35,7 +35,13 @@ export const registerSchema = z
   });
 
 export const loginSchema = z.object({
-  email: emailSchema,
+  identifier: z
+    .string()
+    .min(1, "ایمیل یا شماره موبایل الزامی است")
+    .refine(
+      (val) => val.includes("@") || /^09\d{9}$/.test(val),
+      "ایمیل یا شماره موبایل معتبر وارد کنید",
+    ),
   password: z.string().min(1, "رمز عبور الزامی است"),
 });
 
