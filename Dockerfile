@@ -27,6 +27,7 @@ COPY . .
 RUN mkdir -p /app/public/images/articles
 
 ENV DATABASE_URL="postgresql://placeholder:placeholder@db:5432/db"
+ENV NEXTAUTH_URL="https://amlakaslani.ir"
 RUN npx prisma generate --schema prisma/schema.prisma
 RUN npm run build
 
