@@ -36,7 +36,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
             priority
             className="h-12 w-auto"
           />
-          <span className="hidden sm:inline">{companyName}</span>
+          <span className="text-xl leading-tight">{companyName}</span>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -67,13 +67,20 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
           )}
         </div>
 
-        <button
-          className="md:hidden"
-          onClick={() => setOpen(!open)}
-          aria-label="منو"
-        >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          {!user && (
+            <Button asChild variant="accent" size="sm">
+              <Link href="/login">ورود / ثبت‌نام</Link>
+            </Button>
+          )}
+          <button
+            className="md:hidden"
+            onClick={() => setOpen(!open)}
+            aria-label="منو"
+          >
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
