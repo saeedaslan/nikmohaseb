@@ -24,10 +24,10 @@ function InstagramIcon({ className }: { className?: string }) {
 }
 
 const social: { icon: ComponentType<{ className?: string }>; label: string; href: string }[] = [
-  { icon: PhoneCall, label: "تماس تلفیاتی", href: "tel:+982100000000" },
+  { icon: PhoneCall, label: "تماس تلفیاتی", href: "tel:+9821828701113" },
   { icon: Mail, label: "ایمیل", href: "mailto:info@nikmohaseb.ir" },
   { icon: Send, label: "تلگرام", href: "https://t.me/nikmohaseb" },
-  { icon: InstagramIcon, label: "اینستاگرام", href: "https://instagram.com/nikmohaseb" },
+  { icon: InstagramIcon, label: "اینستاگرام", href: "https://instagram.com/nikmohasebsarv" },
 ];
 
 export function Footer() {
@@ -86,7 +86,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-text-muted">
               <li className="flex items-center gap-2.5">
                 <MapPin className="h-4 w-4 text-accent-green" />
-                <span>تهران، ایران</span>
+                <span>سعادت اباد بلوار سعادت اباد بالاتر از میدان کاج برج مادر پلاک ۱۳۳ طبقه ۱۰ واحد ۱۹</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="h-4 w-4 text-accent-green" />
