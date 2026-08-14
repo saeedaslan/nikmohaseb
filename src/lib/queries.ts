@@ -51,12 +51,26 @@ export async function getCircularBySlug(slug: string) {
   return prisma.circular.findUnique({ where: { slug }, include: { category: true } });
 }
 
+export async function getPublishedLaws(limit = 3) {
+  return prisma.law.findMany({
+    where: { published: true },
+    orderBy: { date: "desc" },
+    include: { category: true },
+    take: limit,
+  });
+}
+
+export async function getLawBySlug(slug: string) {
+  return prisma.law.findUnique({ where: { slug }, include: { category: true } });
+}
+
 export async function getAllCategories() {
   return prisma.category.findMany({ orderBy: { name: "asc" } });
 }
 
 export type Article = Awaited<ReturnType<typeof getPublishedArticles>>[number];
 export type Circular = Awaited<ReturnType<typeof getPublishedCirculars>>[number];
+export type Law = Awaited<ReturnType<typeof getPublishedLaws>>[number];
 export type Service = Awaited<ReturnType<typeof getPublishedServices>>[number];
 export type Banner = NonNullable<Awaited<ReturnType<typeof getActiveBanner>>>;
 

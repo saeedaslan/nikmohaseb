@@ -40,7 +40,17 @@ export type TicketPriority = (typeof TicketPriority)[keyof typeof TicketPriority
 export const CategoryType = {
   SERVICE: 'SERVICE',
   ARTICLE: 'ARTICLE',
-  CIRCULAR: 'CIRCULAR'
+  CIRCULAR: 'CIRCULAR',
+  LAW: 'LAW'
 } as const
 
 export type CategoryType = (typeof CategoryType)[keyof typeof CategoryType]
+
+
+export const LawType = {
+  DIRECT_TAX: 'DIRECT_TAX',
+  VAT: 'VAT',
+  OTHER: 'OTHER'
+} as const
+
+export type LawType = (typeof LawType)[keyof typeof LawType]

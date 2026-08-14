@@ -57,6 +57,7 @@ export const ModelName = {
   Service: 'Service',
   Article: 'Article',
   Circular: 'Circular',
+  Law: 'Law',
   Banner: 'Banner',
   Ticket: 'Ticket',
   TicketMessage: 'TicketMessage',
@@ -176,6 +177,27 @@ export const CircularScalarFieldEnum = {
 } as const
 
 export type CircularScalarFieldEnum = (typeof CircularScalarFieldEnum)[keyof typeof CircularScalarFieldEnum]
+
+
+export const LawScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  number: 'number',
+  date: 'date',
+  issuer: 'issuer',
+  summary: 'summary',
+  content: 'content',
+  file: 'file',
+  type: 'type',
+  published: 'published',
+  publishedAt: 'publishedAt',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LawScalarFieldEnum = (typeof LawScalarFieldEnum)[keyof typeof LawScalarFieldEnum]
 
 
 export const BannerScalarFieldEnum = {

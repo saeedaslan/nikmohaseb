@@ -30,6 +30,7 @@ enum CategoryType {
   SERVICE
   ARTICLE
   CIRCULAR
+  LAW
 }
 
 model User {
@@ -73,6 +74,7 @@ model Category {
   services   Service[]
   articles   Article[]
   circulars  Circular[]
+  laws       Law[]
 }
 
 model Service {
@@ -126,6 +128,31 @@ model Circular {
   category      Category? @relation(fields: [categoryId], references: [id])
   createdAt     DateTime @default(now()) @db.Timestamptz(3)
   updatedAt     DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model Law {
+  id            String   @id @default(cuid())
+  title         String
+  slug          String   @unique
+  number        String?
+  date          DateTime? @db.Timestamptz(3)
+  issuer        String?
+  summary       String?
+  content       String?
+  file          String?
+  type          LawType  @default(OTHER)
+  published     Boolean  @default(false)
+  publishedAt   DateTime? @db.Timestamptz(3)
+  categoryId    String?
+  category      Category? @relation(fields: [categoryId], references: [id])
+  createdAt     DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime @updatedAt @db.Timestamptz(3)
+}
+
+enum LawType {
+  DIRECT_TAX
+  VAT
+  OTHER
 }
 
 model Banner {

@@ -209,6 +209,23 @@ export type IntWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntFilter<$PrismaModel>
 }
 
+export type EnumLawTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.LawType | Prisma.EnumLawTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.LawType[] | Prisma.ListEnumLawTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LawType[] | Prisma.ListEnumLawTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLawTypeFilter<$PrismaModel> | $Enums.LawType
+}
+
+export type EnumLawTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LawType | Prisma.EnumLawTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.LawType[] | Prisma.ListEnumLawTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LawType[] | Prisma.ListEnumLawTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLawTypeWithAggregatesFilter<$PrismaModel> | $Enums.LawType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLawTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLawTypeFilter<$PrismaModel>
+}
+
 export type EnumTicketPriorityFilter<$PrismaModel = never> = {
   equals?: $Enums.TicketPriority | Prisma.EnumTicketPriorityFieldRefInput<$PrismaModel>
   in?: $Enums.TicketPriority[] | Prisma.ListEnumTicketPriorityFieldRefInput<$PrismaModel>
@@ -476,6 +493,23 @@ export type NestedFloatFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatFilter<$PrismaModel> | number
+}
+
+export type NestedEnumLawTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.LawType | Prisma.EnumLawTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.LawType[] | Prisma.ListEnumLawTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LawType[] | Prisma.ListEnumLawTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLawTypeFilter<$PrismaModel> | $Enums.LawType
+}
+
+export type NestedEnumLawTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LawType | Prisma.EnumLawTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.LawType[] | Prisma.ListEnumLawTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.LawType[] | Prisma.ListEnumLawTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumLawTypeWithAggregatesFilter<$PrismaModel> | $Enums.LawType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLawTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLawTypeFilter<$PrismaModel>
 }
 
 export type NestedEnumTicketPriorityFilter<$PrismaModel = never> = {

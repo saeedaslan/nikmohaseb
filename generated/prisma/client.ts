@@ -72,6 +72,11 @@ export type Article = Prisma.ArticleModel
  */
 export type Circular = Prisma.CircularModel
 /**
+ * Model Law
+ * 
+ */
+export type Law = Prisma.LawModel
+/**
  * Model Banner
  * 
  */

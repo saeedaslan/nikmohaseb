@@ -403,6 +403,7 @@ export const ModelName = {
   Service: 'Service',
   Article: 'Article',
   Circular: 'Circular',
+  Law: 'Law',
   Banner: 'Banner',
   Ticket: 'Ticket',
   TicketMessage: 'TicketMessage',
@@ -422,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "resetToken" | "category" | "service" | "article" | "circular" | "banner" | "ticket" | "ticketMessage" | "ticketAttachment"
+    modelProps: "user" | "resetToken" | "category" | "service" | "article" | "circular" | "law" | "banner" | "ticket" | "ticketMessage" | "ticketAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -870,6 +871,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Law: {
+      payload: Prisma.$LawPayload<ExtArgs>
+      fields: Prisma.LawFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LawFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LawFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload>
+        }
+        findFirst: {
+          args: Prisma.LawFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LawFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload>
+        }
+        findMany: {
+          args: Prisma.LawFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload>[]
+        }
+        create: {
+          args: Prisma.LawCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload>
+        }
+        createMany: {
+          args: Prisma.LawCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LawCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload>[]
+        }
+        delete: {
+          args: Prisma.LawDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload>
+        }
+        update: {
+          args: Prisma.LawUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload>
+        }
+        deleteMany: {
+          args: Prisma.LawDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LawUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LawUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload>[]
+        }
+        upsert: {
+          args: Prisma.LawUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LawPayload>
+        }
+        aggregate: {
+          args: Prisma.LawAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLaw>
+        }
+        groupBy: {
+          args: Prisma.LawGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LawGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LawCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LawCountAggregateOutputType> | number
+        }
+      }
+    }
     Banner: {
       payload: Prisma.$BannerPayload<ExtArgs>
       fields: Prisma.BannerFieldRefs
@@ -1304,6 +1379,27 @@ export const CircularScalarFieldEnum = {
 export type CircularScalarFieldEnum = (typeof CircularScalarFieldEnum)[keyof typeof CircularScalarFieldEnum]
 
 
+export const LawScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  number: 'number',
+  date: 'date',
+  issuer: 'issuer',
+  summary: 'summary',
+  content: 'content',
+  file: 'file',
+  type: 'type',
+  published: 'published',
+  publishedAt: 'publishedAt',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LawScalarFieldEnum = (typeof LawScalarFieldEnum)[keyof typeof LawScalarFieldEnum]
+
+
 export const BannerScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -1464,6 +1560,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LawType'
+ */
+export type EnumLawTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LawType'>
+    
+
+
+/**
+ * Reference to a field of type 'LawType[]'
+ */
+export type ListEnumLawTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LawType[]'>
     
 
 
@@ -1665,6 +1775,7 @@ export type GlobalOmitConfig = {
   service?: Prisma.ServiceOmit
   article?: Prisma.ArticleOmit
   circular?: Prisma.CircularOmit
+  law?: Prisma.LawOmit
   banner?: Prisma.BannerOmit
   ticket?: Prisma.TicketOmit
   ticketMessage?: Prisma.TicketMessageOmit

@@ -29,7 +29,7 @@ export default async function ContactPage() {
               اطلاعات تماس
             </h2>
             <div className="flex items-center justify-end gap-2 text-sm">
-              <span>تهران، خیابان ولیعصر، پلاک ۱۲</span>
+              <span>سعادت اباد بلوار سعادت اباد بالاتر از میدان کاج برج مادر پلاک ۱۳۳ طبقه ۱۰ واحد ۱۹</span>
               <MapPin className="h-4 w-4 text-accent-green" />
             </div>
             <div className="flex items-center justify-end gap-2 text-sm">
@@ -37,7 +37,7 @@ export default async function ContactPage() {
               <Mail className="h-4 w-4 text-accent-green" />
             </div>
             <div className="flex items-center justify-end gap-2 text-sm">
-              <span>۰۲۱-۱۲۳۴۵۶۷۸</span>
+              <span>۰۲۱-۸۲۸۸۰۱۱۱۳</span>
               <Phone className="h-4 w-4 text-accent-green" />
             </div>
           </div>

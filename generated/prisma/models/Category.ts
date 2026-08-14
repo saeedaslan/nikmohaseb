@@ -193,6 +193,7 @@ export type CategoryWhereInput = {
   services?: Prisma.ServiceListRelationFilter
   articles?: Prisma.ArticleListRelationFilter
   circulars?: Prisma.CircularListRelationFilter
+  laws?: Prisma.LawListRelationFilter
 }
 
 export type CategoryOrderByWithRelationInput = {
@@ -205,6 +206,7 @@ export type CategoryOrderByWithRelationInput = {
   services?: Prisma.ServiceOrderByRelationAggregateInput
   articles?: Prisma.ArticleOrderByRelationAggregateInput
   circulars?: Prisma.CircularOrderByRelationAggregateInput
+  laws?: Prisma.LawOrderByRelationAggregateInput
 }
 
 export type CategoryWhereUniqueInput = Prisma.AtLeast<{
@@ -220,6 +222,7 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   services?: Prisma.ServiceListRelationFilter
   articles?: Prisma.ArticleListRelationFilter
   circulars?: Prisma.CircularListRelationFilter
+  laws?: Prisma.LawListRelationFilter
 }, "id" | "slug">
 
 export type CategoryOrderByWithAggregationInput = {
@@ -256,6 +259,7 @@ export type CategoryCreateInput = {
   services?: Prisma.ServiceCreateNestedManyWithoutCategoryInput
   articles?: Prisma.ArticleCreateNestedManyWithoutCategoryInput
   circulars?: Prisma.CircularCreateNestedManyWithoutCategoryInput
+  laws?: Prisma.LawCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateInput = {
@@ -268,6 +272,7 @@ export type CategoryUncheckedCreateInput = {
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCategoryInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutCategoryInput
   circulars?: Prisma.CircularUncheckedCreateNestedManyWithoutCategoryInput
+  laws?: Prisma.LawUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUpdateInput = {
@@ -280,6 +285,7 @@ export type CategoryUpdateInput = {
   services?: Prisma.ServiceUpdateManyWithoutCategoryNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutCategoryNestedInput
   circulars?: Prisma.CircularUpdateManyWithoutCategoryNestedInput
+  laws?: Prisma.LawUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateInput = {
@@ -292,6 +298,7 @@ export type CategoryUncheckedUpdateInput = {
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCategoryNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutCategoryNestedInput
   circulars?: Prisma.CircularUncheckedUpdateManyWithoutCategoryNestedInput
+  laws?: Prisma.LawUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateManyInput = {
@@ -405,6 +412,22 @@ export type CategoryUpdateOneWithoutCircularsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutCircularsInput, Prisma.CategoryUpdateWithoutCircularsInput>, Prisma.CategoryUncheckedUpdateWithoutCircularsInput>
 }
 
+export type CategoryCreateNestedOneWithoutLawsInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutLawsInput, Prisma.CategoryUncheckedCreateWithoutLawsInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutLawsInput
+  connect?: Prisma.CategoryWhereUniqueInput
+}
+
+export type CategoryUpdateOneWithoutLawsNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutLawsInput, Prisma.CategoryUncheckedCreateWithoutLawsInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutLawsInput
+  upsert?: Prisma.CategoryUpsertWithoutLawsInput
+  disconnect?: Prisma.CategoryWhereInput | boolean
+  delete?: Prisma.CategoryWhereInput | boolean
+  connect?: Prisma.CategoryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutLawsInput, Prisma.CategoryUpdateWithoutLawsInput>, Prisma.CategoryUncheckedUpdateWithoutLawsInput>
+}
+
 export type CategoryCreateWithoutServicesInput = {
   id?: string
   name: string
@@ -414,6 +437,7 @@ export type CategoryCreateWithoutServicesInput = {
   updatedAt?: Date | string
   articles?: Prisma.ArticleCreateNestedManyWithoutCategoryInput
   circulars?: Prisma.CircularCreateNestedManyWithoutCategoryInput
+  laws?: Prisma.LawCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutServicesInput = {
@@ -425,6 +449,7 @@ export type CategoryUncheckedCreateWithoutServicesInput = {
   updatedAt?: Date | string
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutCategoryInput
   circulars?: Prisma.CircularUncheckedCreateNestedManyWithoutCategoryInput
+  laws?: Prisma.LawUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutServicesInput = {
@@ -452,6 +477,7 @@ export type CategoryUpdateWithoutServicesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   articles?: Prisma.ArticleUpdateManyWithoutCategoryNestedInput
   circulars?: Prisma.CircularUpdateManyWithoutCategoryNestedInput
+  laws?: Prisma.LawUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutServicesInput = {
@@ -463,6 +489,7 @@ export type CategoryUncheckedUpdateWithoutServicesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutCategoryNestedInput
   circulars?: Prisma.CircularUncheckedUpdateManyWithoutCategoryNestedInput
+  laws?: Prisma.LawUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateWithoutArticlesInput = {
@@ -474,6 +501,7 @@ export type CategoryCreateWithoutArticlesInput = {
   updatedAt?: Date | string
   services?: Prisma.ServiceCreateNestedManyWithoutCategoryInput
   circulars?: Prisma.CircularCreateNestedManyWithoutCategoryInput
+  laws?: Prisma.LawCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutArticlesInput = {
@@ -485,6 +513,7 @@ export type CategoryUncheckedCreateWithoutArticlesInput = {
   updatedAt?: Date | string
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCategoryInput
   circulars?: Prisma.CircularUncheckedCreateNestedManyWithoutCategoryInput
+  laws?: Prisma.LawUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutArticlesInput = {
@@ -512,6 +541,7 @@ export type CategoryUpdateWithoutArticlesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.ServiceUpdateManyWithoutCategoryNestedInput
   circulars?: Prisma.CircularUpdateManyWithoutCategoryNestedInput
+  laws?: Prisma.LawUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutArticlesInput = {
@@ -523,6 +553,7 @@ export type CategoryUncheckedUpdateWithoutArticlesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCategoryNestedInput
   circulars?: Prisma.CircularUncheckedUpdateManyWithoutCategoryNestedInput
+  laws?: Prisma.LawUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateWithoutCircularsInput = {
@@ -534,6 +565,7 @@ export type CategoryCreateWithoutCircularsInput = {
   updatedAt?: Date | string
   services?: Prisma.ServiceCreateNestedManyWithoutCategoryInput
   articles?: Prisma.ArticleCreateNestedManyWithoutCategoryInput
+  laws?: Prisma.LawCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutCircularsInput = {
@@ -545,6 +577,7 @@ export type CategoryUncheckedCreateWithoutCircularsInput = {
   updatedAt?: Date | string
   services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCategoryInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutCategoryInput
+  laws?: Prisma.LawUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutCircularsInput = {
@@ -572,6 +605,7 @@ export type CategoryUpdateWithoutCircularsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.ServiceUpdateManyWithoutCategoryNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutCategoryNestedInput
+  laws?: Prisma.LawUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutCircularsInput = {
@@ -583,6 +617,71 @@ export type CategoryUncheckedUpdateWithoutCircularsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   services?: Prisma.ServiceUncheckedUpdateManyWithoutCategoryNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutCategoryNestedInput
+  laws?: Prisma.LawUncheckedUpdateManyWithoutCategoryNestedInput
+}
+
+export type CategoryCreateWithoutLawsInput = {
+  id?: string
+  name: string
+  slug: string
+  type: $Enums.CategoryType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.ServiceCreateNestedManyWithoutCategoryInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutCategoryInput
+  circulars?: Prisma.CircularCreateNestedManyWithoutCategoryInput
+}
+
+export type CategoryUncheckedCreateWithoutLawsInput = {
+  id?: string
+  name: string
+  slug: string
+  type: $Enums.CategoryType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutCategoryInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutCategoryInput
+  circulars?: Prisma.CircularUncheckedCreateNestedManyWithoutCategoryInput
+}
+
+export type CategoryCreateOrConnectWithoutLawsInput = {
+  where: Prisma.CategoryWhereUniqueInput
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutLawsInput, Prisma.CategoryUncheckedCreateWithoutLawsInput>
+}
+
+export type CategoryUpsertWithoutLawsInput = {
+  update: Prisma.XOR<Prisma.CategoryUpdateWithoutLawsInput, Prisma.CategoryUncheckedUpdateWithoutLawsInput>
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutLawsInput, Prisma.CategoryUncheckedCreateWithoutLawsInput>
+  where?: Prisma.CategoryWhereInput
+}
+
+export type CategoryUpdateToOneWithWhereWithoutLawsInput = {
+  where?: Prisma.CategoryWhereInput
+  data: Prisma.XOR<Prisma.CategoryUpdateWithoutLawsInput, Prisma.CategoryUncheckedUpdateWithoutLawsInput>
+}
+
+export type CategoryUpdateWithoutLawsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.ServiceUpdateManyWithoutCategoryNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutCategoryNestedInput
+  circulars?: Prisma.CircularUpdateManyWithoutCategoryNestedInput
+}
+
+export type CategoryUncheckedUpdateWithoutLawsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumCategoryTypeFieldUpdateOperationsInput | $Enums.CategoryType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutCategoryNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutCategoryNestedInput
+  circulars?: Prisma.CircularUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 
@@ -594,12 +693,14 @@ export type CategoryCountOutputType = {
   services: number
   articles: number
   circulars: number
+  laws: number
 }
 
 export type CategoryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   services?: boolean | CategoryCountOutputTypeCountServicesArgs
   articles?: boolean | CategoryCountOutputTypeCountArticlesArgs
   circulars?: boolean | CategoryCountOutputTypeCountCircularsArgs
+  laws?: boolean | CategoryCountOutputTypeCountLawsArgs
 }
 
 /**
@@ -633,6 +734,13 @@ export type CategoryCountOutputTypeCountCircularsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.CircularWhereInput
 }
 
+/**
+ * CategoryCountOutputType without action
+ */
+export type CategoryCountOutputTypeCountLawsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LawWhereInput
+}
+
 
 export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -644,6 +752,7 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   services?: boolean | Prisma.Category$servicesArgs<ExtArgs>
   articles?: boolean | Prisma.Category$articlesArgs<ExtArgs>
   circulars?: boolean | Prisma.Category$circularsArgs<ExtArgs>
+  laws?: boolean | Prisma.Category$lawsArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["category"]>
 
@@ -679,6 +788,7 @@ export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   services?: boolean | Prisma.Category$servicesArgs<ExtArgs>
   articles?: boolean | Prisma.Category$articlesArgs<ExtArgs>
   circulars?: boolean | Prisma.Category$circularsArgs<ExtArgs>
+  laws?: boolean | Prisma.Category$lawsArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CategoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -690,6 +800,7 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     services: Prisma.$ServicePayload<ExtArgs>[]
     articles: Prisma.$ArticlePayload<ExtArgs>[]
     circulars: Prisma.$CircularPayload<ExtArgs>[]
+    laws: Prisma.$LawPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1095,6 +1206,7 @@ export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime
   services<T extends Prisma.Category$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   articles<T extends Prisma.Category$articlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$articlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   circulars<T extends Prisma.Category$circularsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$circularsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CircularPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  laws<T extends Prisma.Category$lawsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$lawsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LawPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1592,6 +1704,30 @@ export type Category$circularsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.CircularScalarFieldEnum | Prisma.CircularScalarFieldEnum[]
+}
+
+/**
+ * Category.laws
+ */
+export type Category$lawsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Law
+   */
+  select?: Prisma.LawSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Law
+   */
+  omit?: Prisma.LawOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LawInclude<ExtArgs> | null
+  where?: Prisma.LawWhereInput
+  orderBy?: Prisma.LawOrderByWithRelationInput | Prisma.LawOrderByWithRelationInput[]
+  cursor?: Prisma.LawWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LawScalarFieldEnum | Prisma.LawScalarFieldEnum[]
 }
 
 /**

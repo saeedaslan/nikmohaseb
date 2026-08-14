@@ -25,6 +25,7 @@ const nav = [
   { label: "بنرها", href: "/admin/banners", icon: ImageIcon },
   { label: "مقالات", href: "/admin/articles", icon: FileText },
   { label: "بخشنامه‌ها", href: "/admin/circulars", icon: ReceiptText },
+  { label: "قوانین", href: "/admin/laws", icon: FileText },
   { label: "خدمات", href: "/admin/services", icon: Settings },
 ];
 

@@ -67,6 +67,21 @@ export const circularSchema = z.object({
   categoryId: z.string().optional(),
 });
 
+export const lawSchema = z.object({
+  title: z.string().min(2, "عنوان الزامی است").max(180),
+  slug: z.string().min(2, "اسلاک الزامی است").max(180),
+  number: z.string().optional(),
+  date: z.coerce.date().optional(),
+  issuer: z.string().optional(),
+  summary: z.string().optional(),
+  content: z.string().optional(),
+  file: z.string().optional(),
+  type: z.enum(["DIRECT_TAX", "VAT", "OTHER"]).optional(),
+  published: z.boolean().optional(),
+  publishedAt: z.coerce.date().optional(),
+  categoryId: z.string().optional(),
+});
+
 export const bannerSchema = z.object({
   title: z.string().min(1, "عنوان الزامی است").max(180),
   description: z.string().optional(),
@@ -82,4 +97,5 @@ export type TicketReplyInput = z.infer<typeof ticketReplySchema>;
 export type ServiceInput = z.infer<typeof serviceSchema>;
 export type ArticleInput = z.infer<typeof articleSchema>;
 export type CircularInput = z.infer<typeof circularSchema>;
+export type LawInput = z.infer<typeof lawSchema>;
 export type BannerInput = z.infer<typeof bannerSchema>;
