@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="نیک محاسب سرو">
+  <style>.g{fill:#16a34a}.n{fill:#1e293b}</style>
+  <g>
+    <rect x="2" y="2" width="28" height="28" rx="8" class="n" fill-opacity=".05" stroke="#e2e8f0" stroke-width="1"/>
+    <path class="g" d="M10 24 L16 8 L22 24 Z"/>
+    <path class="g" fill="#0ea5e9" d="M15 22 L15 24 L17 24 L17 22 Z M13 22 L13 24 L15 24 L15 22 Z M19 22 L19 24 L21 24 L21 22 Z"/>
+    <path class="g" d="M9 25 L23 25 L23 27 L9 27 Z"/>
+  </g>
+</svg>
