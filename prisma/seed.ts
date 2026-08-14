@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({ path: [".env.local", ".env"] });
+dotenv.config({ path: [".env.local", ".env", ".env.production"] });
 
 import { prisma, CategoryType } from "@/lib/prisma";
 import { hashPassword } from "@/lib/password";
@@ -7,8 +7,8 @@ import { slugify } from "@/lib/slug";
 import { sanitizeHtml } from "@/lib/sanitize";
 
 async function main() {
-  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? "admin@nikmohaseb.ir";
-  const adminPass = process.env.SEED_ADMIN_PASSWORD ?? "Admin123!";
+  const adminEmail = process.env.ADMIN_EMAIL ?? process.env.SEED_ADMIN_EMAIL ?? "admin@nikmohaseb.ir";
+  const adminPass = process.env.ADMIN_PASSWORD ?? process.env.SEED_ADMIN_PASSWORD ?? "Admin123!";
 
   const admin = await prisma.user.upsert({
     where: { email: adminEmail },

@@ -29,7 +29,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const addToast = (toast: Omit<Toast, "id">) => {
-    const id = crypto.randomUUID();
+    const id =
+      typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : Math.random().toString(36).slice(2, 11);
     setToasts((prev) => [...prev, { id, ...toast }]);
   };
   const dismiss = (id: string) => {
