@@ -35,6 +35,7 @@ export type {
   Circular,
   Service,
   Banner,
+  Faq,
   Ticket,
   User,
   Category,

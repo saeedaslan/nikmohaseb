@@ -92,6 +92,18 @@ export const bannerSchema = z.object({
   order: z.coerce.number().int().min(0).optional(),
 });
 
+export const faqSchema = z.object({
+  category: z.string().optional(),
+  question: z.string().min(2, "سوال الزامی است").max(200),
+  answer: z.string().min(1, "پاسخ الزامی است"),
+  slug: z.string().min(2, "اسلاک الزامی است").max(200),
+  order: z.coerce.number().int().min(0).optional(),
+  published: z.boolean().optional(),
+  publishedAt: z.coerce.date().optional(),
+});
+
+export type FaqInput = z.infer<typeof faqSchema>;
+
 export type TicketCreateInput = z.infer<typeof ticketCreateSchema>;
 export type TicketReplyInput = z.infer<typeof ticketReplySchema>;
 export type ServiceInput = z.infer<typeof serviceSchema>;

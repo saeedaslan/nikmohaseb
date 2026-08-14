@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Card } from "@/components/ui/card";
-import { Users, Ticket, FileText, ReceiptText } from "lucide-react";
+import { Users, Ticket, FileText, ReceiptText, HelpCircle } from "lucide-react"
 import { TicketStatus } from "@/lib/prisma";
 
 export const metadata = {
@@ -8,12 +8,13 @@ export const metadata = {
 };
 
 export default async function AdminDashboardPage() {
-  const [userCount, tickets, articles, circulars, statusCounts] =
+  const [userCount, tickets, articles, circulars, faqs, statusCounts] =
     await Promise.all([
       prisma.user.count(),
       prisma.ticket.count(),
       prisma.article.count(),
       prisma.circular.count(),
+      prisma.faq.count(),
       prisma.ticket
         .groupBy({ by: ["status"], _count: { _all: true } })
         .then((r) => Object.fromEntries(r.map((x) => [x.status, x._count._all]))),
@@ -24,6 +25,7 @@ export default async function AdminDashboardPage() {
     { label: "کل تیکت‌ها", value: tickets, icon: <Ticket className="h-6 w-6" /> },
     { label: "کل مقالات", value: articles, icon: <FileText className="h-6 w-6" /> },
     { label: "کل بخشنامه‌ها", value: circulars, icon: <ReceiptText className="h-6 w-6" /> },
+    { label: "کل سؤالات متداول", value: faqs, icon: <HelpCircle className="h-6 w-6" /> },
     {
       label: "تیکت‌های جدید",
       value: statusCounts[TicketStatus.NEW] ?? 0,

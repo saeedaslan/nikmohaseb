@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   FileText,
   ReceiptText,
+  HelpCircle,
   Settings,
   Menu,
   X,
@@ -26,6 +27,7 @@ const nav = [
   { label: "مقالات", href: "/admin/articles", icon: FileText },
   { label: "بخشنامه‌ها", href: "/admin/circulars", icon: ReceiptText },
   { label: "قوانین", href: "/admin/laws", icon: FileText },
+  { label: "سؤالات متداول", href: "/admin/faqs", icon: HelpCircle },
   { label: "خدمات", href: "/admin/services", icon: Settings },
 ];
 

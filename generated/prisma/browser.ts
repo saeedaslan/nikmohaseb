@@ -53,6 +53,11 @@ export type Circular = Prisma.CircularModel
  */
 export type Law = Prisma.LawModel
 /**
+ * Model Faq
+ * 
+ */
+export type Faq = Prisma.FaqModel
+/**
  * Model Banner
  * 
  */

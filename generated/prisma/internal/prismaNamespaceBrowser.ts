@@ -58,6 +58,7 @@ export const ModelName = {
   Article: 'Article',
   Circular: 'Circular',
   Law: 'Law',
+  Faq: 'Faq',
   Banner: 'Banner',
   Ticket: 'Ticket',
   TicketMessage: 'TicketMessage',
@@ -198,6 +199,22 @@ export const LawScalarFieldEnum = {
 } as const
 
 export type LawScalarFieldEnum = (typeof LawScalarFieldEnum)[keyof typeof LawScalarFieldEnum]
+
+
+export const FaqScalarFieldEnum = {
+  id: 'id',
+  category: 'category',
+  question: 'question',
+  answer: 'answer',
+  slug: 'slug',
+  order: 'order',
+  published: 'published',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FaqScalarFieldEnum = (typeof FaqScalarFieldEnum)[keyof typeof FaqScalarFieldEnum]
 
 
 export const BannerScalarFieldEnum = {

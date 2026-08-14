@@ -41,7 +41,8 @@ export const CategoryType = {
   SERVICE: 'SERVICE',
   ARTICLE: 'ARTICLE',
   CIRCULAR: 'CIRCULAR',
-  LAW: 'LAW'
+  LAW: 'LAW',
+  FAQ: 'FAQ'
 } as const
 
 export type CategoryType = (typeof CategoryType)[keyof typeof CategoryType]

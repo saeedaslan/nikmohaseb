@@ -64,6 +64,18 @@ export async function getLawBySlug(slug: string) {
   return prisma.law.findUnique({ where: { slug }, include: { category: true } });
 }
 
+export async function getFaqBySlug(slug: string) {
+  return prisma.faq.findUnique({ where: { slug } });
+}
+
+export async function getPublishedFaqs(limit = 50) {
+  return prisma.faq.findMany({
+    where: { published: true },
+    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+    take: limit,
+  });
+}
+
 export async function getAllCategories() {
   return prisma.category.findMany({ orderBy: { name: "asc" } });
 }
@@ -73,5 +85,6 @@ export type Circular = Awaited<ReturnType<typeof getPublishedCirculars>>[number]
 export type Law = Awaited<ReturnType<typeof getPublishedLaws>>[number];
 export type Service = Awaited<ReturnType<typeof getPublishedServices>>[number];
 export type Banner = NonNullable<Awaited<ReturnType<typeof getActiveBanner>>>;
+export type Faq = Awaited<ReturnType<typeof getPublishedFaqs>>[number];
 
 export type { Prisma } from "@/lib/prisma";
