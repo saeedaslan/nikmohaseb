@@ -1,7 +1,9 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { addTicketMessage } from "@/lib/actions/tickets";
+import { ticketReplySchema, type TicketReplyInput } from "@/lib/validations/admin";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
@@ -10,11 +12,12 @@ import { Send } from "lucide-react";
 
 export function ReplyForm({ ticketId }: { ticketId: string }) {
   const { addToast } = useToast();
-  const { control, handleSubmit, reset } = useForm<{ content: string }>({
+  const { control, handleSubmit, reset } = useForm<TicketReplyInput>({
+    resolver: zodResolver(ticketReplySchema),
     defaultValues: { content: "" },
   });
 
-  const onSubmit = async (data: { content: string }) => {
+  const onSubmit = async (data: TicketReplyInput) => {
     const fd = new FormData();
     fd.append("content", data.content);
     const result = await addTicketMessage(ticketId, fd);

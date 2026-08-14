@@ -67,5 +67,7 @@ export async function adminAddMessage(
 
   revalidatePath("/admin/tickets");
   revalidatePath(`/admin/tickets/${ticketId}`);
+  revalidatePath("/dashboard/tickets");
+  revalidatePath(`/dashboard/tickets/${ticketId}`);
   return { ok: true };
 }

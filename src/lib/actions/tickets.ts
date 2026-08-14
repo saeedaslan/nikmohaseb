@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
+import { prisma, TicketStatus } from "@/lib/prisma";
 import { ticketCreateSchema, ticketReplySchema } from "@/lib/validations/admin";
 import { requireUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -109,13 +109,13 @@ export async function getTicketById(id: string) {
     where: { id },
     include: {
       user: { select: { id: true, name: true, email: true } },
-      messages: {
-        orderBy: { createdAt: "asc" },
-        include: {
-          user: { select: { id: true, name: true } },
-          attachments: true,
-        },
-      },
+       messages: {
+         orderBy: { createdAt: "asc" },
+         include: {
+           user: { select: { id: true, name: true, role: true } },
+           attachments: true,
+         },
+       },
       attachments: true,
     },
   });
@@ -156,10 +156,11 @@ export async function addTicketMessage(
 
   await prisma.ticket.update({
     where: { id: ticket.id },
-    data: { status: "ANSWERED" },
+    data: { status: TicketStatus.IN_PROGRESS },
   });
 
   revalidatePath(`/dashboard/tickets/${ticketId}`);
   revalidatePath(`/admin/tickets/${ticketId}`);
+  revalidatePath("/dashboard/tickets");
   return { ok: true };
 }

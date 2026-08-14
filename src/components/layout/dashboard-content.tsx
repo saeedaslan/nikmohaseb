@@ -19,9 +19,10 @@ import { ThemeToggle } from "@/components/theme/toggle";
 
 const nav = [
   { label: "خلاصه وضعیت", href: "/dashboard", icon: LayoutDashboard },
-  { label: "تیکت‌های من", href: "/dashboard/tickets", icon: Ticket },
+  { label: "مشاهده تیکت", href: "/dashboard/tickets", icon: Ticket },
   { label: "ثبت تیکت جدید", href: "/dashboard/tickets/new", icon: TicketPlus },
   { label: "پروفایل", href: "/dashboard/profile", icon: User },
+  { label: "تنظیمات", href: "/dashboard/profile", icon: Settings },
 ];
 
 export default function DashboardContent({ children }: { children: React.ReactNode }) {

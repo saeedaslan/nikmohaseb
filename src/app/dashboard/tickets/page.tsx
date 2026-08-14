@@ -41,7 +41,7 @@ export default async function DashboardTicketsPage({
       ? { status: statusFilter as Ticket["status"] }
       : {}),
     ...(query
-      ? { OR: [{ subject: { contains: query } }, { description: { contains: query } }] }
+      ? { subject: { contains: query } }
       : {}),
   };
 
@@ -83,14 +83,14 @@ export default async function DashboardTicketsPage({
             <TableBody>
               {tickets.map((t) => (
                 <tr key={t.id} className="hover:bg-surface-background/50">
-                  <TableCell>
-                    <Link
-                      href={`/dashboard/tickets/${t.id}`}
-                      className="font-medium text-accent-green hover:underline"
-                    >
-                      {t.subject}
-                    </Link>
-                  </TableCell>
+                 <TableCell>
+                   <Link
+                     href={`/dashboard/tickets/${t.id}`}
+                     className="font-medium text-accent-green hover:underline"
+                   >
+                     {t.subject}
+                   </Link>
+                 </TableCell>
                   <TableCell>
                     <Badge
                       variant={

@@ -1,7 +1,8 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const statusLabels: Record<string, string> = {
   NEW: "جدید",
@@ -17,25 +18,44 @@ export function TicketFilters({
   query?: string;
   statusFilter?: string;
 }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [search, setSearch] = useState(query ?? "");
+
+  const updateURL = (newQuery: string, newStatus: string) => {
+    const params = new URLSearchParams();
+    if (newQuery) params.set("q", newQuery);
+    if (newStatus) params.set("status", newStatus);
+    const url = params.toString() ? `?${params.toString()}` : "/dashboard/tickets";
+    router.push(url);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateURL(search, statusFilter ?? "");
+  };
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    updateURL(search, e.target.value);
+  };
+
   useEffect(() => {
-    const select = document.querySelector<HTMLSelectElement>('select[name="status"]');
-    if (!select) return;
-    const handler = () => select.form?.requestSubmit();
-    select.addEventListener("change", handler);
-    return () => select.removeEventListener("change", handler);
-  }, []);
+    setSearch(query ?? "");
+  }, [query]);
 
   return (
-    <form className="flex items-center gap-3">
+    <form onSubmit={handleSearch} className="flex items-center gap-3">
       <Input
         name="q"
         placeholder="جستجو در تیکت‌ها..."
-        defaultValue={query}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         className="max-w-xs"
       />
       <select
         name="status"
-        defaultValue={statusFilter ?? ""}
+        value={statusFilter ?? ""}
+        onChange={handleStatusChange}
         className="rounded-md border border-border bg-surface-card px-3 py-2 text-sm text-text"
       >
         <option value="">همه وضعیت‌ها</option>
