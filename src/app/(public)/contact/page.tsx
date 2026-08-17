@@ -29,7 +29,7 @@ export default async function ContactPage() {
               اطلاعات تماس
             </h2>
             <div className="flex items-center justify-end gap-2 text-sm">
-              <span>سعادت اباد بلوار سعادت اباد بالاتر از میدان کاج برج مادر پلاک ۱۳۳ طبقه ۱۰ واحد ۱۹</span>
+              <span>تهران سعادت آباد میدان کاج بلوار سعادت آباد برج مادر طبقه ۱۰ واحد ۱۹</span>
               <MapPin className="h-4 w-4 text-accent-green" />
             </div>
             <div className="flex items-center justify-end gap-2 text-sm">
@@ -37,7 +37,7 @@ export default async function ContactPage() {
               <Mail className="h-4 w-4 text-accent-green" />
             </div>
             <div className="flex items-center justify-end gap-2 text-sm">
-              <span>۰۲۱-۸۲۸۸۰۱۱۱۳</span>
+              <span>۰۲۱-۸۲۸۰۹۵۱۵-۰۲۱-۲۶۷۴۶۷۱۶</span>
               <Phone className="h-4 w-4 text-accent-green" />
             </div>
           </div>

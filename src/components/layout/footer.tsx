@@ -100,7 +100,7 @@ export function Footer() {
               <li className="flex items-center gap-2.5">
                 <PhoneCall className="h-4 w-4 text-accent-green" />
                 <a href="tel:+9821828701113" className="hover:text-accent-green">
-                  ۰۲۱-۸۲۸۷۰۱۱۱۳
+                  ۰۲۱-۸۲۸۰۹۵۱۵-۰۲۱-۲۶۷۴۶۷۱۶
                 </a>
               </li>
             </ul>
