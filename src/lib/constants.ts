@@ -38,3 +38,9 @@ export interface ActionError {
 }
 
 export type ActionResult = ActionSuccess | ActionError;
+
+export interface AdminFormState {
+  ok?: boolean;
+  error?: string;
+  errors?: Record<string, string[]>;
+}

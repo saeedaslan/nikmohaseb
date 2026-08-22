@@ -5,12 +5,12 @@ export const metadata = {
   description: "بازنشانی رمز عبور",
 };
 
-export default function ResetPasswordPage({
+export default async function ResetPasswordPage({
   searchParams,
 }: {
-  searchParams: { token?: string };
+  searchParams: Promise<{ token?: string }>;
 }) {
-  const token = searchParams.token ?? "";
+  const { token } = await searchParams;
   if (!token) {
     return (
       <div className="py-8 text-center">

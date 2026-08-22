@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MapPin, Mail, Phone } from "lucide-react";
+import { contactInfo } from "@/lib/nav";
 
 export const metadata = {
   title: "تماس با ما | نیک محاسب سرو",
@@ -29,16 +30,27 @@ export default async function ContactPage() {
               اطلاعات تماس
             </h2>
             <div className="flex items-center justify-end gap-2 text-sm">
-              <span>تهران سعادت آباد میدان کاج بلوار سعادت آباد برج مادر طبقه ۱۰ واحد ۱۹</span>
+              <span>{contactInfo.address}</span>
               <MapPin className="h-4 w-4 text-accent-green" />
             </div>
             <div className="flex items-center justify-end gap-2 text-sm">
-              <span>info@nikmohaseb.ir</span>
+              <a href={`mailto:${contactInfo.email}`} className="hover:text-accent-green">
+                {contactInfo.email}
+              </a>
               <Mail className="h-4 w-4 text-accent-green" />
             </div>
-            <div className="flex items-center justify-end gap-2 text-sm">
-              <span>۰۲۱-۸۲۸۰۹۵۱۵-۰۲۱-۲۶۷۴۶۷۱۶</span>
-              <Phone className="h-4 w-4 text-accent-green" />
+            {contactInfo.phones.map((phone) => (
+              <div key={phone} className="flex items-center justify-end gap-2 text-sm">
+                <a href={`tel:${phone.replace(/-/g, "")}`} className="hover:text-accent-green">
+                  {phone}
+                </a>
+                <Phone className="h-4 w-4 text-accent-green" />
+              </div>
+            ))}
+            <div className="mt-6 rounded-lg border border-border/60 bg-surface-card p-4">
+              <h3 className="mb-2 text-sm font-medium text-text">ساعات کاری</h3>
+              <p className="text-xs text-text-muted">{contactInfo.workingHours.weekdays}</p>
+              <p className="text-xs text-text-muted">{contactInfo.workingHours.thursday}</p>
             </div>
           </div>
 
@@ -54,13 +66,21 @@ export default async function ContactPage() {
                 <TicketForm redirectTo="/dashboard/tickets" />
               </Card>
             ) : (
-              <Card className="p-8 text-center">
+              <Card className="p-6">
+                <h2 className="mb-4 text-lg font-semibold text-primary-navy">
+                  ثبت درخواست مشاوره
+                </h2>
                 <p className="mb-4 text-sm text-text-muted">
                   برای ثبت درخواست مشاوره، ابتدا وارد حساب کاربری خود شوید.
                 </p>
-                <Button asChild variant="primary">
-                  <Link href="/login?callbackUrl=/contact">ورود / ثبت‌نام</Link>
-                </Button>
+                <div className="space-y-3">
+                  <Button asChild variant="primary" className="w-full">
+                    <Link href="/login?callbackUrl=/contact">ورود به حساب کاربری</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href="/register?callbackUrl=/contact">ثبت‌نام کاربر جدید</Link>
+                  </Button>
+                </div>
               </Card>
             )}
           </div>

@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import { useToast } from "@/components/ui/toast";
 
 export default function LoginForm({ callbackUrl = "/dashboard" }: { callbackUrl?: string }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { addToast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,10 +37,16 @@ export default function LoginForm({ callbackUrl = "/dashboard" }: { callbackUrl?
     });
 
     if (result?.error) {
-      addToast({ message: "نام کاربری یا رمز عبور اشتباه است.", variant: "error" });
+      const errorMessage = result.error === "CredentialsSignin"
+        ? "نام کاربری یا رمز عبور اشتباه است."
+        : result.error.includes("AccessDenied")
+          ? "شما اجازه دسترسی به این بخش را ندارید."
+          : "خطا در ورود. دوباره سعی کنید.";
+      addToast({ message: errorMessage, variant: "error" });
     } else if (result?.ok) {
       addToast({ message: "ورود موفقیت‌آمیز بود.", variant: "success" });
-      router.push(result.url || callbackUrl);
+      const returnUrl = searchParams.get("callbackUrl") || result.url || callbackUrl;
+      router.push(returnUrl);
     }
   };
 

@@ -17,3 +17,17 @@ export const navLinks: NavLink[] = [
 export const companyName = "نیک محاسب سرو";
 export const companyDescription =
   "همراه مطمئن شما در امور مالی و مالیاتی";
+
+export const contactInfo = {
+  address: "تهران، سعادت‌آباد، بلوار سعادت‌آباد، بالاتر از میدان کاج، برج مادر، پلاک ۱۳۳، طبقه ۱۰، واحد ۱۹",
+  phones: ["۰۲۱-۸۲۸۰۹۵۱۵", "۰۲۱-۲۶۷۴۶۷۱۶"],
+  email: "info@nikmohaseb.ir",
+  workingHours: {
+    weekdays: "شنبه تا چهارشنبه ۹:۰۰ - ۱۸:۰۰",
+    thursday: "پنجشنبه ۹:۰۰ - ۱۴:۰۰",
+  },
+  social: {
+    telegram: "https://t.me/nikmohaseb",
+    instagram: "https://instagram.com/nikmohasebsarv",
+  },
+};

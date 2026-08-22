@@ -12,6 +12,7 @@ import { FileUpload, type UploadedFileMeta } from "@/components/ui/file-upload";
 import { useToast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import type { AdminFormState } from "@/lib/constants";
 
 export type AdminFieldType =
   | "text"
@@ -29,12 +30,6 @@ export interface AdminField {
   type: AdminFieldType;
   options?: { value: string; label: string }[];
   description?: string;
-}
-
-export interface AdminFormState {
-  ok?: boolean;
-  error?: string;
-  errors?: Record<string, string[]>;
 }
 
 interface AdminCrudFormProps<T> {

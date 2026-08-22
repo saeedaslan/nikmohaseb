@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Mail, PhoneCall, Send, Clock, ArrowLeft, ExternalLink } from "lucide-react";
 import type { ComponentType } from "react";
-import { companyName, companyDescription, navLinks } from "@/lib/nav";
+import { companyName, companyDescription, navLinks, contactInfo } from "@/lib/nav";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -24,10 +24,10 @@ function InstagramIcon({ className }: { className?: string }) {
 }
 
 const social: { icon: ComponentType<{ className?: string }>; label: string; href: string }[] = [
-  { icon: PhoneCall, label: "تماس تلفیاتی", href: "tel:+9821828701113" },
-  { icon: Mail, label: "ایمیل", href: "mailto:info@nikmohaseb.ir" },
-  { icon: Send, label: "تلگرام", href: "https://t.me/nikmohaseb" },
-  { icon: InstagramIcon, label: "اینستاگرام", href: "https://instagram.com/nikmohasebsarv" },
+  { icon: PhoneCall, label: "تماس تلفیاتی", href: `tel:${contactInfo.phones[0].replace(/-/g, "")}` },
+  { icon: Mail, label: "ایمیل", href: `mailto:${contactInfo.email}` },
+  { icon: Send, label: "تلگرام", href: contactInfo.social.telegram },
+  { icon: InstagramIcon, label: "اینستاگرام", href: contactInfo.social.instagram },
 ];
 
 const services = [
@@ -89,9 +89,9 @@ export function Footer() {
                   <div>
                     <p className="text-sm font-medium text-text">ساعات کاری</p>
                     <p className="mt-1 text-xs text-text-muted">
-                      شنبه تا چهارشنبه ۹:۰۰ - ۱۸:۰۰
+                      {contactInfo.workingHours.weekdays}
                       <br />
-                      پنجشنبه ۹:۰۰ - ۱۴:۰۰
+                      {contactInfo.workingHours.thursday}
                     </p>
                   </div>
                 </div>
@@ -142,7 +142,7 @@ export function Footer() {
                   <div>
                     <p className="text-xs font-medium text-text">آدرس</p>
                     <p className="mt-1 text-sm text-text-muted leading-5">
-                      تهران، سعادت‌آباد، بلوار سعادت‌آباد، بالاتر از میدان کاج، برج مادر، پلاک ۱۳۳، طبقه ۱۰، واحد ۱۹
+                      {contactInfo.address}
                     </p>
                   </div>
                 </li>
@@ -152,12 +152,11 @@ export function Footer() {
                   </div>
                   <div>
                     <p className="text-xs font-medium text-text">تلفن</p>
-                    <a href="tel:+9821828701113" className="mt-1 block text-sm text-text-muted hover:text-accent-green">
-                      ۰۲۱-۸۲۸۰۹۵۱۵
-                    </a>
-                    <a href="tel:+982126746716" className="block text-sm text-text-muted hover:text-accent-green">
-                      ۰۲۱-۲۶۷۴۶۷۱۶
-                    </a>
+                    {contactInfo.phones.map((phone) => (
+                      <a key={phone} href={`tel:${phone.replace(/-/g, "")}`} className="mt-1 block text-sm text-text-muted hover:text-accent-green">
+                        {phone}
+                      </a>
+                    ))}
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
@@ -166,8 +165,8 @@ export function Footer() {
                   </div>
                   <div>
                     <p className="text-xs font-medium text-text">ایمیل</p>
-                    <a href="mailto:info@nikmohaseb.ir" className="mt-1 block text-sm text-text-muted hover:text-accent-green">
-                      info@nikmohaseb.ir
+                    <a href={`mailto:${contactInfo.email}`} className="mt-1 block text-sm text-text-muted hover:text-accent-green">
+                      {contactInfo.email}
                     </a>
                   </div>
                 </li>
