@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { ThemeToggle } from "@/components/theme/toggle";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const nav = [
   { label: "خلاصه وضعیت", href: "/dashboard", icon: LayoutDashboard },
@@ -103,7 +104,9 @@ export default function DashboardContent({ children }: { children: React.ReactNo
           </div>
         </header>
         <main className="flex-1 overflow-y-auto p-4">
-          <div className="mx-auto max-w-6xl">{children}</div>
+          <div className="mx-auto max-w-6xl">
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </div>
         </main>
       </div>
       {sidebarOpen && (

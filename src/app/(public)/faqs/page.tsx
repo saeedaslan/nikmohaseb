@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { HelpCircle, ChevronDown } from "lucide-react";
+import { HelpCircle } from "lucide-react";
 import { FaqAccordion } from "@/components/faq/faq-accordion";
 
 export const metadata = {
@@ -7,8 +7,7 @@ export const metadata = {
   description: "سؤالات متداول مالی و مالیاتی",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function FaqsPage() {
   const faqs = await prisma.faq.findMany({

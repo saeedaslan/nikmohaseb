@@ -4,8 +4,19 @@ import { prisma, TicketStatus } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
-export async function listAdminTickets() {
+export async function listAdminTickets(query?: string, statusFilter?: string) {
   return prisma.ticket.findMany({
+    where: {
+      ...(statusFilter ? { status: statusFilter as TicketStatus } : {}),
+      ...(query
+        ? {
+            OR: [
+              { subject: { contains: query } },
+              { id: { contains: query } },
+            ],
+          }
+        : {}),
+    },
     orderBy: { updatedAt: "desc" },
     include: {
       user: { select: { id: true, name: true, email: true } },

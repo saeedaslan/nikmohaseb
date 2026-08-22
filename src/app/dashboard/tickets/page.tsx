@@ -8,23 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { TicketFilters } from "@/components/dashboard/ticket-filters";
-
-export const metadata = {
-  title: "تیکت‌های من | نیک محاسب سرو",
-};
-
-const statusLabels: Record<string, string> = {
-  NEW: "جدید",
-  IN_PROGRESS: "در حال بررسی",
-  ANSWERED: "پاسخ‌داده شده",
-  CLOSED: "بسته‌شده",
-};
-const priorityLabels = {
-  NORMAL: "عادی",
-  HIGH: "مهم",
-  URGENT: "فوری",
-  CRITICAL: "حیاتی",
-};
+import { TICKET_STATUS_LABELS, TICKET_PRIORITY_LABELS } from "@/lib/constants";
 
 export default async function DashboardTicketsPage({
   searchParams,
@@ -37,7 +21,7 @@ export default async function DashboardTicketsPage({
 
   const where = {
     userId: user.id,
-    ...(statusFilter && statusFilter in statusLabels
+    ...(statusFilter && statusFilter in TICKET_STATUS_LABELS
       ? { status: statusFilter as Ticket["status"] }
       : {}),
     ...(query
@@ -101,10 +85,10 @@ export default async function DashboardTicketsPage({
                             : "success"
                       }
                     >
-                      {statusLabels[t.status] ?? t.status}
+                      {TICKET_STATUS_LABELS[t.status] ?? t.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>{priorityLabels[t.priority] ?? t.priority}</TableCell>
+                   <TableCell>{TICKET_PRIORITY_LABELS[t.priority] ?? t.priority}</TableCell>
                   <TableCell className="text-xs">
                     {toJalali(t.createdAt)}
                   </TableCell>

@@ -11,6 +11,8 @@ export const ALLOWED_MIME = [
   "application/pdf",
 ];
 
+export const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".pdf"];
+
 export const MAX_UPLOAD_SIZE = Number(process.env.MAX_UPLOAD_SIZE ?? 5 * 1024 * 1024);
 
 export interface SavedFile {
@@ -20,6 +22,21 @@ export interface SavedFile {
   url: string;
   mime: string;
   size: number;
+}
+
+function getSafeExtension(filename: string, mime: string): string {
+  const ext = extname(filename).toLowerCase();
+  if (ALLOWED_EXTENSIONS.includes(ext)) {
+    return ext;
+  }
+  const mimeToExt: Record<string, string> = {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/gif": ".gif",
+    "image/webp": ".webp",
+    "application/pdf": ".pdf",
+  };
+  return mimeToExt[mime] ?? ".bin";
 }
 
 export async function saveUploadedFile(file: File): Promise<SavedFile> {
@@ -34,7 +51,7 @@ export async function saveUploadedFile(file: File): Promise<SavedFile> {
   const absoluteDir = join(/* turbopackIgnore: true */ process.cwd(), uploadDir);
   await mkdir(absoluteDir, { recursive: true });
 
-  const ext = extname(file.name) || ".bin";
+  const ext = getSafeExtension(file.name, file.type);
   const id = randomUUID();
   const safeName = `${id}${ext}`;
   const filePath = join(/* turbopackIgnore: true */ absoluteDir, safeName);

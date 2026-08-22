@@ -4,27 +4,13 @@ import { toJalali } from "@/lib/jalali";
 import { Badge } from "@/components/ui/badge";
 import { ReplyForm } from "@/components/tickets/reply-form";
 import { TicketThread } from "@/components/tickets/ticket-thread";
-
-const priorityLabels: Record<string, string> = {
-  NORMAL: "عادی",
-  HIGH: "مهم",
-  URGENT: "فوری",
-  CRITICAL: "حیاتی",
-};
-
-const statusLabels: Record<string, string> = {
-  NEW: "جدید",
-  IN_PROGRESS: "در حال بررسی",
-  ANSWERED: "پاسخ‌داده شده",
-  CLOSED: "بسته‌شده",
-};
+import { TICKET_STATUS_LABELS, TICKET_PRIORITY_LABELS } from "@/lib/constants";
 
 export const metadata = {
   title: "جزئیات تیکت | نیک محاسب سرو",
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 30;
 
 export default async function TicketDetailPage({
   params,
@@ -44,7 +30,7 @@ export default async function TicketDetailPage({
           </h1>
           <div className="mt-1 flex items-center gap-2 text-xs text-text-muted">
             <Badge variant="default" className="text-xs">
-              {priorityLabels[ticket.priority] ?? ticket.priority}
+              {TICKET_PRIORITY_LABELS[ticket.priority] ?? ticket.priority}
             </Badge>
             <Badge
               variant={
@@ -55,7 +41,7 @@ export default async function TicketDetailPage({
                     : "success"
               }
             >
-              {statusLabels[ticket.status] ?? ticket.status}
+              {TICKET_STATUS_LABELS[ticket.status] ?? ticket.status}
             </Badge>
             <span>دسته: {ticket.category}</span>
             <span>ایجاد شده: {toJalali(ticket.createdAt)}</span>

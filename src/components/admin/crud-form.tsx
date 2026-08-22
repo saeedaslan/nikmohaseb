@@ -12,7 +12,6 @@ import { FileUpload, type UploadedFileMeta } from "@/components/ui/file-upload";
 import { useToast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import type { FieldValues } from "react-hook-form";
 
 export type AdminFieldType =
   | "text"
@@ -38,8 +37,8 @@ export interface AdminFormState {
   errors?: Record<string, string[]>;
 }
 
-interface AdminCrudFormProps<T extends FieldValues> {
-  schema: z.ZodType<T>;
+interface AdminCrudFormProps<T> {
+  schema: z.ZodTypeAny;
   fields: AdminField[];
   serverAction: (fd: FormData) => Promise<AdminFormState>;
   initialData?: Partial<T> & { id?: string };
@@ -47,36 +46,43 @@ interface AdminCrudFormProps<T extends FieldValues> {
 }
 
 interface RenderCtx {
-  setValue: any;
   fileStates: Record<string, UploadedFileMeta[]>;
   setFileStates: React.Dispatch<React.SetStateAction<Record<string, UploadedFileMeta[]>>>;
 }
 
-function renderField(f: AdminField, field: any, ctx: RenderCtx) {
-  const { setValue, fileStates, setFileStates } = ctx;
+function renderField(f: AdminField, field: { value?: unknown; onChange?: (value: unknown) => void; name: string }, ctx: RenderCtx) {
+  const { fileStates, setFileStates } = ctx;
+  const fieldValue = field.value ?? "";
+  const fieldOnChange = field.onChange ?? (() => {});
+  const baseProps = {
+    value: fieldValue as string | number | readonly string[] | undefined,
+    onChange: fieldOnChange,
+    name: field.name,
+  };
+
   switch (f.type) {
     case "textarea":
-      return <Textarea {...field} placeholder={f.description} rows={4} />;
+      return <Textarea {...baseProps} placeholder={f.description} rows={4} />;
     case "number":
       return (
         <Input
-          {...field}
+          {...baseProps}
           type="number"
-          onChange={(e) => field.onChange(Number(e.target.value))}
+          onChange={(e) => fieldOnChange(Number(e.target.value))}
         />
       );
     case "checkbox":
       return (
         <Checkbox
-          checked={!!field.value}
-          onChange={(e) => field.onChange(e.target.checked)}
+          checked={!!fieldValue}
+          onChange={(e) => fieldOnChange(e.target.checked)}
         />
       );
     case "select":
       return (
         <select
-          value={field.value ?? ""}
-          onChange={(e) => field.onChange(e.target.value)}
+          value={String(fieldValue)}
+          onChange={(e) => fieldOnChange(e.target.value)}
           className="flex h-11 w-full rounded-md border border-border bg-surface-card px-3 py-2 text-sm text-text focus:border-accent-green focus:outline-none focus:ring-1 focus:ring-accent-green"
         >
           <option value="" disabled>
@@ -96,7 +102,7 @@ function renderField(f: AdminField, field: any, ctx: RenderCtx) {
           <input
             type="hidden"
             name={field.name}
-            value={field.value ?? ""}
+            value={String(fieldValue)}
           />
           <FileUpload
             value={arr}
@@ -110,21 +116,21 @@ function renderField(f: AdminField, field: any, ctx: RenderCtx) {
     case "html":
       return (
         <Textarea
-          {...field}
+          {...baseProps}
           placeholder={f.description}
           rows={8}
           className="font-mono text-sm"
         />
       );
     case "date":
-      return <Input type="date" {...field} />;
+      return <Input type="date" {...baseProps} />;
     case "text":
     default:
-      return <Input {...field} placeholder={f.description} />;
+      return <Input {...baseProps} placeholder={f.description} />;
   }
 }
 
-export function AdminCrudForm<T extends FieldValues>({
+export function AdminCrudForm<T>({
   schema,
   fields,
   serverAction,
@@ -138,12 +144,13 @@ export function AdminCrudForm<T extends FieldValues>({
   const [fileStates, setFileStates] = useState<Record<string, UploadedFileMeta[]>>(() => {
     const init: Record<string, UploadedFileMeta[]> = {};
     for (const f of fields) {
-      if (f.type === "image" && (initialData as any)?.[f.name]) {
+      if (f.type === "image" && initialData && f.name in initialData) {
+        const val = String((initialData as Record<string, unknown>)[f.name]);
         init[f.name] = [
           {
-            url: String((initialData as any)[f.name]),
-            filename: String((initialData as any)[f.name]),
-            originalName: String((initialData as any)[f.name]),
+            url: val,
+            filename: val,
+            originalName: val,
             mime: "image/jpeg",
             size: 0,
           },
@@ -153,10 +160,11 @@ export function AdminCrudForm<T extends FieldValues>({
     return init;
   });
 
-  let defaults: any = initialData ?? ({} as any);
+  const rawDefaults = initialData ?? ({} as Partial<T>);
+  const defaults: Record<string, unknown> = { ...rawDefaults };
   for (const f of fields) {
-    if (f.type === "date" && defaults && defaults[f.name] instanceof Date) {
-      defaults = { ...defaults, [f.name]: defaults[f.name].toISOString().split("T")[0] };
+    if (f.type === "date" && defaults[f.name] instanceof Date) {
+      defaults[f.name] = (defaults[f.name] as Date).toISOString().split("T")[0];
     }
   }
 
@@ -165,9 +173,9 @@ export function AdminCrudForm<T extends FieldValues>({
     handleSubmit,
     setValue,
     setError,
-  } = useForm<T>({
-    resolver: zodResolver(schema),
-    defaultValues: defaults ?? ({} as T),
+  } = useForm({
+    resolver: zodResolver(schema) as never,
+    defaultValues: defaults,
   });
 
   useEffect(() => {
@@ -175,16 +183,16 @@ export function AdminCrudForm<T extends FieldValues>({
       if (f.type === "image") {
         const filesFor = fileStates[f.name] ?? [];
         if (filesFor.length > 0) {
-          setValue(f.name as any, filesFor[0].url as any);
+          setValue(f.name, filesFor[0].url);
         }
       }
     }
-  }, [fileStates]);
+  }, [fileStates, setValue, fields]);
 
-  const onSubmit = async (data: T) => {
+  const onSubmit = async (data: Record<string, unknown>) => {
     const fd = new FormData();
     for (const f of fields) {
-      const val = (data as any)[f.name];
+      const val = data[f.name];
       if (val === undefined || val === null) continue;
       fd.append(f.name, typeof val === "boolean" ? String(val) : String(val));
     }
@@ -206,7 +214,7 @@ export function AdminCrudForm<T extends FieldValues>({
     } else if (result?.errors) {
       const entries = Object.entries(result.errors);
       for (const [k, msgs] of entries) {
-        if (msgs?.[0]) setError(k as any, { type: "server", message: msgs[0] });
+        if (msgs?.[0]) setError(k, { type: "server", message: msgs[0] });
       }
     }
   };
@@ -217,13 +225,12 @@ export function AdminCrudForm<T extends FieldValues>({
         {fields.map((f) => (
           <FormField
             key={f.name}
-            control={control}
-            name={f.name as any}
+            control={control as never}
+            name={f.name}
             label={f.label}
             description={f.description}
-          render={({ field, fieldState: { error } }) =>
-              renderField(f, field, {
-                setValue,
+            render={({ field }) =>
+              renderField(f, field as { value?: unknown; onChange?: (value: unknown) => void; name: string }, {
                 fileStates,
                 setFileStates,
               })

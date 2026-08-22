@@ -7,6 +7,7 @@ import { TicketStatusSelect } from "@/components/admin/ticket-status-select";
 import { TicketThread } from "@/components/tickets/ticket-thread";
 import { AdminReplyForm } from "@/components/tickets/admin-reply-form";
 import { getCurrentUser } from "@/lib/auth";
+import { TICKET_PRIORITY_LABELS } from "@/lib/constants";
 
 export const metadata = {
   title: "جزئیات تیکت | ادمین | نیک محاسب سرو",
@@ -31,7 +32,7 @@ export default async function AdminTicketDetailPage({
             {ticket.subject}
           </h1>
           <div className="mt-1 flex items-center gap-2 text-xs text-text-muted">
-            <Badge variant="default">{ticket.priority}</Badge>
+             <Badge variant="default">{TICKET_PRIORITY_LABELS[ticket.priority] ?? ticket.priority}</Badge>
             <TicketStatusSelect ticketId={ticket.id} current={ticket.status} />
             <span>{" دسته: " + ticket.category}</span>
             <span>ایجاد شده: {toJalali(ticket.createdAt)}</span>

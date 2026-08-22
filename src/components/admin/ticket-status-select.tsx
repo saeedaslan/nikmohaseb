@@ -1,13 +1,7 @@
 "use client";
 
 import { updateTicketStatus } from "@/lib/actions/admin-tickets";
-
-const statusLabels = {
-  NEW: "جدید",
-  IN_PROGRESS: "در حال بررسی",
-  ANSWERED: "پاسخ‌داده شده",
-  CLOSED: "بسته‌شده",
-};
+import { TICKET_STATUS_LABELS } from "@/lib/constants";
 
 export function TicketStatusSelect({
   ticketId,
@@ -26,7 +20,7 @@ export function TicketStatusSelect({
       onChange={handleChange}
       className="rounded-md border border-border bg-surface-card px-2 py-1 text-sm text-text"
     >
-      {Object.entries(statusLabels).map(([v, label]) => (
+      {Object.entries(TICKET_STATUS_LABELS).map(([v, label]) => (
         <option key={v} value={v}>
           {label}
         </option>

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { toJalali } from "@/lib/jalali";
 import { TicketStatusSelect } from "@/components/admin/ticket-status-select";
 import { TicketFilters } from "@/components/dashboard/ticket-filters";
+import { TICKET_PRIORITY_LABELS } from "@/lib/constants";
 
 export const metadata = {
   title: "تیکت‌ها | ادمین | نیک محاسب سرو",
@@ -23,14 +24,7 @@ export default async function AdminTicketsPage({
   searchParams: Promise<{ q?: string; status?: string }>;
 }) {
   const { q: query, status: statusFilter } = await searchParams;
-  const tickets = await listAdminTickets();
-
-  const filtered = tickets.filter((t) => {
-    const matchesQuery =
-      !query || t.subject.includes(query) || t.id.includes(query);
-    const matchesStatus = !statusFilter || t.status === statusFilter;
-    return matchesQuery && matchesStatus;
-  });
+  const tickets = await listAdminTickets(query, statusFilter);
 
   return (
     <div className="space-y-4">
@@ -39,7 +33,7 @@ export default async function AdminTicketsPage({
         <TicketFilters query={query} statusFilter={statusFilter} />
       </div>
 
-      {filtered.length === 0 ? (
+      {tickets.length === 0 ? (
         <p className="py-8 text-center text-text-muted">تیکتی یافت نشد.</p>
       ) : (
         <div className="overflow-x-auto rounded-md border border-border">
@@ -55,7 +49,7 @@ export default async function AdminTicketsPage({
               </tr>
             </TableHeader>
             <TableBody>
-              {filtered.map((t) => (
+              {tickets.map((t) => (
                 <TableRow key={t.id}>
                   <TableCell>
                     <Link
@@ -69,7 +63,7 @@ export default async function AdminTicketsPage({
                   <TableCell>
                     <TicketStatusSelect ticketId={t.id} current={t.status} />
                   </TableCell>
-                  <TableCell>{t.priority}</TableCell>
+                   <TableCell>{TICKET_PRIORITY_LABELS[t.priority] ?? t.priority}</TableCell>
                   <TableCell className="text-xs">
                     {toJalali(t.updatedAt)}
                   </TableCell>

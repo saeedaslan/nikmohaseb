@@ -7,14 +7,12 @@ import { forgotPasswordSchema, type ForgotPasswordInput } from "@/lib/validation
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
-import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
 export default function ForgotPasswordForm() {
-  const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const { control, handleSubmit } = useForm<ForgotPasswordInput>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -27,10 +25,23 @@ export default function ForgotPasswordForm() {
     fd.append("email", data.email);
     const result = await forgotPassword(null, fd);
     setSubmitting(false);
-    if (result?.ok && result.token) {
-      router.push(`/reset-password?token=${result.token}`);
+    if (result?.ok) {
+      setSent(true);
     }
   };
+
+  if (sent) {
+    return (
+      <div className="rounded-md border border-accent-green/30 bg-accent-green/5 p-4 text-center">
+        <p className="text-sm text-accent-green">
+          اگر ایمیل شما در سیستم ثبت باشد، لینک بازنشانی ارسال خواهد شد.
+        </p>
+        <Link href="/login" className="mt-3 inline-block text-sm text-accent-green hover:underline">
+          بازگشت به ورود
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

@@ -5,21 +5,41 @@ import { ticketCreateSchema, ticketReplySchema } from "@/lib/validations/admin";
 import { requireUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
+interface AttachmentInput {
+  filename: string;
+  originalName: string;
+  url: string;
+  mime: string;
+  size: number;
+}
+
+function parseAttachments(raw: unknown): AttachmentInput[] {
+  if (typeof raw !== "string" || !raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (a): a is AttachmentInput =>
+        typeof a === "object" &&
+        a !== null &&
+        typeof a.filename === "string" &&
+        typeof a.originalName === "string" &&
+        typeof a.url === "string" &&
+        typeof a.mime === "string" &&
+        typeof a.size === "number"
+    );
+  } catch {
+    return [];
+  }
+}
+
 export async function createTicket(
   prevState: unknown,
   formData: FormData,
 ): Promise<{ ok?: boolean; error?: string; errors?: Record<string, string[]> }> {
   const user = await requireUser();
 
-  const attachmentsRaw = formData.get("attachments");
-  let attachments: unknown[] = [];
-  if (typeof attachmentsRaw === "string" && attachmentsRaw) {
-    try {
-      attachments = JSON.parse(attachmentsRaw);
-    } catch {
-      attachments = [];
-    }
-  }
+  const attachments = parseAttachments(formData.get("attachments"));
 
   const parsed = ticketCreateSchema.safeParse({
     subject: formData.get("subject"),
@@ -35,15 +55,12 @@ export async function createTicket(
 
   const data = parsed.data;
 
-  const attachmentsParsed = (attachments as unknown[]).map((f) => {
-    const a = f as { filename: string; originalName: string; url: string; mime: string; size: number };
-    return {
-      filename: a.originalName ?? a.filename,
-      path: a.url,
-      mime: a.mime,
-      size: a.size,
-    };
-  });
+  const attachmentsParsed = attachments.map((a) => ({
+    filename: a.originalName ?? a.filename,
+    path: a.url,
+    mime: a.mime,
+    size: a.size,
+  }));
 
   try {
     const ticket = await prisma.ticket.create({
@@ -65,7 +82,8 @@ export async function createTicket(
         },
       },
     });
-  } catch {
+  } catch (error) {
+    console.error("Ticket creation error:", error);
     return { error: "خطا در ثبت تیکت." };
   }
 

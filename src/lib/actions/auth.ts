@@ -9,11 +9,12 @@ import {
 } from "@/lib/validations/auth";
 import { Role } from "@/lib/prisma";
 import { randomBytes } from "crypto";
+import type { ActionResult } from "@/lib/constants";
 
 export async function register(
   prevState: unknown,
   formData: FormData,
-): Promise<{ ok?: boolean; error?: string }> {
+): Promise<ActionResult> {
   const parsed = registerSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
@@ -23,7 +24,7 @@ export async function register(
   });
 
   if (!parsed.success) {
-    return { error: "اطلاعات وارد شده نامعتبر است." };
+    return { ok: false, error: "اطلاعات وارد شده نامعتبر است." };
   }
 
   const { name, email, phone, password } = parsed.data;
@@ -33,7 +34,7 @@ export async function register(
       where: { OR: [{ email: email || undefined }, { phone }] },
     });
     if (existing) {
-      return { error: "کاربر با این ایمیل یا موبایل قبلاً ثبت شده است." };
+      return { ok: false, error: "کاربر با این ایمیل یا موبایل قبلاً ثبت شده است." };
     }
 
     const hashed = await hashPassword(password);
@@ -47,7 +48,7 @@ export async function register(
       },
     });
   } catch {
-    return { error: "خطا در ثبت‌نام. دوباره سعی کنید." };
+    return { ok: false, error: "خطا در ثبت‌نام. دوباره سعی کنید." };
   }
 
   return { ok: true };
@@ -56,37 +57,34 @@ export async function register(
 export async function forgotPassword(
   prevState: unknown,
   formData: FormData,
-): Promise<{ ok?: boolean; error?: string; token?: string }> {
+): Promise<ActionResult> {
   const parsed = forgotPasswordSchema.safeParse({
     email: formData.get("email"),
   });
 
   if (!parsed.success) {
-    return { error: "ایمیل نامعتبر است." };
+    return { ok: false, error: "ایمیل نامعتبر است." };
   }
 
   const user = await prisma.user.findUnique({
     where: { email: parsed.data.email },
   });
 
-  // NOTE: In production, send the reset link via email and do NOT return the
-  // token here. The token is returned only for local development without SMTP.
-  let token: string | undefined;
   if (user) {
-    token = randomBytes(32).toString("hex");
+    const token = randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
     await prisma.resetToken.create({
       data: { token, userId: user.id, expiresAt },
     });
   }
 
-  return { ok: true, token };
+  return { ok: true };
 }
 
 export async function resetPassword(
   prevState: unknown,
   formData: FormData,
-): Promise<{ ok?: boolean; error?: string }> {
+): Promise<ActionResult> {
   const token = formData.get("token")?.toString();
   const parsed = resetPasswordSchema.safeParse({
     password: formData.get("password"),
@@ -95,10 +93,10 @@ export async function resetPassword(
 
   if (!parsed.success) {
     const errors = parsed.error.flatten().fieldErrors;
-    return { error: errors.password?.[0] ?? "رمز عبور نامعتبر است." };
+    return { ok: false, error: errors.password?.[0] ?? "رمز عبور نامعتبر است." };
   }
 
-  if (!token) return { error: "توکن نامعتبر است." };
+  if (!token) return { ok: false, error: "توکن نامعتبر است." };
 
   const reset = await prisma.resetToken.findUnique({
     where: { token },
@@ -106,7 +104,7 @@ export async function resetPassword(
   });
 
   if (!reset || reset.expiresAt < new Date()) {
-    return { error: "توکن منقضی یا نامعتبر است." };
+    return { ok: false, error: "توکن منقضی یا نامعتبر است." };
   }
 
   try {
@@ -117,7 +115,7 @@ export async function resetPassword(
     });
     await prisma.resetToken.deleteMany({ where: { token } });
   } catch {
-    return { error: "خطا در بازنشانی رمز عبور." };
+    return { ok: false, error: "خطا در بازنشانی رمز عبور." };
   }
 
   return { ok: true };

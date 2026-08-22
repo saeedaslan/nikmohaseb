@@ -14,11 +14,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 FROM base AS deps
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev --prefer-offline
 
 FROM base AS builder
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --prefer-offline
 COPY . .
 
 # Download external images used in seed data so they work at runtime
@@ -27,7 +29,8 @@ COPY . .
 RUN mkdir -p /app/public/images/articles
 
 ENV DATABASE_URL="postgresql://placeholder:placeholder@db:5432/db"
-ENV NEXTAUTH_URL="https://amlakaslani.ir"
+ARG NEXTAUTH_URL
+ENV NEXTAUTH_URL=${NEXTAUTH_URL:-https://nikmohaseb.com}
 RUN npx prisma generate --schema prisma/schema.prisma
 RUN npm run build
 
