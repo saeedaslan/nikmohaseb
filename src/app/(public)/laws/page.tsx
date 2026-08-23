@@ -5,10 +5,14 @@ import { toJalali } from "@/lib/jalali";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { Download, FileText } from "lucide-react";
+import { domains } from "@/lib/nav";
 
 export const metadata = {
-  title: "قوانین | نیک محاسب سرو",
-  description: "قوانین مالی و مالیاتی",
+  title: "قوانین مالی و مالیاتی",
+  description: "جدیدترین قوانین مالیاتی، ارزش افزوده و مالیات مستقیم. اطلاعیه‌های رسمی و تشریحات کاربردی",
+  alternates: {
+    canonical: `${domains.primary}/laws`,
+  },
 };
 
 const PAGE_SIZE = 12;

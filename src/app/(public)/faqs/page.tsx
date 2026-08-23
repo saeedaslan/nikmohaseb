@@ -1,10 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import { HelpCircle } from "lucide-react";
 import { FaqAccordion } from "@/components/faq/faq-accordion";
+import { FAQSchema } from "@/components/structured-data";
+import { domains } from "@/lib/nav";
 
 export const metadata = {
-  title: "سؤالات متداول | نیک محاسب سرو",
-  description: "سؤالات متداول مالی و مالیاتی",
+  title: "سؤالات متداول",
+  description: "پاسخ به سؤالات متداول درباره مشاوره مالی، مالیاتی، حسابداری و ثبت شرکت. راهنمای کامل برای کسب‌وکارها.",
+  alternates: {
+    canonical: `${domains.primary}/faqs`,
+  },
 };
 
 export const revalidate = 60;
@@ -15,8 +20,14 @@ export default async function FaqsPage() {
     orderBy: [{ order: "asc" }, { createdAt: "desc" }],
   });
 
+  const faqSchemaData = faqs.map((f) => ({
+    question: f.question,
+    answer: f.answer,
+  }));
+
   return (
     <section className="py-12">
+      <FAQSchema faqs={faqSchemaData} />
       <div className="container mx-auto px-4">
         <div className="mb-8 text-center">
           <div className="mb-3 flex items-center justify-center gap-2">

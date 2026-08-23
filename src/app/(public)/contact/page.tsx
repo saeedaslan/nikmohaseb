@@ -4,11 +4,14 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MapPin, Mail, Phone } from "lucide-react";
-import { contactInfo } from "@/lib/nav";
+import { contactInfo, domains } from "@/lib/nav";
 
 export const metadata = {
-  title: "تماس با ما | نیک محاسب سرو",
-  description: "تماس با شرکت نیک محاسب سرو",
+  title: "تماس با ما",
+  description: "تماس با نیک مشاسب سرو - آدرس، تلفن و فرم درخواست مشاوره",
+  alternates: {
+    canonical: `${domains.primary}/contact`,
+  },
 };
 
 export default async function ContactPage() {

@@ -5,10 +5,14 @@ import { toJalali } from "@/lib/jalali";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { Download } from "lucide-react";
+import { domains } from "@/lib/nav";
 
 export const metadata = {
-  title: "بخشنامه‌ها | نیک محاسب سرو",
-  description: "بخشنامه‌های مالی و مالیاتی",
+  title: "بخشنامه‌های مالیاتی",
+  description: "جدیدترین بخشنامه‌های سازمان مالیاتی، توضیحات و دستورالعمل‌های اجرایی",
+  alternates: {
+    canonical: `${domains.primary}/circulars`,
+  },
 };
 
 const PAGE_SIZE = 12;

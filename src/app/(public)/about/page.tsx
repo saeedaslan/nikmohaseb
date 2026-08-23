@@ -1,8 +1,12 @@
 import { Card } from "@/components/ui/card";
+import { domains } from "@/lib/nav";
 
 export const metadata = {
-  title: "درباره ما | نیک محاسب سرو",
-  description: "درباره شرکت نیک محاسب سرو",
+  title: "درباره ما",
+  description: "درباره نیک محاسب سرو - تیم متخصص حسابداری، مالیاتی و مشاوره مالی",
+  alternates: {
+    canonical: `${domains.primary}/about`,
+  },
 };
 
 export default function AboutPage() {

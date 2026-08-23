@@ -5,14 +5,37 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, User } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
+import { ArticleSchema } from "@/components/structured-data";
+import { domains } from "@/lib/nav";
 
-export const metadata = {
-  title: "مقاله | نیک محاسب سرو",
-  description: "جزئیات مقاله",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await prisma.article.findUnique({
+    where: { slug: decodeURIComponent(slug), published: true },
+    select: { title: true, summary: true, slug: true },
+  });
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+  if (!article) return {};
+
+  return {
+    title: article.title,
+    description: article.summary || `مقاله ${article.title} - نیک محاسب سرو`,
+    alternates: {
+      canonical: `${domains.primary}/articles/${article.slug}`,
+    },
+    openGraph: {
+      title: article.title,
+      description: article.summary || undefined,
+      type: "article",
+      url: `${domains.primary}/articles/${article.slug}`,
+    },
+  };
+}
 
 export default async function ArticlePage({
   params,
@@ -29,6 +52,15 @@ export default async function ArticlePage({
 
   return (
     <article className="py-8">
+      <ArticleSchema
+        title={article.title}
+        description={article.summary || article.title}
+        image={article.image || undefined}
+        datePublished={article.publishedAt || article.createdAt}
+        dateModified={article.updatedAt}
+        author={article.author?.name || undefined}
+        slug={article.slug}
+      />
       <div className="container mx-auto max-w-4xl px-4">
         <Link
           href="/articles"

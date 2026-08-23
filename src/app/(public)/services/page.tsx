@@ -1,10 +1,15 @@
 import { getPublishedServices } from "@/lib/queries";
 import { ServiceCard } from "@/components/public/service-card";
 import { Briefcase } from "lucide-react";
+import { domains } from "@/lib/nav";
 
 export const metadata = {
-  title: "خدمات | نیک محاسب سرو",
-  description: "لیست خدمات حسابداری، مالی و مالیاتی نیک محاسب سرو",
+  title: "خدمات حسابداری و مالیاتی",
+  description: "لیست خدمات تخصصی حسابداری، مالیاتی، مشاوره مالی و ثبت شرکت در تهران",
+  alternates: {
+    canonical: `${domains.primary}/services`,
+    languages: { "fa-IR": `${domains.primary}/services` },
+  },
 };
 
 export default async function ServicesPage() {

@@ -4,11 +4,36 @@ import { toJalali } from "@/lib/jalali";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Calendar, HelpCircle } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
+import { domains } from "@/lib/nav";
 
-export const metadata = {
-  title: "جزئیات سؤال متداول | نیک محاسب سرو",
-  description: "جزئیات سؤال متداول",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const faq = await prisma.faq.findUnique({
+    where: { slug: decodeURIComponent(slug), published: true },
+    select: { question: true, answer: true, slug: true },
+  });
+
+  if (!faq) return {};
+
+  return {
+    title: faq.question,
+    description: faq.answer?.slice(0, 160) || faq.question,
+    alternates: {
+      canonical: `${domains.primary}/faqs/${faq.slug}`,
+    },
+    openGraph: {
+      title: faq.question,
+      description: faq.answer?.slice(0, 160) || undefined,
+      type: "article",
+      url: `${domains.primary}/faqs/${faq.slug}`,
+    },
+  };
+}
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

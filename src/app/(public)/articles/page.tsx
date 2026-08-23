@@ -4,10 +4,14 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 import { toJalali } from "@/lib/jalali";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
+import { domains } from "@/lib/nav";
 
 export const metadata = {
-  title: "مقالات | نیک محاسب سرو",
-  description: "مقالات حسابداری، مالی و مالیاتی نیک محاسب سرو",
+  title: "مقالات مالی و مالیاتی",
+  description: "مقالات تخصصی حسابداری، مالیاتی، مشاوره مالی و حقوق دستمزد. راهنمای‌های کاربردی برای کسب‌وکارها",
+  alternates: {
+    canonical: `${domains.primary}/articles`,
+  },
 };
 
 const PAGE_SIZE = 9;

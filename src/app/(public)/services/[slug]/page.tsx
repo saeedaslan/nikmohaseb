@@ -4,23 +4,52 @@ import { getServiceBySlug } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
+import { ServiceSchema } from "@/components/structured-data";
+import { domains } from "@/lib/nav";
 
-export const metadata = {
-  title: "جزئیات خدمت | نیک محاسب سرو",
-  description: "جزئیات خدمات حسابداری و مالیاتی",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const service = await prisma.service.findUnique({
+    where: { slug: decodeURIComponent(slug), published: true },
+    select: { title: true, summary: true, slug: true },
+  });
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+  if (!service) return {};
+
+  return {
+    title: service.title,
+    description: service.summary || `خدمات ${service.title} - نیک محاسب سرو`,
+    alternates: {
+      canonical: `${domains.primary}/services/${service.slug}`,
+    },
+    openGraph: {
+      title: service.title,
+      description: service.summary || undefined,
+      type: "website",
+      url: `${domains.primary}/services/${service.slug}`,
+    },
+  };
+}
 
 export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const service = await getServiceBySlug(decodeURIComponent(slug));
 
-  if (!service) notFound();
+  if (!service || !service.published) notFound();
 
   return (
     <article className="py-12">
+      <ServiceSchema
+        name={service.title}
+        description={service.summary || `خدمات ${service.title}`}
+        image={service.image || undefined}
+        slug={service.slug}
+      />
       <div className="container mx-auto max-w-4xl px-4">
         <Link
           href="/services"

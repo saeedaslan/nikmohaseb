@@ -10,11 +10,15 @@ import { CTASection } from "@/components/public/cta-section";
 import { ArticlesSection } from "@/components/public/articles-section";
 import { CircularsSection } from "@/components/public/circulars-section";
 import { LawsSection } from "@/components/public/laws-section";
+import { domains } from "@/lib/nav";
 
 export const metadata = {
-  title: "نیک محاسب سرو | همراه مطمئن شما در امور مالی و مالیاتی",
+  title: "همراه مطمئن شما در امور مالی و مالیاتی",
   description:
     "نیک محاسب سرو ارائه‌دهنده خدمات تخصصی حسابداری، مالی، مالیاتی، مشاوره مالی و ثبت شرکت در تهران.",
+  alternates: {
+    canonical: domains.primary,
+  },
 };
 
 export default async function HomePage() {

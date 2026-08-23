@@ -5,11 +5,36 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Download, ArrowLeft, Calendar } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
+import { domains } from "@/lib/nav";
 
-export const metadata = {
-  title: "جزئیات بخشنامه | نیک محاسب سرو",
-  description: "جزئیات بخشنامه",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const circular = await prisma.circular.findUnique({
+    where: { slug: decodeURIComponent(slug), published: true },
+    select: { title: true, summary: true, slug: true },
+  });
+
+  if (!circular) return {};
+
+  return {
+    title: circular.title,
+    description: circular.summary || `جزئیات بخشنامه ${circular.title}`,
+    alternates: {
+      canonical: `${domains.primary}/circulars/${circular.slug}`,
+    },
+    openGraph: {
+      title: circular.title,
+      description: circular.summary || undefined,
+      type: "article",
+      url: `${domains.primary}/circulars/${circular.slug}`,
+    },
+  };
+}
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

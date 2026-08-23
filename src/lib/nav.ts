@@ -18,6 +18,14 @@ export const companyName = "نیک محاسب سرو";
 export const companyDescription =
   "همراه مطمئن شما در امور مالی و مالیاتی";
 
+export const domains = {
+  primary: "https://nikmohaseb.ir",
+  secondary: "https://nikmohaseb.com",
+  get all() {
+    return [this.primary, this.secondary];
+  },
+};
+
 export const contactInfo = {
   address: "تهران، سعادت‌آباد، بلوار سعادت‌آباد، بالاتر از میدان کاج، برج مادر، پلاک ۱۳۳، طبقه ۱۰، واحد ۱۹",
   phones: ["۰۲۱-۸۲۸۰۹۵۱۵", "۰۲۱-۲۶۷۴۶۷۱۶"],
