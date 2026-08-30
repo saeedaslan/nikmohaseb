@@ -31,6 +31,7 @@ export function CircularForm({
       type: "select",
       options: [{ value: "", label: "بدون دسته" }, ...categories],
     },
+    { name: "image", label: "تصویر شاخص", type: "image" },
     { name: "summary", label: "خلاصه", type: "textarea", description: "خلاصه کوتاه" },
     { name: "content", label: "محتوا (HTML)", type: "html", description: "متن کامل بخشنامه" },
     { name: "published", label: "منتشر شود", type: "checkbox" },

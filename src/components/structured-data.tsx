@@ -191,3 +191,33 @@ export function ServiceSchema({
     />
   );
 }
+
+export function GovernmentServiceSchema({
+  title,
+  datePublished,
+  issuer,
+  number,
+  slug,
+}: {
+  title: string;
+  datePublished: Date;
+  issuer?: string;
+  number?: string;
+  slug: string;
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "GovernmentService",
+    name: title,
+    datePublished: datePublished.toISOString(),
+    areaServed: { "@type": "Country", name: "Iran" },
+    url: `${domains.primary}/circulars/${slug}`,
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}

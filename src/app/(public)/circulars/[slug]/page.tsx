@@ -7,6 +7,7 @@ import { Download, ArrowLeft, Calendar } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { domains } from "@/lib/nav";
+import { BreadcrumbSchema, GovernmentServiceSchema } from "@/components/structured-data";
 
 export async function generateMetadata({
   params,
@@ -54,6 +55,18 @@ export default async function CircularPage({
 
   return (
     <article className="py-12">
+      <GovernmentServiceSchema
+        title={circular.title}
+        datePublished={circular.date ?? circular.createdAt}
+        issuer={circular.issuer || undefined}
+        number={circular.number || undefined}
+        slug={circular.slug}
+      />
+      <BreadcrumbSchema items={[
+        { name: "خانه", href: "/" },
+        { name: "بخشنامه‌ها", href: "/circulars" },
+        { name: circular.title, href: `/circulars/${circular.slug}` },
+      ]} />
       <div className="container mx-auto max-w-4xl px-4">
         <Link
           href="/circulars"

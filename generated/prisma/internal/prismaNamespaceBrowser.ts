@@ -169,6 +169,7 @@ export const CircularScalarFieldEnum = {
   issuer: 'issuer',
   summary: 'summary',
   content: 'content',
+  image: 'image',
   file: 'file',
   published: 'published',
   publishedAt: 'publishedAt',

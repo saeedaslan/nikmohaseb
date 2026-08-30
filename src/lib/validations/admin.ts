@@ -61,6 +61,7 @@ export const circularSchema = z.object({
   issuer: z.string().optional(),
   summary: z.string().optional(),
   content: z.string().optional(),
+  image: z.string().optional(),
   file: z.string().optional(),
   published: z.boolean().optional(),
   publishedAt: z.coerce.date().optional(),
