@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 import { toJalali } from "@/lib/jalali";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
-import { Download, Search } from "lucide-react";
+import { Download, Search, FileText, AlertCircle } from "lucide-react";
 import { domains } from "@/lib/nav";
 
 export const metadata = {
@@ -22,49 +22,140 @@ export default async function CircularsPage({
 }: {
   searchParams: Promise<{ page?: string; q?: string; category?: string }>;
 }) {
-    const { page, q, category } = await searchParams;
-    const current = Math.max(1, Number(page ?? 1));
-    const skip = (current - 1) * PAGE_SIZE;
+  const { page, q, category } = await searchParams;
+  const current = Math.max(1, Number(page ?? 1));
+  const skip = (current - 1) * PAGE_SIZE;
 
-    const where: any = { published: true };
-    if (q) {
-      where.OR = [
-        { title: { contains: q, mode: "insensitive" } },
-        { summary: { contains: q, mode: "insensitive" } },
-        { number: { contains: q, mode: "insensitive" } },
-      ];
-    }
-    if (category) {
-      where.categoryId = category;
-    }
+  const where: any = { published: true };
+  if (q) {
+    where.OR = [
+      { title: { contains: q, mode: "insensitive" } },
+      { summary: { contains: q, mode: "insensitive" } },
+      { number: { contains: q, mode: "insensitive" } },
+    ];
+  }
+  if (category) {
+    where.categoryId = category;
+  }
 
-    const [circulars, total, categories] = await Promise.all([
-      prisma.circular.findMany({
-        where,
-        orderBy: { date: "desc" },
-        include: { category: true },
-        skip,
-        take: PAGE_SIZE,
-      }),
-      prisma.circular.count({ where }),
-      prisma.category.findMany({
-        where: { type: "CIRCULAR" },
-        orderBy: { name: "asc" },
-      }),
-    ]);
+  const [circulars, total, categories] = await Promise.all([
+    prisma.circular.findMany({
+      where,
+      orderBy: { date: "desc" },
+      include: { category: true },
+      skip,
+      take: PAGE_SIZE,
+    }),
+    prisma.circular.count({ where }),
+    prisma.category.findMany({
+      where: { type: "CIRCULAR" },
+      orderBy: { name: "asc" },
+    }),
+  ]);
 
-    const pages = Math.ceil(total / PAGE_SIZE);
+  const pages = Math.ceil(total / PAGE_SIZE);
 
-    return (
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold text-primary-navy">بخشنامه‌ها</h1>
-            <p className="mt-3 text-sm text-text-muted">
-              بخشنامه‌های مالی، مالیاتی و حسابداری
-            </p>
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary-navy via-primary-navy to-accent-yellow py-16 lg:py-24">
+        {/* Animated Blobs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-accent-yellow/20 blur-3xl animate-float" />
+          <div className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-accent-green/20 blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+        </div>
+        
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 grid-pattern opacity-20" />
+        
+        <div className="relative z-10 container mx-auto max-w-6xl px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm mb-6">
+            <FileText className="h-4 w-4 text-accent-green" />
+            <span className="text-sm text-white/90">به‌روز باشید</span>
           </div>
+          <h1 className="text-4xl font-extrabold text-white lg:text-5xl">
+            بخشنامه‌های مالیاتی
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
+            جدیدترین بخشنامه‌های صادر شده توسط سازمان مالیاتی ایران
+          </p>
+        </div>
+      </div>
 
+      {/* Info Card */}
+      <div className="relative -mt-12 pb-12">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg">
+            <div className="flex items-start gap-4">
+              <div className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-accent-yellow/20">
+                <AlertCircle className="h-6 w-6 text-accent-yellow" />
+              </div>
+              <div>
+                <h3 className="mb-2 font-bold text-primary-navy">درباره بخشنامه‌ها</h3>
+                <p className="text-sm text-text-muted leading-relaxed">
+                  در این بخش جدیدترین بخشنامه‌های صادر شده توسط سازمان مالیاتی ایران را مطالعه کنید. این بخشنامه‌ها شامل دستورالعمل‌های اجرایی، توضیحات و راهنمایی‌های مربوط به قوانین مالیاتی هستند.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Search & Filter */}
+      <div className="pb-8">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg">
+            <div className="flex flex-col gap-4 sm:flex-row">
+              <form className="flex-1" method="get" action="/circulars">
+                <div className="relative">
+                  <input
+                    type="text"
+                    name="q"
+                    defaultValue={q ?? ""}
+                    placeholder="جستجو در بخشنامه‌ها..."
+                    className="w-full rounded-xl border border-border bg-surface-card py-3 pl-4 pr-12 text-sm text-text focus:border-accent-yellow focus:outline-none focus:ring-2 focus:ring-accent-yellow/20"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-accent-yellow transition-colors"
+                  >
+                    <Search className="h-5 w-5" />
+                  </button>
+                </div>
+                {category && <input type="hidden" name="category" value={category} />}
+              </form>
+
+              <form method="get" action="/circulars">
+                <div className="flex items-center gap-2">
+                  <select
+                    name="category"
+                    defaultValue={category ?? ""}
+                    className="rounded-xl border border-border bg-surface-card px-4 py-3 text-sm text-text focus:border-accent-yellow focus:outline-none focus:ring-2 focus:ring-accent-yellow/20"
+                  >
+                    <option value="">همه دسته‌ها</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="submit"
+                    className="rounded-xl bg-accent-yellow px-6 py-3 text-sm font-medium text-white hover:bg-accent-yellow/90 transition-colors"
+                  >
+                    فیلتر
+                  </button>
+                </div>
+                {q && <input type="hidden" name="q" value={q} />}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Circulars List */}
+      <div className="pb-12">
+        <div className="container mx-auto max-w-6xl px-4">
           {current > 1 && (
             <link rel="prev" href={`${domains.primary}/circulars?page=${current - 1}`} />
           )}
@@ -72,121 +163,73 @@ export default async function CircularsPage({
             <link rel="next" href={`${domains.primary}/circulars?page=${current + 1}`} />
           )}
 
-          <div className="mb-8 rounded-lg border border-border/60 bg-surface-card p-6 text-right">
-            <p className="text-sm text-text-muted leading-6">
-              در این بخش جدیدترین بخشنامه‌های صادر شده توسط سازمان مالیاتی ایران را مطالعه کنید. این بخشنامه‌ها شامل دستورالعمل‌های اجرایی، توضیحات و راهنمایی‌های مربوط به قوانین مالیاتی هستند. برای مشاهده جزئیات کامل هر بخشنامه، روی دکمه مشاهده کلیک کنید.
-            </p>
-          </div>
-
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row">
-            <form className="flex-1" method="get" action="/circulars">
-              <div className="relative">
-                <input
-                  type="text"
-                  name="q"
-                  defaultValue={q ?? ""}
-                  placeholder="جستجو در بخشنامه‌ها..."
-                  className="w-full rounded-lg border border-border bg-surface-card py-2.5 pl-4 pr-10 text-sm text-text focus:border-accent-green focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-accent-green"
-                >
-                  <Search className="h-4 w-4" />
-                </button>
-              </div>
-              {category && <input type="hidden" name="category" value={category} />}
-            </form>
-
-            <form method="get" action="/circulars">
-              <div className="flex items-center gap-2">
-                <select
-                  name="category"
-                  defaultValue={category ?? ""}
-                  className="rounded-lg border border-border bg-surface-card px-4 py-2.5 text-sm text-text focus:border-accent-green focus:outline-none"
-                >
-                  <option value="">همه دسته‌ها</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="submit"
-                  className="rounded-lg bg-accent-green px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-green/90"
-                >
-                  فیلتر
-                </button>
-              </div>
-              {q && <input type="hidden" name="q" value={q} />}
-            </form>
-          </div>
-
           {circulars.length === 0 ? (
-            <p className="py-12 text-center text-text-muted">
-              {q || category ? "بخشنامه‌ای با این مشخصات یافت نشد." : "بخشنامه‌ای یافت نشد."}
-            </p>
+            <div className="rounded-2xl border border-white/20 bg-white/80 p-12 text-center shadow-lg backdrop-blur-lg">
+              <FileText className="mx-auto h-16 w-16 text-text-muted mb-4" />
+              <p className="text-lg text-text-muted">
+                {q || category ? "بخشنامه‌ای با این مشخصات یافت نشد." : "بخشنامه‌ای یافت نشد."}
+              </p>
+            </div>
           ) : (
             <>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {circulars.map((c) => (
-                  <Card key={c.id} className="flex flex-col">
+                  <div key={c.id} className="group rounded-2xl border border-white/20 bg-white/80 shadow-lg backdrop-blur-lg transition-all duration-300 hover:border-accent-yellow/50 hover:shadow-xl hover:shadow-accent-yellow/10 hover:-translate-y-1 overflow-hidden">
                     {c.image && (
-                      <div className="relative h-32 w-full overflow-hidden rounded-t-xl">
+                      <div className="relative h-32 w-full overflow-hidden">
                         <img
                           src={c.image}
                           alt={c.title}
-                          className="h-full w-full object-cover"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                       </div>
                     )}
-                    <CardHeader>
+                    <div className="p-6">
                       {c.category && (
-                        <span className="text-xs text-accent-green">
+                        <span className="inline-block rounded-full bg-accent-yellow/20 px-3 py-1 text-xs text-accent-yellow mb-3">
                           {c.category.name}
                         </span>
                       )}
-                      <CardTitle className="text-right">{c.title}</CardTitle>
+                      <h3 className="mb-2 text-lg font-bold text-primary-navy line-clamp-1">{c.title}</h3>
                       {c.number && (
-                        <CardDescription>شماره: {c.number}</CardDescription>
+                        <p className="text-sm text-text-muted mb-2">شماره: {c.number}</p>
                       )}
                       {c.summary && (
-                        <CardDescription className="line-clamp-2">
-                          {c.summary}
-                        </CardDescription>
+                        <p className="text-sm text-text-muted line-clamp-2 mb-4">{c.summary}</p>
                       )}
-                    </CardHeader>
-                    <div className="mt-auto flex items-center justify-between p-6 pt-0">
-                      <span className="text-xs text-text-muted">
-                        {toJalali(c.date ?? c.createdAt)}
-                      </span>
-                      <div className="flex gap-2">
-                        {c.file && (
-                          <Button asChild variant="ghost" size="sm">
-                            <a href={c.file} download>
-                              <Download className="h-4 w-4" />
+                      <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                        <span className="text-xs text-text-muted">
+                          {toJalali(c.date ?? c.createdAt)}
+                        </span>
+                        <div className="flex gap-2">
+                          {c.file && (
+                            <a href={c.file} download className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-surface-background hover:bg-accent-yellow/20 transition-colors">
+                              <Download className="h-4 w-4 text-accent-yellow" />
                             </a>
-                          </Button>
-                        )}
-                        <Button asChild variant="ghost" size="sm">
-                          <Link href={`/circulars/${c.slug}`}>مشاهده</Link>
-                        </Button>
+                          )}
+                          <Link href={`/circulars/${c.slug}`} className="inline-flex h-8 items-center gap-1 rounded-lg bg-accent-yellow px-3 text-xs font-medium text-white hover:bg-accent-yellow/90 transition-colors">
+                            <span>مشاهده</span>
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
 
-              <Pagination
-                current={current}
-                pages={pages}
-                total={total}
-                basePath="/circulars"
-              />
+              <div className="mt-8">
+                <Pagination
+                  current={current}
+                  pages={pages}
+                  total={total}
+                  basePath="/circulars"
+                />
+              </div>
             </>
           )}
         </div>
-      </section>
-    );
+      </div>
+    </div>
+  );
 }

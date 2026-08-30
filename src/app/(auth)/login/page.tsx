@@ -14,10 +14,14 @@ export default async function LoginPage({
 
   return (
     <div>
-      <h1 className="mb-2 text-center text-2xl font-bold text-primary-navy">ورود به حساب کاربری</h1>
-      <p className="mb-6 text-center text-sm text-text-muted">
-        برای دسترسی به پنل کاربری وارد حساب کاربری خود شوید.
-      </p>
+      <div className="mb-8">
+        <h1 className="mb-2 text-2xl font-bold text-primary-navy">
+          ورود به حساب کاربری
+        </h1>
+        <p className="text-sm text-text-muted">
+          برای دسترسی به پنل کاربری وارد حساب خود شوید
+        </p>
+      </div>
       <LoginForm callbackUrl={callbackUrl || "/dashboard"} />
     </div>
   );

@@ -3,12 +3,12 @@ import { TicketForm } from "@/components/tickets/ticket-form";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { MapPin, Mail, Phone } from "lucide-react";
+import { MapPin, Mail, Phone, Clock, MessageSquare, Send, CheckCircle, ArrowLeft } from "lucide-react";
 import { contactInfo, domains } from "@/lib/nav";
 
 export const metadata = {
-  title: "تماس با ما",
-  description: "تماس با نیک مشاسب سرو - آدرس، تلفن و فرم درخواست مشاوره",
+  title: "تماس با ما | نیک محاسب سرو",
+  description: "تماس با نیک محاسب سرو - آدرس، تلفن و فرم درخواست مشاوره",
   alternates: {
     canonical: `${domains.primary}/contact`,
   },
@@ -18,77 +18,170 @@ export default async function ContactPage() {
   const user = await getCurrentUser();
 
   return (
-    <section className="py-12">
-      <div className="container mx-auto max-w-4xl px-4">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-primary-navy">تماس با ما</h1>
-          <p className="mt-3 text-sm text-text-muted">
-            با ما در ارتباط باشید یا درخواست مشاوره خود را ثبت کنید
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary-navy via-primary-navy to-accent-green py-16 lg:py-24">
+        {/* Animated Blobs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-accent-green/20 blur-3xl animate-float" />
+          <div className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-accent-yellow/20 blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+        </div>
+        
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 grid-pattern opacity-20" />
+        
+        <div className="relative z-10 container mx-auto max-w-6xl px-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm mb-6">
+            <MessageSquare className="h-4 w-4 text-accent-yellow" />
+            <span className="text-sm text-white/90">در ارتباط باشید</span>
+          </div>
+          <h1 className="text-4xl font-extrabold text-white lg:text-5xl">
+            تماس با ما
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
+            سوالی دارید یا نیاز به مشاوره دارید؟ تیم ما آمکان پاسخگویی است
           </p>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="space-y-4 text-right">
-            <h2 className="text-lg font-semibold text-primary-navy">
-              اطلاعات تماس
-            </h2>
-            <div className="flex items-center justify-end gap-2 text-sm">
-              <span>{contactInfo.address}</span>
-              <MapPin className="h-4 w-4 text-accent-green" />
+      {/* Contact Info Cards */}
+      <div className="relative -mt-12 pb-12">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {/* Address Card */}
+            <div className="group rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg transition-all duration-300 hover:border-accent-green/50 hover:shadow-xl hover:shadow-accent-green/10 hover:-translate-y-1">
+              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green/20 to-accent-green/10 transition-transform duration-300 group-hover:scale-110">
+                <MapPin className="h-7 w-7 text-accent-green" />
+              </div>
+              <h3 className="mb-2 text-lg font-bold text-primary-navy">آدرس</h3>
+              <p className="text-sm text-text-muted leading-relaxed">{contactInfo.address}</p>
             </div>
-            <div className="flex items-center justify-end gap-2 text-sm">
-              <a href={`mailto:${contactInfo.email}`} className="hover:text-accent-green">
+
+            {/* Email Card */}
+            <div className="group rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg transition-all duration-300 hover:border-accent-green/50 hover:shadow-xl hover:shadow-accent-green/10 hover:-translate-y-1">
+              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green/20 to-accent-green/10 transition-transform duration-300 group-hover:scale-110">
+                <Mail className="h-7 w-7 text-accent-green" />
+              </div>
+              <h3 className="mb-2 text-lg font-bold text-primary-navy">ایمیل</h3>
+              <a href={`mailto:${contactInfo.email}`} className="text-sm text-text-muted hover:text-accent-green transition-colors leading-relaxed">
                 {contactInfo.email}
               </a>
-              <Mail className="h-4 w-4 text-accent-green" />
             </div>
-            {contactInfo.phones.map((phone) => (
-              <div key={phone} className="flex items-center justify-end gap-2 text-sm">
-                <a href={`tel:${phone.replace(/-/g, "")}`} className="hover:text-accent-green">
-                  {phone}
-                </a>
-                <Phone className="h-4 w-4 text-accent-green" />
-              </div>
-            ))}
-            <div className="mt-6 rounded-lg border border-border/60 bg-surface-card p-4">
-              <h3 className="mb-2 text-sm font-medium text-text">ساعات کاری</h3>
-              <p className="text-xs text-text-muted">{contactInfo.workingHours.weekdays}</p>
-              <p className="text-xs text-text-muted">{contactInfo.workingHours.thursday}</p>
-            </div>
-          </div>
 
-          <div>
-            {user ? (
-              <Card className="p-6">
-                <h2 className="mb-4 text-lg font-semibold text-primary-navy">
-                  ثبت درخواست مشاوره / تیکت
-                </h2>
-                <p className="mb-4 text-sm text-text-muted">
-                  برای ثبت درخواست مشاوره، فرم زیر را تکمیل کنید.
-                </p>
-                <TicketForm redirectTo="/dashboard/tickets" />
-              </Card>
-            ) : (
-              <Card className="p-6">
-                <h2 className="mb-4 text-lg font-semibold text-primary-navy">
-                  ثبت درخواست مشاوره
-                </h2>
-                <p className="mb-4 text-sm text-text-muted">
-                  برای ثبت درخواست مشاوره، ابتدا وارد حساب کاربری خود شوید.
-                </p>
-                <div className="space-y-3">
-                  <Button asChild variant="primary" className="w-full">
-                    <Link href="/login?callbackUrl=/contact">ورود به حساب کاربری</Link>
-                  </Button>
-                  <Button asChild variant="outline" className="w-full">
-                    <Link href="/register?callbackUrl=/contact">ثبت‌نام کاربر جدید</Link>
-                  </Button>
-                </div>
-              </Card>
-            )}
+            {/* Phone Card */}
+            <div className="group rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg transition-all duration-300 hover:border-accent-green/50 hover:shadow-xl hover:shadow-accent-green/10 hover:-translate-y-1">
+              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green/20 to-accent-green/10 transition-transform duration-300 group-hover:scale-110">
+                <Phone className="h-7 w-7 text-accent-green" />
+              </div>
+              <h3 className="mb-2 text-lg font-bold text-primary-navy">تلفن</h3>
+              <div className="space-y-1">
+                {contactInfo.phones.map((phone) => (
+                  <a key={phone} href={`tel:${phone.replace(/-/g, "")}`} className="block text-sm text-text-muted hover:text-accent-green transition-colors">
+                    {phone}
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </section>
+
+      {/* Main Content */}
+      <div className="py-12">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {/* Working Hours & Info */}
+            <div className="space-y-6">
+              {/* Working Hours Card */}
+              <div className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent-yellow/20">
+                    <Clock className="h-6 w-6 text-accent-yellow" />
+                  </div>
+                  <h2 className="text-xl font-bold text-primary-navy">ساعات کاری</h2>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between rounded-xl bg-surface-background p-3">
+                    <span className="text-sm text-text">شنبه تا چهارشنبه</span>
+                    <span className="text-sm font-medium text-accent-green">{contactInfo.workingHours.weekdays}</span>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl bg-surface-background p-3">
+                    <span className="text-sm text-text">پنجشنبه</span>
+                    <span className="text-sm font-medium text-accent-yellow">{contactInfo.workingHours.thursday}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Info Card */}
+              <div className="rounded-2xl border border-white/20 bg-gradient-to-br from-accent-green/5 to-accent-green/10 p-6 shadow-lg backdrop-blur-lg">
+                <h3 className="mb-4 text-lg font-bold text-primary-navy">چرا ما را انتخاب کنید؟</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-accent-green flex-shrink-0" />
+                    <span className="text-sm text-text">مشاوره تخصصی و رایگان</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-accent-green flex-shrink-0" />
+                    <span className="text-sm text-text">پاسخگویی سریع در کمتر از ۲۴ ساعت</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-accent-green flex-shrink-0" />
+                    <span className="text-sm text-text">تیم متخصص با سال‌ها تجربه</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-accent-green flex-shrink-0" />
+                    <span className="text-sm text-text">ضمانت کیفیت خدمات</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Form */}
+            <div className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg">
+              {user ? (
+                <>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent-green/20">
+                      <Send className="h-6 w-6 text-accent-green" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-primary-navy">ثبت درخواست مشاوره</h2>
+                      <p className="text-sm text-text-muted">فرم زیر را تکمیل کنید</p>
+                    </div>
+                  </div>
+                  <TicketForm redirectTo="/dashboard/tickets" />
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent-green/20">
+                      <MessageSquare className="h-6 w-6 text-accent-green" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-primary-navy">ثبت درخواست مشاوره</h2>
+                      <p className="text-sm text-text-muted">برای ثبت درخواست وارد شوید</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <Button asChild className="btn-shine w-full h-12 bg-accent-green text-white text-base font-medium rounded-xl hover:bg-accent-green/90 hover:shadow-lg hover:shadow-accent-green/30 transition-all duration-300">
+                      <Link href="/login?callbackUrl=/contact" className="flex items-center justify-center gap-2">
+                        <span>ورود به حساب کاربری</span>
+                        <ArrowLeft className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" className="w-full h-12 text-base font-medium rounded-xl border-border hover:border-accent-green hover:text-accent-green transition-all duration-300">
+                      <Link href="/register?callbackUrl=/contact" className="flex items-center justify-center gap-2">
+                        <span>ثبت‌نام کاربر جدید</span>
+                        <ArrowLeft className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

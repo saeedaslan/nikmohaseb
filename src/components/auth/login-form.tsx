@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 
 export default function LoginForm({ callbackUrl = "/dashboard" }: { callbackUrl?: string }) {
@@ -18,73 +18,90 @@ export default function LoginForm({ callbackUrl = "/dashboard" }: { callbackUrl?
   const searchParams = useSearchParams();
   const { addToast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: { identifier: "", password: "" },
   });
 
   const onSubmit = async (data: LoginInput) => {
-    const result = await signIn("credentials", {
-      redirect: false,
-      identifier: data.identifier,
-      password: data.password,
-      callbackUrl,
-    });
+    setIsLoading(true);
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        identifier: data.identifier,
+        password: data.password,
+        callbackUrl,
+      });
 
-    if (result?.error) {
-      const errorMessage = result.error === "CredentialsSignin"
-        ? "نام کاربری یا رمز عبور اشتباه است."
-        : result.error.includes("AccessDenied")
-          ? "شما اجازه دسترسی به این بخش را ندارید."
-          : "خطا در ورود. دوباره سعی کنید.";
-      addToast({ message: errorMessage, variant: "error" });
-    } else if (result?.ok) {
-      addToast({ message: "ورود موفقیت‌آمیز بود.", variant: "success" });
-      const returnUrl = searchParams.get("callbackUrl") || result.url || callbackUrl;
-      router.push(returnUrl);
+      if (result?.error) {
+        const errorMessage = result.error === "CredentialsSignin"
+          ? "نام کاربری یا رمز عبور اشتباه است."
+          : result.error.includes("AccessDenied")
+            ? "شما اجازه دسترسی به این بخش را ندارید."
+            : "خطا در ورود. دوباره سعی کنید.";
+        addToast({ message: errorMessage, variant: "error" });
+      } else if (result?.ok) {
+        addToast({ message: "ورود موفقیت‌آمیز بود.", variant: "success" });
+        const returnUrl = searchParams.get("callbackUrl") || result.url || callbackUrl;
+        router.push(returnUrl);
+        router.refresh();
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <FormField
         control={control}
         name="identifier"
-        label="ایمیل / شماره موبایل"
+        label="ایمیل یا شماره موبایل"
         render={({ field }) => (
-          <Input
-            {...field}
-            type="text"
-            placeholder="example@nikmohaseb.ir یا 09123456789"
-            autoComplete="username"
-          />
+          <div className="relative">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">
+              <Mail className="h-5 w-5" />
+            </div>
+            <Input
+              {...field}
+              type="text"
+              placeholder="example@nikmohaseb.ir"
+              autoComplete="username"
+              className="pr-11 h-12 rounded-xl border-border focus:border-accent-green focus:ring-accent-green/20"
+            />
+          </div>
         )}
       />
+      
       <FormField
         name="password"
         label="رمز عبور"
         control={control}
         render={({ field }) => (
           <div className="relative">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">
+              <Lock className="h-5 w-5" />
+            </div>
             <Input
               {...field}
               type={showPassword ? "text" : "password"}
-              placeholder="رمز عبور"
+              placeholder="رمز عبور خود را وارد کنید"
               autoComplete="current-password"
+              className="pr-11 pl-11 h-12 rounded-xl border-border focus:border-accent-green focus:ring-accent-green/20"
             />
             <button
               type="button"
               tabIndex={-1}
-              className="absolute top-1/2 -translate-y-1/2 ltr:right-3 rtl:left-3"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-primary-navy transition-colors"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? "مخفی کردن" : "نمایش"}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </button>
           </div>
         )}
@@ -92,31 +109,49 @@ export default function LoginForm({ callbackUrl = "/dashboard" }: { callbackUrl?
 
       <div className="flex items-center justify-between text-sm">
         <Link
+          href="/register"
+          className="text-text-muted hover:text-accent-green transition-colors"
+        >
+          حساب ندارید؟{" "}
+          <span className="font-medium text-accent-green">ثبت‌نام</span>
+        </Link>
+        <Link
           href="/forgot-password"
-          className="text-accent-green hover:underline"
+          className="font-medium text-accent-green hover:text-accent-green/80 transition-colors"
         >
           فراموشی رمز عبور؟
         </Link>
-        <span className="text-text-muted">
-          حساب ندارید؟{" "}
-          <Link
-            href="/register"
-            className="text-accent-green hover:underline"
-          >
-            ثبت‌نام
-          </Link>
-        </span>
       </div>
 
       <Button
         type="submit"
-        variant="primary"
-        className="w-full"
-        loading={isSubmitting}
-        disabled={isSubmitting}
+        className="btn-shine w-full h-12 bg-accent-green text-white text-base font-medium rounded-xl hover:bg-accent-green/90 hover:shadow-lg hover:shadow-accent-green/30 transition-all duration-300"
+        loading={isLoading}
+        disabled={isLoading}
       >
         ورود
       </Button>
+
+      {/* Divider */}
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="bg-white px-4 text-text-muted">یا</span>
+        </div>
+      </div>
+
+      {/* Register Link */}
+      <div className="text-center">
+        <span className="text-text-muted">حساب کاربری ندارید؟ </span>
+        <Link
+          href="/register"
+          className="font-medium text-primary-navy hover:text-accent-green transition-colors"
+        >
+          ثبت‌نام رایگان
+        </Link>
+      </div>
     </form>
   );
 }

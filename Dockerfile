@@ -28,7 +28,7 @@ COPY . .
 # (using local SVG fallbacks since container may lack internet at runtime)
 RUN mkdir -p /app/public/images/articles
 
-ENV DATABASE_URL="postgresql://placeholder:placeholder@db:5432/db"
+ENV DATABASE_URL="postgresql://nikmohaseb:nikmohaseb123@db:5432/nikmohaseb"
 ARG NEXTAUTH_URL
 ENV NEXTAUTH_URL=${NEXTAUTH_URL:-https://nikmohaseb.com}
 RUN npx prisma generate --schema prisma/schema.prisma
@@ -36,6 +36,9 @@ RUN npm run build
 
 FROM base AS runner
 WORKDIR /app
+
+ENV DATABASE_URL="postgresql://nikmohaseb:nikmohaseb123@db:5432/nikmohaseb"
+ENV NEXTAUTH_URL=https://nikmohaseb.ir
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-client \
