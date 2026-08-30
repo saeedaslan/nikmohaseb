@@ -1,20 +1,24 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { Service } from "@/lib/queries";
-import { Briefcase } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { ServiceIcon } from "./service-icon";
 
 export async function ServicesSection({ services }: { services: Service[] }) {
   return (
-    <section className="py-12">
+    <section className="py-20 bg-surface-background">
       <div className="container mx-auto px-4">
-        <h2 className="mb-2 flex items-center justify-center gap-2 text-center text-2xl font-bold text-primary-navy dark:text-primary-navy-light sm:text-3xl">
-          <Briefcase className="h-6 w-6 text-accent-yellow" />
-          <span>خدمات ما</span>
-        </h2>
-        <p className="mx-auto mb-8 max-w-xl text-center text-sm text-text-muted sm:text-base">
-          ارائه خدمات جامع حسابداری، مالی، مالیاتی و مشاوره‌ای با بهره‌وری بالا
-        </p>
+        <div className="mb-12 text-center">
+          <span className="mb-2 inline-block rounded-full bg-accent-green/10 px-4 py-1 text-xs font-medium text-accent-green">
+            خدمات تخصصی
+          </span>
+          <h2 className="mb-3 text-2xl font-bold text-primary-navy dark:text-primary-navy-light sm:text-3xl md:text-4xl">
+            خدمات ما
+          </h2>
+          <p className="mx-auto max-w-xl text-sm text-text-muted sm:text-base">
+            ارائه خدمات جامع حسابداری، مالی، مالیاتی و مشاوره‌ای با بهره‌وری بالا
+          </p>
+        </div>
 
         {services.length === 0 ? (
           <p className="py-8 text-center text-text-muted">
@@ -28,20 +32,21 @@ export async function ServicesSection({ services }: { services: Service[] }) {
                 href={`/services/${s.slug}`}
                 className="group block"
               >
-                <div className="flex h-full flex-col rounded-xl border border-border bg-surface-card p-6 shadow-sm transition-shadow hover:shadow-md">
-           <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary-navy/20 ring-1 ring-inset ring-primary-navy/10 dark:bg-accent-green-light/45 dark:ring-accent-green-light/40">
-                      <ServiceIcon slug={s.slug} className="h-6 w-6 text-accent-yellow dark:text-gray-300" />
-                    </div>
-                  <h3 className="mb-1 text-lg font-semibold text-primary-navy">
+                <div className="flex h-full flex-col rounded-2xl border border-border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green/20 to-accent-green/5 ring-1 ring-accent-green/10">
+                    <ServiceIcon slug={s.slug} className="h-7 w-7 text-accent-green" />
+                  </div>
+                  <h3 className="mb-2 text-lg font-semibold text-primary-navy">
                     {s.title}
                   </h3>
                   {s.summary && (
-                    <p className="mt-1 text-sm text-text-muted line-clamp-2">
+                    <p className="mb-4 flex-1 text-sm leading-6 text-text-muted">
                       {s.summary}
                     </p>
                   )}
-                  <span className="mt-auto pt-4 text-sm font-medium text-accent-yellow hover:text-accent-green">
+                  <span className="inline-flex items-center gap-1 text-sm font-medium text-accent-green opacity-0 transition-opacity group-hover:opacity-100">
                     مشاهده جزئیات
+                    <ArrowLeft className="h-4 w-4" />
                   </span>
                 </div>
               </Link>
@@ -49,9 +54,9 @@ export async function ServicesSection({ services }: { services: Service[] }) {
           </div>
         )}
 
-        <div className="mt-10 text-center">
-          <Button asChild variant="outline">
-            <Link href="/services">همه خدمات</Link>
+        <div className="mt-12 text-center">
+          <Button asChild variant="outline" size="lg" className="border-accent-green text-accent-green hover:bg-accent-green hover:text-white">
+            <Link href="/services">مشاهده همه خدمات</Link>
           </Button>
         </div>
       </div>
