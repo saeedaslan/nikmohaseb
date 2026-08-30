@@ -17,7 +17,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useState } from "react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const nav = [
@@ -32,10 +32,26 @@ const nav = [
   { label: "خدمات", href: "/admin/services", icon: Settings },
 ];
 
+const supportNav = [
+  { label: "تیکت‌ها", href: "/admin/tickets", icon: Ticket },
+];
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session } = useSession();
+  const role = session?.user?.role;
+  const isSupport = role === "SUPPORT";
+  const navItems = isSupport ? supportNav : nav;
+
+  if (!session) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <p className="text-text-muted">در حال بارگذاری...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -60,7 +76,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </button>
           </div>
           <nav className="flex flex-col gap-1">
-            {nav.map((link) => (
+            {navItems.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}

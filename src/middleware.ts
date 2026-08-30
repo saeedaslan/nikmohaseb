@@ -4,6 +4,7 @@ import { getToken } from "next-auth/jwt";
 import { domains } from "@/lib/nav";
 
 const ADMIN = "ADMIN";
+const SUPPORT = "SUPPORT";
 const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
 
 export const config = {
@@ -31,7 +32,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   if (authRoutes.includes(pathname)) {
-    if (isLoggedIn && role === ADMIN) {
+    if (isLoggedIn && (role === ADMIN || role === SUPPORT)) {
       return NextResponse.redirect(new URL("/admin", req.url));
     }
     if (isLoggedIn) {
@@ -42,10 +43,17 @@ export default async function middleware(req: NextRequest) {
 
   const isAdminRoute = pathname.startsWith("/admin");
   const isDashboardRoute = pathname.startsWith("/dashboard");
+  const isTicketRoute = pathname.startsWith("/admin/tickets");
 
   if (isAdminRoute) {
     if (!isLoggedIn) {
       return redirectTo("/login", req);
+    }
+    if (role === SUPPORT) {
+      if (!isTicketRoute) {
+        return NextResponse.redirect(new URL("/admin/tickets", req.url));
+      }
+      return NextResponse.next();
     }
     if (role !== ADMIN) {
       return NextResponse.redirect(new URL("/unauthorized", req.url));

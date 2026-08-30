@@ -42,7 +42,7 @@ export default async function AdminUserPage({
           </div>
           <div>
             <span className="text-text-muted">نقش:</span>{" "}
-            {user.role === "ADMIN" ? "ادمین" : "کاربر"}
+            {user.role === "ADMIN" ? "ادمین" : user.role === "SUPPORT" ? "پشتیبان" : "کاربر"}
           </div>
           <div>
             <span className="text-text-muted">ایمیل:</span> {user.email ?? "-"}

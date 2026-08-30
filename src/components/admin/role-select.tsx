@@ -28,6 +28,7 @@ export function RoleSelect({
       className="rounded-md border border-border bg-surface-card px-2 py-1 text-sm text-text"
     >
       <option value="USER">USER</option>
+      <option value="SUPPORT">SUPPORT</option>
       <option value="ADMIN">ADMIN</option>
     </select>
   );

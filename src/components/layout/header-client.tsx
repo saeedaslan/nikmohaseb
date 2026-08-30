@@ -134,7 +134,7 @@ function UserMenu({
   onSignOut: () => void;
 }) {
   const [open, setOpen] = useState(false);
-  const href = user.role === "ADMIN" ? "/admin" : "/dashboard";
+  const href = user.role === "ADMIN" || user.role === "SUPPORT" ? "/admin" : "/dashboard";
   return (
     <div className="relative">
       <button

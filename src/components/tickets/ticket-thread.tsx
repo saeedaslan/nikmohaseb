@@ -42,7 +42,7 @@ function MessageBubble({
   authorId: string;
 }) {
   const isOwn = msg.user?.id === authorId;
-  const isAdmin = msg.user?.role === "ADMIN";
+  const isAdmin = msg.user?.role === "ADMIN" || msg.user?.role === "SUPPORT";
   return (
     <div className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}>
       <UserCircle className="mt-1 h-8 w-8 text-text-muted" />
@@ -61,7 +61,7 @@ function MessageBubble({
           </span>
           {isAdmin && (
             <span className="rounded bg-accent-green/20 px-1.5 py-0.5 text-[10px] font-bold text-accent-green">
-              ادمین
+              پشتیبانی
             </span>
           )}
         </div>

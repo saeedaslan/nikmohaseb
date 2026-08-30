@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma, TicketStatus } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireAdmin, requireAdminOrSupport } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 export async function listAdminTickets(query?: string, statusFilter?: string) {
@@ -59,7 +59,7 @@ export async function adminAddMessage(
   const content = formData.get("content")?.toString() ?? "";
   if (!content.trim()) return { error: "متن پیام الزامی است." };
 
-  const admin = await requireAdmin();
+  const admin = await requireAdminOrSupport();
 
   const ticket = await prisma.ticket.findUnique({
     where: { id: ticketId },

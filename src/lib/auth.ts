@@ -106,3 +106,10 @@ export async function requireAdmin(): Promise<CurrentUser> {
   if (user.role !== Role.ADMIN) redirect("/unauthorized");
   return user;
 }
+
+export async function requireAdminOrSupport(): Promise<CurrentUser> {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (user.role !== Role.ADMIN && user.role !== Role.SUPPORT) redirect("/unauthorized");
+  return user;
+}

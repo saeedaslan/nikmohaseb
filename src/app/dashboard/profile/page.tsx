@@ -30,7 +30,7 @@ export default async function ProfilePage() {
           </div>
           <div className="flex justify-between">
             <span className="text-text-muted">نقش</span>
-            <span>{user.role === "ADMIN" ? "ادمین" : "کاربر"}</span>
+            <span>{user.role === "ADMIN" ? "ادمین" : user.role === "SUPPORT" ? "پشتیبان" : "کاربر"}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-text-muted">عضویت</span>
