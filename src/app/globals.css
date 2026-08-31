@@ -231,28 +231,28 @@
 
   html.dark {
 
-    /* Backgrounds */
-    --color-surface-background: #0a100e;
-    --color-surface-card: #121a19;
+    /* Backgrounds - تاریک ملایم */
+    --color-surface-background: #111816;
+    --color-surface-card: #1a231f;
 
-    /* Text */
-    --color-text: #babec4;
-    --color-text-muted: #9ba7b8;
+    /* Text - سفید ملایم برای خوانایی بالا */
+    --color-text: #e8edeb;
+    --color-text-muted: #94a3b8;
 
-    /* Borders */
-    --color-border: #2a3a38;
+    /* Borders - خاکستری تیره */
+    --color-border: #3a4a45;
 
-    /* Primary - light سورمه‌ی for readable headings on dark */
-    --color-primary-navy: #4dd3a9;
-    --color-primary-navy-light: #9ca5a3;
+    /* Primary - سبز فیروزه‌ای ملایم برای عنوان‌ها */
+    --color-primary-navy: #4db896;
+    --color-primary-navy-light: #5cc9a3;
 
-    /* Accent - سبز سرو stays contrast-safe (white-on passes) */
-    --color-accent-green: #0c4930;
-    --color-accent-green-light: #e6f7f0;
+    /* Accent - سبز ملایم برای دکمه‌ها و لینک‌ها */
+    --color-accent-green: #16a34a;
+    --color-accent-green-light: #dcfce7;
 
-    /* Accent - yellow stays readable on dark */
-    --color-accent-yellow: #fbbf24;
-    --color-accent-yellow-light: #f5e9d3;
+    /* Accent - زرد طلایی ملایم برای تاکید */
+    --color-accent-yellow: #d4a017;
+    --color-accent-yellow-light: #fef3c7;
   }
 }
 
@@ -409,7 +409,7 @@
   @apply text-lg text-text;
 
   h1, h2, h3, h4, h5, h6 {
-    @apply mt-8 mb-4 font-bold text-primary-navy first:mt-0 dark:text-primary-navy-light;
+    @apply mt-8 mb-4 font-bold text-primary-navy first:mt-0;
   }
 
   h1 {

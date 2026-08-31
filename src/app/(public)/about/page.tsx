@@ -46,7 +46,7 @@ const timeline = [
   { year: "۱۳۹۳", title: "تاسیس", description: "شرکت نیک محاسب سرو با هدف ارائه خدمات تخصصی حسابداری تاسیس شد" },
   { year: "۱۳۹۶", title: "رشد", description: "توسعه تیم و افزایش تعداد مشتریان به بیش از ۱۰۰ نفر" },
   { year: "۱۳۹۹", title: "دیجیتالی‌سازی", description: "ارائه خدمات آنلاین و اتوماسیون فرآیندها" },
-  { year: "۱۴۰۳", title: "امروز", description: "بیش از ۵۰۰ مشتری فعال و تیم ۲۰ نفره متخصص" },
+  { year: "۱۴۰۵", title: "امروز", description: "بیش از ۵۰۰ مشتری فعال و تیم ۲۰ نفره متخصص" },
 ];
 
 export default function AboutPage() {
