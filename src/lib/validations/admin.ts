@@ -1,15 +1,12 @@
 import { z } from "zod";
 
 export const ticketCategorySchema = z.enum([
-  "مالیاتی",
-  "حسابداری",
-  "اظهارنامه",
-  "ارزش افزوده",
-  "بیمه و حقوق",
-  "حسابرسی",
-  "ثبت شرکت",
-  "مشاوره مالی",
-  "سایر",
+  "TAX_CONSULTING",
+  "MOADIAN_SYSTEM",
+  "VAT_DECLARATION",
+  "INSURANCE_PAYROLL",
+  "TECHNICAL_SUPPORT",
+  "GENERAL",
 ]);
 
 export const ticketPrioritySchema = z.enum(["NORMAL", "HIGH", "URGENT", "CRITICAL"]);
@@ -25,6 +22,29 @@ export const ticketCreateSchema = z.object({
 
 export const ticketReplySchema = z.object({
   content: z.string().min(1, "پیام الزامی است"),
+});
+
+export const ticketAssignSchema = z.object({
+  ticketId: z.string().min(1),
+  assignedToId: z.string().min(1).optional(),
+});
+
+export const ticketUpdateStatusSchema = z.object({
+  ticketId: z.string().min(1),
+  status: ticketStatusSchema,
+});
+
+export const ticketUpdatePrioritySchema = z.object({
+  ticketId: z.string().min(1),
+  priority: ticketPrioritySchema,
+});
+
+export const ticketDeleteSchema = z.object({
+  ticketId: z.string().min(1),
+});
+
+export const ticketInternalNoteSchema = z.object({
+  content: z.string().min(1, "متن یادداشت الزامی است"),
 });
 
 export const serviceSchema = z.object({

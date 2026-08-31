@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  listCirculars,
-  deleteCircular,
-  toggleCircularPublished,
-} from "@/lib/actions/circulars";
+import { listCirculars } from "@/lib/actions/circulars";
 import {
   Table,
   TableHeader,
@@ -16,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit, Download } from "lucide-react";
 import { DeleteButton } from "@/components/admin/delete-button";
-import { ToggleButton } from "@/components/admin/toggle-button";
 import { toJalali } from "@/lib/jalali";
 
 export const metadata = {
@@ -88,10 +83,7 @@ export default async function AdminCircularsPage() {
                           <Edit className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <DeleteButton
-                        label="بخشنامه"
-                        onConfirm={deleteCircular.bind(null, c.id)}
-                      />
+                      <DeleteButton label="بخشنامه" entityType="circular" entityId={c.id} />
                     </div>
                   </TableCell>
                 </TableRow>

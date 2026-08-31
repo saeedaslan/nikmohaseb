@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { listServices, deleteService, toggleServicePublished } from "@/lib/actions/services";
+import { listServices } from "@/lib/actions/services";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,10 +47,7 @@ export default async function AdminServicesPage() {
                   <TableCell>{s.slug}</TableCell>
                   <TableCell>{s.category?.name ?? "-"}</TableCell>
                   <TableCell>
-                    <ToggleButton
-                      active={s.published}
-                      onToggle={toggleServicePublished.bind(null, s.id, !s.published)}
-                    />
+                    <ToggleButton entityType="service" entityId={s.id} active={s.published} />
                   </TableCell>
                   <TableCell>{s.order}</TableCell>
                   <TableCell>
@@ -60,7 +57,7 @@ export default async function AdminServicesPage() {
                           <Edit className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <DeleteButton label="خدمت" onConfirm={deleteService.bind(null, s.id)} />
+                      <DeleteButton label="خدمت" entityType="service" entityId={s.id} />
                     </div>
                   </TableCell>
                 </TableRow>

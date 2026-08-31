@@ -29,6 +29,8 @@ export type TicketMessageMinAggregateOutputType = {
   content: string | null
   ticketId: string | null
   userId: string | null
+  senderRole: $Enums.Role | null
+  isInternal: boolean | null
   createdAt: Date | null
 }
 
@@ -37,6 +39,8 @@ export type TicketMessageMaxAggregateOutputType = {
   content: string | null
   ticketId: string | null
   userId: string | null
+  senderRole: $Enums.Role | null
+  isInternal: boolean | null
   createdAt: Date | null
 }
 
@@ -45,6 +49,8 @@ export type TicketMessageCountAggregateOutputType = {
   content: number
   ticketId: number
   userId: number
+  senderRole: number
+  isInternal: number
   createdAt: number
   _all: number
 }
@@ -55,6 +61,8 @@ export type TicketMessageMinAggregateInputType = {
   content?: true
   ticketId?: true
   userId?: true
+  senderRole?: true
+  isInternal?: true
   createdAt?: true
 }
 
@@ -63,6 +71,8 @@ export type TicketMessageMaxAggregateInputType = {
   content?: true
   ticketId?: true
   userId?: true
+  senderRole?: true
+  isInternal?: true
   createdAt?: true
 }
 
@@ -71,6 +81,8 @@ export type TicketMessageCountAggregateInputType = {
   content?: true
   ticketId?: true
   userId?: true
+  senderRole?: true
+  isInternal?: true
   createdAt?: true
   _all?: true
 }
@@ -152,6 +164,8 @@ export type TicketMessageGroupByOutputType = {
   content: string | null
   ticketId: string
   userId: string
+  senderRole: $Enums.Role
+  isInternal: boolean
   createdAt: Date
   _count: TicketMessageCountAggregateOutputType | null
   _min: TicketMessageMinAggregateOutputType | null
@@ -181,6 +195,8 @@ export type TicketMessageWhereInput = {
   content?: Prisma.StringNullableFilter<"TicketMessage"> | string | null
   ticketId?: Prisma.StringFilter<"TicketMessage"> | string
   userId?: Prisma.StringFilter<"TicketMessage"> | string
+  senderRole?: Prisma.EnumRoleFilter<"TicketMessage"> | $Enums.Role
+  isInternal?: Prisma.BoolFilter<"TicketMessage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TicketMessage"> | Date | string
   ticket?: Prisma.XOR<Prisma.TicketScalarRelationFilter, Prisma.TicketWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -192,6 +208,8 @@ export type TicketMessageOrderByWithRelationInput = {
   content?: Prisma.SortOrderInput | Prisma.SortOrder
   ticketId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  senderRole?: Prisma.SortOrder
+  isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ticket?: Prisma.TicketOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
@@ -206,6 +224,8 @@ export type TicketMessageWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringNullableFilter<"TicketMessage"> | string | null
   ticketId?: Prisma.StringFilter<"TicketMessage"> | string
   userId?: Prisma.StringFilter<"TicketMessage"> | string
+  senderRole?: Prisma.EnumRoleFilter<"TicketMessage"> | $Enums.Role
+  isInternal?: Prisma.BoolFilter<"TicketMessage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TicketMessage"> | Date | string
   ticket?: Prisma.XOR<Prisma.TicketScalarRelationFilter, Prisma.TicketWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -217,6 +237,8 @@ export type TicketMessageOrderByWithAggregationInput = {
   content?: Prisma.SortOrderInput | Prisma.SortOrder
   ticketId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  senderRole?: Prisma.SortOrder
+  isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.TicketMessageCountOrderByAggregateInput
   _max?: Prisma.TicketMessageMaxOrderByAggregateInput
@@ -231,12 +253,16 @@ export type TicketMessageScalarWhereWithAggregatesInput = {
   content?: Prisma.StringNullableWithAggregatesFilter<"TicketMessage"> | string | null
   ticketId?: Prisma.StringWithAggregatesFilter<"TicketMessage"> | string
   userId?: Prisma.StringWithAggregatesFilter<"TicketMessage"> | string
+  senderRole?: Prisma.EnumRoleWithAggregatesFilter<"TicketMessage"> | $Enums.Role
+  isInternal?: Prisma.BoolWithAggregatesFilter<"TicketMessage"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"TicketMessage"> | Date | string
 }
 
 export type TicketMessageCreateInput = {
   id?: string
   content?: string | null
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
   ticket: Prisma.TicketCreateNestedOneWithoutMessagesInput
   user: Prisma.UserCreateNestedOneWithoutMessagesInput
@@ -248,6 +274,8 @@ export type TicketMessageUncheckedCreateInput = {
   content?: string | null
   ticketId: string
   userId: string
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
   attachments?: Prisma.TicketAttachmentUncheckedCreateNestedManyWithoutTicketMessageInput
 }
@@ -255,6 +283,8 @@ export type TicketMessageUncheckedCreateInput = {
 export type TicketMessageUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ticket?: Prisma.TicketUpdateOneRequiredWithoutMessagesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutMessagesNestedInput
@@ -266,6 +296,8 @@ export type TicketMessageUncheckedUpdateInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.TicketAttachmentUncheckedUpdateManyWithoutTicketMessageNestedInput
 }
@@ -275,12 +307,16 @@ export type TicketMessageCreateManyInput = {
   content?: string | null
   ticketId: string
   userId: string
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
 }
 
 export type TicketMessageUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -289,6 +325,8 @@ export type TicketMessageUncheckedUpdateManyInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -307,6 +345,8 @@ export type TicketMessageCountOrderByAggregateInput = {
   content?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  senderRole?: Prisma.SortOrder
+  isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -315,6 +355,8 @@ export type TicketMessageMaxOrderByAggregateInput = {
   content?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  senderRole?: Prisma.SortOrder
+  isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -323,6 +365,8 @@ export type TicketMessageMinOrderByAggregateInput = {
   content?: Prisma.SortOrder
   ticketId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  senderRole?: Prisma.SortOrder
+  isInternal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -434,6 +478,8 @@ export type TicketMessageUpdateOneWithoutAttachmentsNestedInput = {
 export type TicketMessageCreateWithoutUserInput = {
   id?: string
   content?: string | null
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
   ticket: Prisma.TicketCreateNestedOneWithoutMessagesInput
   attachments?: Prisma.TicketAttachmentCreateNestedManyWithoutTicketMessageInput
@@ -443,6 +489,8 @@ export type TicketMessageUncheckedCreateWithoutUserInput = {
   id?: string
   content?: string | null
   ticketId: string
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
   attachments?: Prisma.TicketAttachmentUncheckedCreateNestedManyWithoutTicketMessageInput
 }
@@ -481,12 +529,16 @@ export type TicketMessageScalarWhereInput = {
   content?: Prisma.StringNullableFilter<"TicketMessage"> | string | null
   ticketId?: Prisma.StringFilter<"TicketMessage"> | string
   userId?: Prisma.StringFilter<"TicketMessage"> | string
+  senderRole?: Prisma.EnumRoleFilter<"TicketMessage"> | $Enums.Role
+  isInternal?: Prisma.BoolFilter<"TicketMessage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"TicketMessage"> | Date | string
 }
 
 export type TicketMessageCreateWithoutTicketInput = {
   id?: string
   content?: string | null
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutMessagesInput
   attachments?: Prisma.TicketAttachmentCreateNestedManyWithoutTicketMessageInput
@@ -496,6 +548,8 @@ export type TicketMessageUncheckedCreateWithoutTicketInput = {
   id?: string
   content?: string | null
   userId: string
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
   attachments?: Prisma.TicketAttachmentUncheckedCreateNestedManyWithoutTicketMessageInput
 }
@@ -529,6 +583,8 @@ export type TicketMessageUpdateManyWithWhereWithoutTicketInput = {
 export type TicketMessageCreateWithoutAttachmentsInput = {
   id?: string
   content?: string | null
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
   ticket: Prisma.TicketCreateNestedOneWithoutMessagesInput
   user: Prisma.UserCreateNestedOneWithoutMessagesInput
@@ -539,6 +595,8 @@ export type TicketMessageUncheckedCreateWithoutAttachmentsInput = {
   content?: string | null
   ticketId: string
   userId: string
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
 }
 
@@ -561,6 +619,8 @@ export type TicketMessageUpdateToOneWithWhereWithoutAttachmentsInput = {
 export type TicketMessageUpdateWithoutAttachmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ticket?: Prisma.TicketUpdateOneRequiredWithoutMessagesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutMessagesNestedInput
@@ -571,6 +631,8 @@ export type TicketMessageUncheckedUpdateWithoutAttachmentsInput = {
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -578,12 +640,16 @@ export type TicketMessageCreateManyUserInput = {
   id?: string
   content?: string | null
   ticketId: string
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
 }
 
 export type TicketMessageUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ticket?: Prisma.TicketUpdateOneRequiredWithoutMessagesNestedInput
   attachments?: Prisma.TicketAttachmentUpdateManyWithoutTicketMessageNestedInput
@@ -593,6 +659,8 @@ export type TicketMessageUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.TicketAttachmentUncheckedUpdateManyWithoutTicketMessageNestedInput
 }
@@ -601,6 +669,8 @@ export type TicketMessageUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ticketId?: Prisma.StringFieldUpdateOperationsInput | string
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -608,12 +678,16 @@ export type TicketMessageCreateManyTicketInput = {
   id?: string
   content?: string | null
   userId: string
+  senderRole?: $Enums.Role
+  isInternal?: boolean
   createdAt?: Date | string
 }
 
 export type TicketMessageUpdateWithoutTicketInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutMessagesNestedInput
   attachments?: Prisma.TicketAttachmentUpdateManyWithoutTicketMessageNestedInput
@@ -623,6 +697,8 @@ export type TicketMessageUncheckedUpdateWithoutTicketInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attachments?: Prisma.TicketAttachmentUncheckedUpdateManyWithoutTicketMessageNestedInput
 }
@@ -631,6 +707,8 @@ export type TicketMessageUncheckedUpdateManyWithoutTicketInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  senderRole?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isInternal?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -670,6 +748,8 @@ export type TicketMessageSelect<ExtArgs extends runtime.Types.Extensions.Interna
   content?: boolean
   ticketId?: boolean
   userId?: boolean
+  senderRole?: boolean
+  isInternal?: boolean
   createdAt?: boolean
   ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -682,6 +762,8 @@ export type TicketMessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   content?: boolean
   ticketId?: boolean
   userId?: boolean
+  senderRole?: boolean
+  isInternal?: boolean
   createdAt?: boolean
   ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -692,6 +774,8 @@ export type TicketMessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   content?: boolean
   ticketId?: boolean
   userId?: boolean
+  senderRole?: boolean
+  isInternal?: boolean
   createdAt?: boolean
   ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -702,10 +786,12 @@ export type TicketMessageSelectScalar = {
   content?: boolean
   ticketId?: boolean
   userId?: boolean
+  senderRole?: boolean
+  isInternal?: boolean
   createdAt?: boolean
 }
 
-export type TicketMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "ticketId" | "userId" | "createdAt", ExtArgs["result"]["ticketMessage"]>
+export type TicketMessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "content" | "ticketId" | "userId" | "senderRole" | "isInternal" | "createdAt", ExtArgs["result"]["ticketMessage"]>
 export type TicketMessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -733,6 +819,8 @@ export type $TicketMessagePayload<ExtArgs extends runtime.Types.Extensions.Inter
     content: string | null
     ticketId: string
     userId: string
+    senderRole: $Enums.Role
+    isInternal: boolean
     createdAt: Date
   }, ExtArgs["result"]["ticketMessage"]>
   composites: {}
@@ -1164,6 +1252,8 @@ export interface TicketMessageFieldRefs {
   readonly content: Prisma.FieldRef<"TicketMessage", 'String'>
   readonly ticketId: Prisma.FieldRef<"TicketMessage", 'String'>
   readonly userId: Prisma.FieldRef<"TicketMessage", 'String'>
+  readonly senderRole: Prisma.FieldRef<"TicketMessage", 'Role'>
+  readonly isInternal: Prisma.FieldRef<"TicketMessage", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"TicketMessage", 'DateTime'>
 }
     

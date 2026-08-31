@@ -11,7 +11,10 @@ export function TicketStatusSelect({
   current: string;
 }) {
   const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    await updateTicketStatus(ticketId, e.target.value);
+    const formData = new FormData();
+    formData.append("ticketId", ticketId);
+    formData.append("status", e.target.value);
+    await updateTicketStatus(null, formData);
     window.location.reload();
   };
   return (

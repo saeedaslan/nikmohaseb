@@ -3,19 +3,40 @@
 import { Check } from "lucide-react";
 import { useToast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
+import { toggleUserActive } from "@/lib/actions/users";
+import { toggleBannerActive } from "@/lib/actions/banners";
+import { toggleFaqPublished } from "@/lib/actions/faqs";
+import { toggleServicePublished } from "@/lib/actions/services";
+
+type EntityType = "user" | "banner" | "faq" | "service";
 
 interface ToggleButtonProps {
+  entityType: EntityType;
+  entityId: string;
   active: boolean;
-  onToggle: () => Promise<unknown> | unknown;
 }
 
-export function ToggleButton({ active, onToggle }: ToggleButtonProps) {
+export function ToggleButton({ entityType, entityId, active }: ToggleButtonProps) {
   const router = useRouter();
   const { addToast } = useToast();
 
   const handle = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
-      await onToggle();
+      const checked = e.target.checked;
+      switch (entityType) {
+        case "user":
+          await toggleUserActive(entityId, checked);
+          break;
+        case "banner":
+          await toggleBannerActive(entityId, checked);
+          break;
+        case "faq":
+          await toggleFaqPublished(entityId, checked);
+          break;
+        case "service":
+          await toggleServicePublished(entityId, checked);
+          break;
+      }
       router.refresh();
     } catch {
       addToast({ message: "خطا در بروزرسانی وضعیت.", variant: "error" });

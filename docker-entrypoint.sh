@@ -9,6 +9,9 @@ done
 echo "📦 Running migrations..."
 npx prisma migrate deploy
 
+echo "🔧 Generating Prisma client..."
+npx prisma generate
+
 echo "🌱 Running seed..."
 npm run seed || echo "⚠️  Seed completed (may have duplicates)"
 

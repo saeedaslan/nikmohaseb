@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { listFaqs, deleteFaq, toggleFaqPublished } from "@/lib/actions/faqs";
+import { listFaqs } from "@/lib/actions/faqs";
 import {
   Table,
   TableHeader,
@@ -67,19 +67,13 @@ export default async function AdminFaqsPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-end gap-1">
-                      <ToggleButton
-                        active={f.published}
-                        onToggle={toggleFaqPublished.bind(null, f.id, !f.published)}
-                      />
+                      <ToggleButton entityType="faq" entityId={f.id} active={f.published} />
                       <Button asChild variant="ghost" size="sm">
                         <Link href={`/admin/faqs/${f.id}/edit`}>
                           <Edit className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <DeleteButton
-                        label="سؤال"
-                        onConfirm={deleteFaq.bind(null, f.id)}
-                      />
+                      <DeleteButton label="سؤال" entityType="faq" entityId={f.id} />
                     </div>
                   </TableCell>
                 </TableRow>

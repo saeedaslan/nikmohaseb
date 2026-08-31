@@ -38,6 +38,18 @@ export const TicketPriority = {
 export type TicketPriority = (typeof TicketPriority)[keyof typeof TicketPriority]
 
 
+export const TicketCategory = {
+  TAX_CONSULTING: 'TAX_CONSULTING',
+  MOADIAN_SYSTEM: 'MOADIAN_SYSTEM',
+  VAT_DECLARATION: 'VAT_DECLARATION',
+  INSURANCE_PAYROLL: 'INSURANCE_PAYROLL',
+  TECHNICAL_SUPPORT: 'TECHNICAL_SUPPORT',
+  GENERAL: 'GENERAL'
+} as const
+
+export type TicketCategory = (typeof TicketCategory)[keyof typeof TicketCategory]
+
+
 export const CategoryType = {
   SERVICE: 'SERVICE',
   ARTICLE: 'ARTICLE',

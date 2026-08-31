@@ -471,8 +471,9 @@ async function main() {
   if (!existingTicket) {
     await prisma.ticket.create({
       data: {
+        trackingCode: "TK-1403-0001",
         subject: "سوال درباره مالیات بر ارزش افزوده",
-        category: "مالیاتی",
+        category: "VAT_DECLARATION",
         priority: "NORMAL",
         status: "NEW",
         userId: user.id,
@@ -480,6 +481,7 @@ async function main() {
           create: {
             content: "سوالی داشتم درباره زمان‌بندی مالیات بر ارزش افزوده.",
             userId: user.id,
+            senderRole: "USER",
           },
         },
       },

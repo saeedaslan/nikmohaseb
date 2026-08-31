@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma, TicketStatus } from "@/lib/prisma";
+import { prisma, TicketStatus, TicketPriority, TicketCategory, Role } from "@/lib/prisma";
 import { ticketCreateSchema, ticketReplySchema } from "@/lib/validations/admin";
 import { requireUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
@@ -33,6 +33,12 @@ function parseAttachments(raw: unknown): AttachmentInput[] {
   }
 }
 
+function generateTrackingCode(): string {
+  const year = 1403;
+  const random = Math.floor(1000 + Math.random() * 9000);
+  return `TK-${year}-${random}`;
+}
+
 export async function createTicket(
   prevState: unknown,
   formData: FormData,
@@ -63,11 +69,14 @@ export async function createTicket(
   }));
 
   try {
+    const trackingCode = generateTrackingCode();
+
     const ticket = await prisma.ticket.create({
       data: {
+        trackingCode,
         subject: data.subject,
-        category: data.category,
-        priority: data.priority ?? "NORMAL",
+        category: data.category as TicketCategory,
+        priority: data.priority ?? TicketPriority.NORMAL,
         userId: user.id,
       },
     });
@@ -77,6 +86,7 @@ export async function createTicket(
         content: data.description,
         ticketId: ticket.id,
         userId: user.id,
+        senderRole: "USER" as any,
         attachments: {
           create: attachmentsParsed,
         },
@@ -95,20 +105,21 @@ export async function getTicketStats() {
   const user = await requireUser();
   const stats = await prisma.ticket.groupBy({
     by: ["status"],
-    where: { userId: user.id },
+    where: { userId: user.id, isDeleted: false },
     _count: { _all: true },
   });
-  const total = await prisma.ticket.count({ where: { userId: user.id } });
+  const total = await prisma.ticket.count({ where: { userId: user.id, isDeleted: false } });
   return { user, stats, total };
 }
 
 export async function getUserTickets() {
   const user = await requireUser();
   const tickets = await prisma.ticket.findMany({
-    where: { userId: user.id },
+    where: { userId: user.id, isDeleted: false },
     orderBy: { updatedAt: "desc" },
     select: {
       id: true,
+      trackingCode: true,
       subject: true,
       category: true,
       priority: true,
@@ -127,13 +138,15 @@ export async function getTicketById(id: string) {
     where: { id },
     include: {
       user: { select: { id: true, name: true, email: true } },
-       messages: {
-         orderBy: { createdAt: "asc" },
-         include: {
-           user: { select: { id: true, name: true, role: true } },
-           attachments: true,
-         },
-       },
+      assignedTo: { select: { id: true, name: true } },
+      messages: {
+        orderBy: { createdAt: "asc" },
+        where: { isInternal: false },
+        include: {
+          user: { select: { id: true, name: true, role: true } },
+          attachments: true,
+        },
+      },
       attachments: true,
     },
   });
@@ -153,29 +166,47 @@ export async function addTicketMessage(
     content: formData.get("content"),
   });
   if (!parsed.success) {
-    return { error: parsed.error.flatten().fieldErrors.content?.[0] || "متن پیام الزامی است." };
+    const flattened = parsed.error.flatten();
+    return { error: flattened.fieldErrors.content?.[0] || "متن پیام الزامی است." };
+  }
+
+  const content = parsed.data.content.trim();
+  if (!content) {
+    return { error: "متن پیام نمی‌تواند خالی باشد." };
   }
 
   const ticket = await prisma.ticket.findUnique({
     where: { id: ticketId },
-    select: { id: true, userId: true },
+    select: { id: true, userId: true, status: true, isDeleted: true },
   });
-  if (!ticket || ticket.userId !== user.id) {
+
+  if (!ticket || ticket.isDeleted) {
     return { error: "تیکت یافت نشد." };
   }
 
-  await prisma.ticketMessage.create({
-    data: {
-      content: parsed.data.content,
-      ticketId: ticket.id,
-      userId: user.id,
-    },
-  });
+  if (ticket.userId !== user.id) {
+    return { error: "شما اجازه پاسخ به این تیکت را ندارید." };
+  }
 
-  await prisma.ticket.update({
-    where: { id: ticket.id },
-    data: { status: TicketStatus.IN_PROGRESS },
-  });
+  if (ticket.status === TicketStatus.CLOSED) {
+    return { error: "این تیکت بسته شده است و نمی‌توانید پاسخ دهید." };
+  }
+
+  await prisma.$transaction([
+    prisma.ticketMessage.create({
+      data: {
+        content,
+        ticketId: ticket.id,
+        userId: user.id,
+        senderRole: Role.USER,
+        isInternal: false,
+      },
+    }),
+    prisma.ticket.update({
+      where: { id: ticket.id },
+      data: { status: TicketStatus.IN_PROGRESS },
+    }),
+  ]);
 
   revalidatePath(`/dashboard/tickets/${ticketId}`);
   revalidatePath(`/admin/tickets/${ticketId}`);

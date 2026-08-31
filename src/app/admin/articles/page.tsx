@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  listArticles,
-  deleteArticle,
-  toggleArticlePublished,
-} from "@/lib/actions/articles";
+import { listArticles } from "@/lib/actions/articles";
 import {
   Table,
   TableHeader,
@@ -16,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit } from "lucide-react";
 import { DeleteButton } from "@/components/admin/delete-button";
-import { ToggleButton } from "@/components/admin/toggle-button";
 import { toJalali } from "@/lib/jalali";
 
 export const metadata = {
@@ -76,10 +71,7 @@ export default async function AdminArticlesPage() {
                           <Edit className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <DeleteButton
-                        label="مقاله"
-                        onConfirm={deleteArticle.bind(null, a.id)}
-                      />
+                      <DeleteButton label="مقاله" entityType="article" entityId={a.id} />
                     </div>
                   </TableCell>
                 </TableRow>

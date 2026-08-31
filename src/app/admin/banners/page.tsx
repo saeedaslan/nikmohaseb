@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { listBanners, deleteBanner, toggleBannerActive, type BannerRow } from "@/lib/actions/banners";
+import { listBanners, type BannerRow } from "@/lib/actions/banners";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -44,10 +44,7 @@ export default async function AdminBannersPage() {
                 <TableRow key={b.id}>
                   <TableCell>{b.title}</TableCell>
                   <TableCell>
-                    <ToggleButton
-                      active={b.active}
-                      onToggle={toggleBannerActive.bind(null, b.id, !b.active)}
-                    />
+                    <ToggleButton entityType="banner" entityId={b.id} active={b.active} />
                   </TableCell>
                   <TableCell>{b.order}</TableCell>
                   <TableCell>
@@ -57,10 +54,7 @@ export default async function AdminBannersPage() {
                           <Edit className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <DeleteButton
-                        label="حذف بنر"
-                        onConfirm={deleteBanner.bind(null, b.id)}
-                      />
+                      <DeleteButton label="حذف بنر" entityType="banner" entityId={b.id} />
                     </div>
                   </TableCell>
                 </TableRow>

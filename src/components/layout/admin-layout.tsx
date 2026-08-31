@@ -15,29 +15,31 @@ import {
   Menu,
   X,
   LogOut,
+  Bell,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const nav = [
-  { label: "داشبورد", href: "/admin", icon: LayoutDashboard },
-  { label: "کاربران", href: "/admin/users", icon: Users },
-  { label: "تیکت‌ها", href: "/admin/tickets", icon: Ticket },
-  { label: "بنرها", href: "/admin/banners", icon: ImageIcon },
-  { label: "مقالات", href: "/admin/articles", icon: FileText },
-  { label: "بخشنامه‌ها", href: "/admin/circulars", icon: ReceiptText },
-  { label: "قوانین", href: "/admin/laws", icon: FileText },
-  { label: "سؤالات متداول", href: "/admin/faqs", icon: HelpCircle },
-  { label: "خدمات", href: "/admin/services", icon: Settings },
+  { label: "داشبورد", href: "/admin", icon: LayoutDashboard, color: "text-blue-500", badge: false },
+  { label: "کاربران", href: "/admin/users", icon: Users, color: "text-purple-500", badge: false },
+  { label: "تیکت‌ها", href: "/admin/tickets", icon: Ticket, color: "text-orange-500", badge: true },
+  { label: "بنرها", href: "/admin/banners", icon: ImageIcon, color: "text-pink-500", badge: false },
+  { label: "مقالات", href: "/admin/articles", icon: FileText, color: "text-green-500", badge: false },
+  { label: "بخشنامه‌ها", href: "/admin/circulars", icon: ReceiptText, color: "text-yellow-500", badge: false },
+  { label: "قوانین", href: "/admin/laws", icon: FileText, color: "text-red-500", badge: false },
+  { label: "سؤالات متداول", href: "/admin/faqs", icon: HelpCircle, color: "text-cyan-500", badge: false },
+  { label: "خدمات", href: "/admin/services", icon: Settings, color: "text-gray-500", badge: false },
 ];
 
 const supportNav = [
-  { label: "تیکت‌ها", href: "/admin/tickets", icon: Ticket },
+  { label: "تیکت‌ها", href: "/admin/tickets", icon: Ticket, color: "text-orange-500", badge: true },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [newTicketCount, setNewTicketCount] = useState(0);
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
@@ -45,89 +47,156 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isSupport = role === "SUPPORT";
   const navItems = isSupport ? supportNav : nav;
 
+  // Fetch new ticket count
+  useEffect(() => {
+    const fetchNewTickets = async () => {
+      try {
+        const res = await fetch("/api/admin/tickets/count");
+        if (res.ok) {
+          const data = await res.json();
+          setNewTicketCount(data.count ?? 0);
+        }
+      } catch {
+        // Silently fail
+      }
+    };
+
+    fetchNewTickets();
+    const interval = setInterval(fetchNewTickets, 30000); // Refresh every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   if (!session) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-text-muted">در حال بارگذاری...</p>
+        <div className="flex items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent-green border-t-transparent" />
+          <p className="text-text-muted">در حال بارگذاری...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-surface-background">
+      {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 z-50 -translate-x-full md:translate-x-0 md:static md:flex",
-          "transition-transform duration-200",
-          sidebarOpen && "translate-x-0",
+          "fixed inset-y-0 right-0 z-50 transition-transform duration-300 md:translate-x-0 md:static md:flex",
+          sidebarOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
-        <div className="flex h-screen w-60 flex-col gap-2 overflow-y-auto border-l border-border/60 bg-surface-card p-4">
-          <div className="mb-4 flex items-center justify-between">
-            <span className="text-lg font-bold text-primary-navy">
-              مدیریت نیک محاسب سرو
+        <div className="flex h-screen w-64 flex-col border-l border-border/60 bg-surface-card/95 backdrop-blur-xl">
+          {/* Logo */}
+          <div className="flex items-center justify-between border-b border-border/60 p-4">
+            <span className="text-lg font-bold bg-gradient-to-l from-accent-green to-primary-navy bg-clip-text text-transparent">
+              نیک محاسب سرو
             </span>
             <button
-              className="md:hidden"
+              className="md:hidden rounded-lg p-1 hover:bg-surface-background transition-colors"
               onClick={() => setSidebarOpen(false)}
               aria-label="بستن منو"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
-          <nav className="flex flex-col gap-1">
-            {navItems.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setSidebarOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  pathname === link.href
-                    ? "bg-accent-green/15 text-accent-green"
-                    : "text-text hover:bg-surface-background",
-                )}
-              >
-                <link.icon className="h-4 w-4" />
-                {link.label}
-              </Link>
-            ))}
+
+          {/* Navigation */}
+          <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+            {navItems.map((link) => {
+              const isActive = pathname === link.href;
+              const showBadge = link.badge && newTicketCount > 0;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setSidebarOpen(false)}
+                  className={cn(
+                    "flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
+                    isActive
+                      ? "bg-accent-green/15 text-accent-green shadow-sm shadow-accent-green/20"
+                      : "text-text-muted hover:bg-surface-background hover:text-text",
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <link.icon className={cn("h-5 w-5", isActive ? "text-accent-green" : link.color)} />
+                    {link.label}
+                  </div>
+                  {showBadge && (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white animate-pulse">
+                      {newTicketCount > 99 ? "99+" : newTicketCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* User & Logout */}
+          <div className="border-t border-border/60 p-3">
+            <div className="flex items-center gap-3 px-3 py-2 mb-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-green/20 text-accent-green font-bold">
+                {session?.user?.name?.charAt(0) ?? "?"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-text truncate">{session?.user?.name}</p>
+                <p className="text-xs text-text-muted truncate">{session?.user?.email}</p>
+              </div>
+            </div>
             <button
               onClick={() => signOut({ callbackUrl: "/login" })}
-              className="mt-4 flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-text hover:bg-surface-background"
+              className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="h-5 w-5" />
               خروج
             </button>
-          </nav>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col">
-        <header className="sticky top-0 flex h-14 items-center justify-between border-b border-border/60 bg-surface-card/80 px-4 backdrop-blur">
+      {/* Main Content */}
+      <div className="flex flex-1 flex-col min-w-0">
+        {/* Header */}
+        <header className="sticky top-0 flex h-16 items-center justify-between border-b border-border/60 bg-surface-card/80 backdrop-blur-xl px-4 md:px-6">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="rounded p-1 text-text hover:bg-surface-background md:hidden"
+              className="md:hidden rounded-lg p-2 hover:bg-surface-background transition-colors"
               aria-label="منو"
             >
               <Menu className="h-5 w-5" />
             </button>
-            <span className="text-lg font-bold text-primary-navy">
-              نیک محاسب سرو
-            </span>
+            <h1 className="text-lg font-bold text-primary-navy">پنل مدیریت</h1>
+          </div>
+          <div className="flex items-center gap-3">
+            {/* Notification Bell */}
+            <Link href="/admin/tickets" className="relative rounded-lg p-2 hover:bg-surface-background transition-colors">
+              <Bell className="h-5 w-5 text-text-muted" />
+              {newTicketCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white animate-pulse">
+                  {newTicketCount > 99 ? "99+" : newTicketCount}
+                </span>
+              )}
+            </Link>
+            <span className="text-sm text-text-muted hidden sm:inline">{session?.user?.name}</span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-green/20 text-accent-green font-bold text-sm">
+              {session?.user?.name?.charAt(0) ?? "?"}
+            </div>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4">
-          <div className="mx-auto max-w-6xl">
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          <div className="mx-auto max-w-7xl">
             <ErrorBoundary>{children}</ErrorBoundary>
           </div>
         </main>
       </div>
 
+      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 md:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}

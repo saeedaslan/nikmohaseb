@@ -27,6 +27,15 @@ enum TicketPriority {
   CRITICAL
 }
 
+enum TicketCategory {
+  TAX_CONSULTING
+  MOADIAN_SYSTEM
+  VAT_DECLARATION
+  INSURANCE_PAYROLL
+  TECHNICAL_SUPPORT
+  GENERAL
+}
+
 enum CategoryType {
   SERVICE
   ARTICLE
@@ -50,6 +59,7 @@ model User {
   updatedAt     DateTime  @updatedAt @db.Timestamptz(3)
 
   tickets      Ticket[]
+  assignedTickets Ticket[] @relation("AssignedTickets")
   messages     TicketMessage[]
   attachments  TicketAttachment[]
   articles     Article[]
@@ -186,14 +196,20 @@ model Banner {
 
 model Ticket {
   id         String        @id @default(cuid())
+  trackingCode String      @unique @default(cuid())
   subject    String
-  category   String
+  category   TicketCategory @default(GENERAL)
   priority   TicketPriority @default(NORMAL)
   status     TicketStatus   @default(NEW)
   userId     String
   user       User          @relation(fields: [userId], references: [id])
+  assignedToId String?
+  assignedTo User?         @relation("AssignedTickets", fields: [assignedToId], references: [id])
+  isDeleted  Boolean       @default(false)
+  deletedAt  DateTime?     @db.Timestamptz(3)
   createdAt  DateTime      @default(now()) @db.Timestamptz(3)
   updatedAt  DateTime      @updatedAt @db.Timestamptz(3)
+  closedAt   DateTime?     @db.Timestamptz(3)
 
   messages    TicketMessage[]
   attachments TicketAttachment[]
@@ -201,6 +217,8 @@ model Ticket {
   @@index([status])
   @@index([priority])
   @@index([userId])
+  @@index([assignedToId])
+  @@index([isDeleted])
 }
 
 model TicketMessage {
@@ -210,6 +228,8 @@ model TicketMessage {
   ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+  senderRole Role     @default(USER)
+  isInternal Boolean @default(false)
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   attachments TicketAttachment[]

@@ -29,7 +29,7 @@ if (process.env.NODE_ENV !== "production") {
 
 export { PrismaClient } from "../../generated/prisma/client";
 export type { Prisma } from "../../generated/prisma/client";
-export { Role, TicketStatus, TicketPriority, CategoryType } from "../../generated/prisma/client";
+export { Role, TicketStatus, TicketPriority, TicketCategory, CategoryType } from "../../generated/prisma/client";
 export type {
   Article,
   Circular,

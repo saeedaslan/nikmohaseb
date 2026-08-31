@@ -1,10 +1,13 @@
 import { toJalali } from "@/lib/jalali";
-import { UserCircle, Paperclip } from "lucide-react";
+import { UserCircle, Paperclip, Download, Image as ImageIcon, FileText, Eye, Lock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Attachment {
+  id?: string;
   filename: string;
   path: string;
   mime: string | null;
+  size?: number | null;
 }
 
 interface Message {
@@ -12,23 +15,37 @@ interface Message {
   content: string | null;
   createdAt: Date;
   user: { id: string; name: string | null; role?: string } | null;
+  senderRole?: string;
+  isInternal?: boolean;
   attachments: Attachment[];
 }
 
 export function TicketThread({
   messages,
   authorId,
+  showInternal = false,
 }: {
   messages: Message[];
   authorId: string;
+  showInternal?: boolean;
 }) {
-  if (!messages.length) {
-    return <p className="py-6 text-center text-sm text-text-muted">هنوز پیامی نیست.</p>;
+  const filteredMessages = showInternal
+    ? messages
+    : messages.filter((m) => !m.isInternal);
+
+  if (!filteredMessages.length) {
+    return (
+      <div className="py-12 text-center">
+        <UserCircle className="mx-auto h-16 w-16 text-text-muted mb-3" />
+        <p className="text-sm text-text-muted">هنوز پیامی نیست.</p>
+      </div>
+    );
   }
+
   return (
     <div className="space-y-4">
-      {messages.map((msg) => (
-        <MessageBubble key={msg.id} msg={msg} authorId={authorId} />
+      {filteredMessages.map((msg) => (
+        <MessageBubble key={msg.id} msg={msg} authorId={authorId} showInternal={showInternal} />
       ))}
     </div>
   );
@@ -37,55 +54,154 @@ export function TicketThread({
 function MessageBubble({
   msg,
   authorId,
+  showInternal,
 }: {
   msg: Message;
   authorId: string;
+  showInternal: boolean;
 }) {
   const isOwn = msg.user?.id === authorId;
   const isAdmin = msg.user?.role === "ADMIN" || msg.user?.role === "SUPPORT";
+  const isInternal = msg.isInternal;
+
+  const formatFileSize = (bytes: number | null | undefined) => {
+    if (!bytes) return "";
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  };
+
+  const isImage = (mime: string | null) => mime?.startsWith("image/") ?? false;
+
   return (
-    <div className={`flex gap-3 ${isOwn ? "flex-row-reverse" : ""}`}>
-      <UserCircle className="mt-1 h-8 w-8 text-text-muted" />
+    <div className={cn("flex gap-3", isOwn ? "flex-row-reverse" : "")}>
       <div
-        className={`max-w-[75%] rounded-lg p-3 text-sm ${
-          isAdmin
-            ? "bg-accent-green/10 text-white"
-            : isOwn
-               ? "bg-primary-navy text-white dark:bg-accent-green"
-              : "bg-surface-card"
-        }`}
+        className={cn(
+          "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
+          isInternal
+            ? "bg-yellow-500/20 text-yellow-600"
+            : isAdmin
+              ? "bg-accent-green/20 text-accent-green"
+              : "bg-surface-background text-text-muted",
+        )}
       >
-        <div className="mb-1 flex items-center gap-2 text-xs">
-          <span className="font-semibold">
+        <UserCircle className="h-8 w-8" />
+      </div>
+      <div
+        className={cn(
+          "max-w-[80%] rounded-2xl p-4",
+          isInternal
+            ? "bg-yellow-500/10 border-2 border-yellow-500/30"
+            : isAdmin
+              ? "bg-accent-green/10 border border-accent-green/20"
+              : isOwn
+                ? "bg-primary-navy text-white"
+                : "bg-surface-background border border-border/60",
+        )}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-2 mb-2 flex-wrap">
+          <span className={cn("text-sm font-semibold", isOwn ? "text-white" : "text-text")}>
             {msg.user?.name ?? "کاربر"}
           </span>
           {isAdmin && (
-            <span className="rounded bg-accent-green/20 px-1.5 py-0.5 text-[10px] font-bold text-accent-green">
+            <span className="rounded-full bg-accent-green/20 px-2 py-0.5 text-[10px] font-bold text-accent-green">
               پشتیبانی
             </span>
           )}
+          {isInternal && showInternal && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/20 px-2 py-0.5 text-[10px] font-bold text-yellow-600">
+              <Lock className="h-2.5 w-2.5" />
+              یادداشت داخلی
+            </span>
+          )}
         </div>
-        <p className="whitespace-pre-wrap break-words">{msg.content}</p>
+
+        {/* Content */}
+        {msg.content && (
+          <p
+            className={cn(
+              "text-sm whitespace-pre-wrap break-words leading-relaxed",
+              isOwn ? "text-white/90" : "text-text",
+            )}
+          >
+            {msg.content}
+          </p>
+        )}
+
+        {/* Attachments */}
         {msg.attachments.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-2">
-            {msg.attachments.map((a) => (
-              <a
-                key={a.path}
-                href={a.path}
-                className="flex items-center gap-1 text-xs underline"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Paperclip className="h-3 w-3" />
-                {a.filename}
-              </a>
-            ))}
+          <div className="mt-3 space-y-2">
+            <div className="flex items-center gap-1 text-xs opacity-70">
+              <Paperclip className="h-3 w-3" />
+              <span>{msg.attachments.length} فایل ضمیمه</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {msg.attachments.map((a, index) => (
+                <div
+                  key={a.id ?? index}
+                  className={cn(
+                    "group relative rounded-xl border overflow-hidden transition-all duration-200 hover:border-accent-green/50",
+                    isOwn ? "border-white/20 bg-white/10" : "border-border/60 bg-surface-card",
+                  )}
+                >
+                  {isImage(a.mime) ? (
+                    <a href={a.path} target="_blank" rel="noreferrer" className="block">
+                      <div className="aspect-video relative overflow-hidden">
+                        <img
+                          src={a.path}
+                          alt={a.filename}
+                          className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                          <Eye className="h-5 w-5 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                      </div>
+                      <div className="p-2">
+                        <p className={cn("text-xs truncate", isOwn ? "text-white/80" : "text-text-muted")}>
+                          {a.filename}
+                        </p>
+                      </div>
+                    </a>
+                  ) : (
+                    <a
+                      href={a.path}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-2 p-3"
+                    >
+                      <div
+                        className={cn(
+                          "flex h-8 w-8 items-center justify-center rounded-lg",
+                          isOwn ? "bg-white/20" : "bg-surface-background",
+                        )}
+                      >
+                        <FileText className={cn("h-4 w-4", isOwn ? "text-white" : "text-text-muted")} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className={cn("text-xs truncate", isOwn ? "text-white/80" : "text-text-muted")}>
+                          {a.filename}
+                        </p>
+                        {a.size && (
+                          <p className={cn("text-[10px]", isOwn ? "text-white/50" : "text-text-muted/70")}>
+                            {formatFileSize(a.size)}
+                          </p>
+                        )}
+                      </div>
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
+
+        {/* Timestamp */}
         <span
-          className={`mt-1 block text-xs opacity-70 ${
-            isOwn ? "text-right" : "text-left"
-          }`}
+          className={cn(
+            "mt-2 block text-xs",
+            isOwn ? "text-left text-white/50" : "text-right text-text-muted/70",
+          )}
         >
           {toJalali(msg.createdAt)}
         </span>

@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  listLaws,
-  deleteLaw,
-  toggleLawPublished,
-} from "@/lib/actions/laws";
+import { listLaws } from "@/lib/actions/laws";
 import {
   Table,
   TableHeader,
@@ -16,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, Edit } from "lucide-react";
 import { DeleteButton } from "@/components/admin/delete-button";
-import { ToggleButton } from "@/components/admin/toggle-button";
 import { toJalali } from "@/lib/jalali";
 
 export const metadata = {
@@ -80,10 +75,7 @@ export default async function AdminLawsPage() {
                           <Edit className="h-4 w-4" />
                         </Link>
                       </Button>
-                      <DeleteButton
-                        label="قانون"
-                        onConfirm={deleteLaw.bind(null, l.id)}
-                      />
+                      <DeleteButton label="قانون" entityType="law" entityId={l.id} />
                     </div>
                   </TableCell>
                 </TableRow>

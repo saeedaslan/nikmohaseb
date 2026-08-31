@@ -6,14 +6,24 @@ import { useToast } from "@/components/ui/toast";
 import { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { useRouter } from "next/navigation";
+import { deleteBanner } from "@/lib/actions/banners";
+import { deleteCircular } from "@/lib/actions/circulars";
+import { deleteArticle } from "@/lib/actions/articles";
+import { deleteLaw } from "@/lib/actions/laws";
+import { deleteFaq } from "@/lib/actions/faqs";
+import { deleteUser } from "@/lib/actions/users";
+import { deleteService } from "@/lib/actions/services";
+
+type EntityType = "banner" | "circular" | "article" | "law" | "faq" | "user" | "service";
 
 interface DeleteButtonProps {
   label: string;
+  entityType: EntityType;
+  entityId: string;
   destructive?: boolean;
-  onConfirm: () => Promise<unknown> | unknown;
 }
 
-export function DeleteButton({ label, destructive = true, onConfirm }: DeleteButtonProps) {
+export function DeleteButton({ label, entityType, entityId, destructive = true }: DeleteButtonProps) {
   const router = useRouter();
   const { addToast } = useToast();
   const [open, setOpen] = useState(false);
@@ -22,7 +32,29 @@ export function DeleteButton({ label, destructive = true, onConfirm }: DeleteBut
   const confirm = async () => {
     setDeleting(true);
     try {
-      await onConfirm();
+      switch (entityType) {
+        case "banner":
+          await deleteBanner(entityId);
+          break;
+        case "circular":
+          await deleteCircular(entityId);
+          break;
+        case "article":
+          await deleteArticle(entityId);
+          break;
+        case "law":
+          await deleteLaw(entityId);
+          break;
+        case "faq":
+          await deleteFaq(entityId);
+          break;
+        case "user":
+          await deleteUser(entityId);
+          break;
+        case "service":
+          await deleteService(entityId);
+          break;
+      }
       addToast({ message: `${label} حذف شد.`, variant: "success" });
       router.refresh();
     } catch {

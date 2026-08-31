@@ -22,8 +22,6 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  const handleSignOut = () => signOut({ callbackUrl: "/" });
-
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-surface-card/80 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -59,7 +57,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
           {user ? (
-            <UserMenu user={user} onSignOut={handleSignOut} />
+            <UserMenu user={user} />
           ) : (
             <Button asChild variant="accent" size="sm">
               <Link href="/login" className="text-sm">ورود / ثبت‌نام</Link>
@@ -110,7 +108,7 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
               variant="outline"
               size="sm"
               className="w-full"
-              onClick={handleSignOut}
+              onClick={() => signOut({ callbackUrl: "/" })}
             >
               خروج ({user?.name?.split(" ")[0]})
             </Button>
@@ -128,10 +126,8 @@ export function HeaderClient({ user }: { user: SessionUser | null }) {
 
 function UserMenu({
   user,
-  onSignOut,
 }: {
   user: SessionUser;
-  onSignOut: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const href = user.role === "ADMIN" || user.role === "SUPPORT" ? "/admin" : "/dashboard";
@@ -160,7 +156,7 @@ function UserMenu({
             پنل من
           </Link>
           <button
-            onClick={onSignOut}
+            onClick={() => signOut({ callbackUrl: "/" })}
             className="w-full rounded px-3 py-2 text-start text-sm text-text hover:bg-surface-background"
           >
             خروج

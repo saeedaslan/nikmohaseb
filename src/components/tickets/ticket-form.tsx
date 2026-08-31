@@ -14,6 +14,7 @@ import { useToast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { z } from "zod";
+import { TICKET_CATEGORY_LABELS } from "@/lib/constants";
 
 export type TicketFormInput = z.infer<typeof ticketCreateSchema>;
 
@@ -27,7 +28,7 @@ export function TicketForm({ redirectTo }: { redirectTo?: string }) {
     resolver: zodResolver(ticketCreateSchema),
     defaultValues: {
       subject: "",
-      category: "سایر",
+      category: "GENERAL",
       priority: "NORMAL",
       description: "",
       attachments: [],
@@ -74,15 +75,9 @@ export function TicketForm({ redirectTo }: { redirectTo?: string }) {
         render={({ field }) => (
           <Select value={field.value} onValueChange={field.onChange}>
             <option value="" disabled>دسته‌بندی انتخاب کنید</option>
-            <option value="مالیاتی">مالیاتی</option>
-            <option value="حسابداری">حسابداری</option>
-            <option value="اظهارنامه">اظهارنامه</option>
-            <option value="ارزش افزوده">ارزش افزوده</option>
-            <option value="بیمه و حقوق">بیمه و حقوق</option>
-            <option value="حسابرسی">حسابرسی</option>
-            <option value="ثبت شرکت">ثبت شرکت</option>
-            <option value="مشاوره مالی">مشاوره مالی</option>
-            <option value="سایر">سایر</option>
+            {Object.entries(TICKET_CATEGORY_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
           </Select>
         )}
       />

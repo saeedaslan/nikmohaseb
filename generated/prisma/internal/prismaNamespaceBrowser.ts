@@ -236,13 +236,18 @@ export type BannerScalarFieldEnum = (typeof BannerScalarFieldEnum)[keyof typeof 
 
 export const TicketScalarFieldEnum = {
   id: 'id',
+  trackingCode: 'trackingCode',
   subject: 'subject',
   category: 'category',
   priority: 'priority',
   status: 'status',
   userId: 'userId',
+  assignedToId: 'assignedToId',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  closedAt: 'closedAt'
 } as const
 
 export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
@@ -253,6 +258,8 @@ export const TicketMessageScalarFieldEnum = {
   content: 'content',
   ticketId: 'ticketId',
   userId: 'userId',
+  senderRole: 'senderRole',
+  isInternal: 'isInternal',
   createdAt: 'createdAt'
 } as const
 
