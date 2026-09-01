@@ -12,12 +12,14 @@ interface StatusPrioritySelectProps {
   ticketId: string;
   currentStatus: string;
   currentPriority: string;
+  type?: "status" | "priority" | "both";
 }
 
 export function StatusPrioritySelect({
   ticketId,
   currentStatus,
   currentPriority,
+  type = "both",
 }: StatusPrioritySelectProps) {
   const { addToast } = useToast();
   const router = useRouter();
@@ -64,51 +66,55 @@ export function StatusPrioritySelect({
 
   return (
     <div className="space-y-3">
-      <div>
-        <label className="block text-xs text-text-muted mb-1.5">وضعیت</label>
-        <div className="flex flex-wrap gap-1.5">
-          {Object.entries(TICKET_STATUS_LABELS).map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => handleStatusChange(value)}
-              disabled={isPending}
-              className={cn(
-                "flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium transition-all duration-200",
-                currentStatus === value
-                  ? "border-accent-green bg-accent-green/10 text-accent-green"
-                  : "border-border/60 bg-surface-card text-text-muted hover:border-accent-green/50",
-              )}
-            >
-              {currentStatus === value && <Check className="h-3 w-3" />}
-              {label}
-            </button>
-          ))}
+      {(type === "both" || type === "status") && (
+        <div>
+          {type === "both" && <label className="block text-xs text-text-muted mb-1.5">وضعیت</label>}
+          <div className="flex flex-wrap gap-1.5">
+            {Object.entries(TICKET_STATUS_LABELS).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => handleStatusChange(value)}
+                disabled={isPending}
+                className={cn(
+                  "flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium transition-all duration-200",
+                  currentStatus === value
+                    ? "border-accent-green bg-accent-green/10 text-accent-green"
+                    : "border-border/60 bg-surface-card text-text-muted hover:border-accent-green/50",
+                )}
+              >
+                {currentStatus === value && <Check className="h-3 w-3" />}
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div>
-        <label className="block text-xs text-text-muted mb-1.5">اولویت</label>
-        <div className="flex flex-wrap gap-1.5">
-          {Object.entries(TICKET_PRIORITY_LABELS).map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => handlePriorityChange(value)}
-              disabled={isPending}
-              className={cn(
-                "flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium transition-all duration-200",
-                currentPriority === value
-                  ? priorityColors[value]
-                  : "border-border/60 bg-surface-card text-text-muted hover:border-accent-green/50",
-              )}
-            >
-              {currentPriority === value && <Check className="h-3 w-3" />}
-              {label}
-            </button>
-          ))}
+      {(type === "both" || type === "priority") && (
+        <div>
+          {type === "both" && <label className="block text-xs text-text-muted mb-1.5">اولویت</label>}
+          <div className="flex flex-wrap gap-1.5">
+            {Object.entries(TICKET_PRIORITY_LABELS).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => handlePriorityChange(value)}
+                disabled={isPending}
+                className={cn(
+                  "flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium transition-all duration-200",
+                  currentPriority === value
+                    ? priorityColors[value]
+                    : "border-border/60 bg-surface-card text-text-muted hover:border-accent-green/50",
+                )}
+              >
+                {currentPriority === value && <Check className="h-3 w-3" />}
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {isPending && (
         <div className="flex items-center gap-2 text-xs text-accent-green">

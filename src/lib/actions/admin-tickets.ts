@@ -454,7 +454,7 @@ export async function getAdminDashboardMetrics() {
 }
 
 export async function getSupportStaff() {
-  await requireAdmin();
+  await requireAdminOrSupport();
 
   return prisma.user.findMany({
     where: { role: { in: [Role.ADMIN, Role.SUPPORT] }, active: true },

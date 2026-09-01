@@ -1,5 +1,5 @@
 import { toJalali } from "@/lib/jalali";
-import { UserCircle, Paperclip, Download, Image as ImageIcon, FileText, Eye, Lock } from "lucide-react";
+import { UserCircle, Paperclip, Download, Image as ImageIcon, FileText, Eye, Lock, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Attachment {
@@ -36,8 +36,11 @@ export function TicketThread({
   if (!filteredMessages.length) {
     return (
       <div className="py-12 text-center">
-        <UserCircle className="mx-auto h-16 w-16 text-text-muted mb-3" />
+        <div className="flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-surface-background mb-4">
+          <UserCircle className="h-10 w-10 text-text-muted" />
+        </div>
         <p className="text-sm text-text-muted">هنوز پیامی نیست.</p>
+        <p className="text-xs text-text-muted/70 mt-1">اولین پیام را ارسال کنید</p>
       </div>
     );
   }
@@ -79,38 +82,53 @@ function MessageBubble({
         className={cn(
           "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full",
           isInternal
-            ? "bg-yellow-500/20 text-yellow-600"
+            ? "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400"
             : isAdmin
-              ? "bg-accent-green/20 text-accent-green"
-              : "bg-surface-background text-text-muted",
+              ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400"
+              : isOwn
+                ? "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400"
+                : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
         )}
       >
-        <UserCircle className="h-8 w-8" />
+        {isAdmin ? (
+          <CheckCircle2 className="h-5 w-5" />
+        ) : (
+          <UserCircle className="h-8 w-8" />
+        )}
       </div>
       <div
         className={cn(
-          "max-w-[80%] rounded-2xl p-4",
+          "max-w-[80%] rounded-2xl p-4 shadow-sm",
           isInternal
-            ? "bg-yellow-500/10 border-2 border-yellow-500/30"
+            ? "bg-amber-50 border-2 border-amber-300 dark:bg-amber-950/30 dark:border-amber-700"
             : isAdmin
-              ? "bg-accent-green/10 border border-accent-green/20"
+              ? "bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800"
               : isOwn
-                ? "bg-primary-navy text-white"
-                : "bg-surface-background border border-border/60",
+                ? "bg-blue-600 text-white border border-blue-500 dark:bg-blue-700"
+                : "bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700",
         )}
       >
         {/* Header */}
         <div className="flex items-center gap-2 mb-2 flex-wrap">
-          <span className={cn("text-sm font-semibold", isOwn ? "text-white" : "text-text")}>
+          <span className={cn(
+            "text-sm font-semibold",
+            isOwn ? "text-white" : isInternal ? "text-amber-800 dark:text-amber-200" : "text-gray-900 dark:text-gray-100"
+          )}>
             {msg.user?.name ?? "کاربر"}
           </span>
           {isAdmin && (
-            <span className="rounded-full bg-accent-green/20 px-2 py-0.5 text-[10px] font-bold text-accent-green">
+            <span className={cn(
+              "rounded-full px-2 py-0.5 text-[10px] font-bold",
+              "bg-emerald-200 text-emerald-800 dark:bg-emerald-800 dark:text-emerald-200"
+            )}>
               پشتیبانی
             </span>
           )}
           {isInternal && showInternal && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/20 px-2 py-0.5 text-[10px] font-bold text-yellow-600">
+            <span className={cn(
+              "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold",
+              "bg-amber-200 text-amber-800 dark:bg-amber-800 dark:text-amber-200"
+            )}>
               <Lock className="h-2.5 w-2.5" />
               یادداشت داخلی
             </span>
@@ -122,7 +140,7 @@ function MessageBubble({
           <p
             className={cn(
               "text-sm whitespace-pre-wrap break-words leading-relaxed",
-              isOwn ? "text-white/90" : "text-text",
+              isOwn ? "text-white" : isInternal ? "text-amber-900 dark:text-amber-100" : "text-gray-800 dark:text-gray-200",
             )}
           >
             {msg.content}
@@ -132,7 +150,10 @@ function MessageBubble({
         {/* Attachments */}
         {msg.attachments.length > 0 && (
           <div className="mt-3 space-y-2">
-            <div className="flex items-center gap-1 text-xs opacity-70">
+            <div className={cn(
+              "flex items-center gap-1 text-xs",
+              isOwn ? "text-white/70" : "text-gray-500 dark:text-gray-400"
+            )}>
               <Paperclip className="h-3 w-3" />
               <span>{msg.attachments.length} فایل ضمیمه</span>
             </div>
@@ -141,8 +162,8 @@ function MessageBubble({
                 <div
                   key={a.id ?? index}
                   className={cn(
-                    "group relative rounded-xl border overflow-hidden transition-all duration-200 hover:border-accent-green/50",
-                    isOwn ? "border-white/20 bg-white/10" : "border-border/60 bg-surface-card",
+                    "group relative rounded-xl border overflow-hidden transition-all duration-200 hover:border-emerald-400",
+                    isOwn ? "border-white/30 bg-white/20" : "border-gray-200 bg-gray-50 dark:border-gray-600 dark:bg-gray-900",
                   )}
                 >
                   {isImage(a.mime) ? (
@@ -158,7 +179,10 @@ function MessageBubble({
                         </div>
                       </div>
                       <div className="p-2">
-                        <p className={cn("text-xs truncate", isOwn ? "text-white/80" : "text-text-muted")}>
+                        <p className={cn(
+                          "text-xs truncate",
+                          isOwn ? "text-white/90" : "text-gray-600 dark:text-gray-400"
+                        )}>
                           {a.filename}
                         </p>
                       </div>
@@ -173,17 +197,17 @@ function MessageBubble({
                       <div
                         className={cn(
                           "flex h-8 w-8 items-center justify-center rounded-lg",
-                          isOwn ? "bg-white/20" : "bg-surface-background",
+                          isOwn ? "bg-white/20" : "bg-gray-200 dark:bg-gray-700",
                         )}
                       >
-                        <FileText className={cn("h-4 w-4", isOwn ? "text-white" : "text-text-muted")} />
+                        <FileText className={cn("h-4 w-4", isOwn ? "text-white" : "text-gray-500 dark:text-gray-400")} />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className={cn("text-xs truncate", isOwn ? "text-white/80" : "text-text-muted")}>
+                        <p className={cn("text-xs truncate", isOwn ? "text-white/90" : "text-gray-600 dark:text-gray-400")}>
                           {a.filename}
                         </p>
                         {a.size && (
-                          <p className={cn("text-[10px]", isOwn ? "text-white/50" : "text-text-muted/70")}>
+                          <p className={cn("text-[10px]", isOwn ? "text-white/60" : "text-gray-400 dark:text-gray-500")}>
                             {formatFileSize(a.size)}
                           </p>
                         )}
@@ -200,7 +224,7 @@ function MessageBubble({
         <span
           className={cn(
             "mt-2 block text-xs",
-            isOwn ? "text-left text-white/50" : "text-right text-text-muted/70",
+            isOwn ? "text-left text-white/70" : "text-right text-gray-400 dark:text-gray-500",
           )}
         >
           {toJalali(msg.createdAt)}
