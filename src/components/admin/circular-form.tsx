@@ -36,6 +36,8 @@ export function CircularForm({
     { name: "content", label: "محتوا (HTML)", type: "html", description: "متن کامل بخشنامه" },
     { name: "published", label: "منتشر شود", type: "checkbox" },
     { name: "publishedAt", label: "تاریخ انتشار", type: "date" },
+    { name: "seoTitle", label: "SEO Title", type: "text", description: "عنوان سئو (حداکثر ۱۶۰ کاراکتر)" },
+    { name: "seoDescription", label: "SEO Description", type: "textarea", description: "توضیحات سئو (حداکثر ۳۲۰ کاراکتر)" },
   ];
 
   const serverAction = circular

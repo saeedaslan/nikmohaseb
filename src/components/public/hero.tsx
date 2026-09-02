@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import type { Banner } from "@/lib/queries";
 import { Users, Award, Clock, ChevronDown } from "lucide-react";
@@ -24,9 +25,11 @@ export async function Hero({ banner }: { banner: Banner | null }) {
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
       {/* Background Image */}
-      <img
+      <Image
         src={imageSrc}
         alt={data.title}
+        fill
+        priority
         className="absolute inset-0 h-full w-full object-cover"
       />
       

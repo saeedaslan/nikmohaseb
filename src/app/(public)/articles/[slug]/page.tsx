@@ -1,13 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { toJalali } from "@/lib/jalali";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, User } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArticleSchema } from "@/components/structured-data";
+import { ArticleSchema, BreadcrumbSchema, SpeakableSchema } from "@/components/structured-data";
 import { domains } from "@/lib/nav";
+
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
@@ -17,22 +20,26 @@ export async function generateMetadata({
   const { slug } = await params;
   const article = await prisma.article.findUnique({
     where: { slug: decodeURIComponent(slug), published: true },
-    select: { title: true, summary: true, slug: true },
+    select: { title: true, summary: true, slug: true, image: true, seoTitle: true, seoDescription: true },
   });
 
   if (!article) return {};
 
+  const metaTitle = article.seoTitle || article.title;
+  const metaDescription = article.seoDescription || article.summary || `مقاله ${article.title} - نیک محاسب سرو`;
+
   return {
-    title: article.title,
-    description: article.summary || `مقاله ${article.title} - نیک محاسب سرو`,
+    title: metaTitle,
+    description: metaDescription,
     alternates: {
       canonical: `${domains.primary}/articles/${article.slug}`,
     },
     openGraph: {
-      title: article.title,
-      description: article.summary || undefined,
+      title: metaTitle,
+      description: metaDescription,
       type: "article",
       url: `${domains.primary}/articles/${article.slug}`,
+      images: article.image ? [{ url: article.image, width: 1200, height: 630, alt: article.title }] : undefined,
     },
   };
 }
@@ -60,6 +67,17 @@ export default async function ArticlePage({
         dateModified={article.updatedAt}
         author={article.author?.name || undefined}
         slug={article.slug}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "خانه", href: "/" },
+          { name: "مقالات", href: "/articles" },
+          { name: article.title, href: `/articles/${article.slug}` },
+        ]}
+      />
+      <SpeakableSchema
+        cssSelector={[".article-content"]}
+        url={`${domains.primary}/articles/${article.slug}`}
       />
       <div className="container mx-auto max-w-4xl px-4">
         <Link
@@ -94,9 +112,11 @@ export default async function ArticlePage({
 
         {article.image && (
           <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-xl">
-            <img
+            <Image
               src={article.image}
               alt={article.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 900px"
               className="absolute inset-0 h-full w-full object-cover object-center"
             />
           </div>

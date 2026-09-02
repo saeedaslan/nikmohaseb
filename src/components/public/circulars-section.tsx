@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileDown, Calendar, Building } from "lucide-react";
 import { toJalali } from "@/lib/jalali";
@@ -49,9 +50,11 @@ export async function CircularsSection({ circulars }: { circulars: Circular[] })
                   {/* Image / Header */}
                   {c.image ? (
                     <div className="relative h-52 w-full overflow-hidden">
-                      <img
+                      <Image
                         src={c.image}
                         alt={c.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />

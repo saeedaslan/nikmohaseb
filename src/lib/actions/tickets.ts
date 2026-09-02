@@ -42,7 +42,7 @@ function generateTrackingCode(): string {
 export async function createTicket(
   prevState: unknown,
   formData: FormData,
-): Promise<{ ok?: boolean; error?: string; errors?: Record<string, string[]> }> {
+): Promise<{ ok?: boolean; error?: string; errors?: Record<string, string[]>; trackingCode?: string }> {
   const user = await requireUser();
 
   const attachments = parseAttachments(formData.get("attachments"));
@@ -92,13 +92,13 @@ export async function createTicket(
         },
       },
     });
+
+    revalidatePath("/dashboard/tickets");
+    return { ok: true, trackingCode };
   } catch (error) {
     console.error("Ticket creation error:", error);
     return { error: "خطا در ثبت تیکت." };
   }
-
-  revalidatePath("/dashboard/tickets");
-  return { ok: true };
 }
 
 export async function getTicketStats() {

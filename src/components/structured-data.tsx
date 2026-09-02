@@ -44,6 +44,27 @@ export function LocalBusinessSchema() {
       "@type": "City",
       name: "تهران",
     },
+    knowsAbout: [
+      "حسابداری",
+      "مالیات",
+      "مالیات بر درآمد",
+      "مالیات بر ارزش افزوده",
+      "حسابرسی",
+      "حقوق دستمزد",
+      "ثبت شرکت",
+      "مشاوره مالی",
+    ],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "خدمات حسابداری و مالیاتی",
+      itemListElement: [
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "حسابداری شرکتی" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "مشاوره مالیاتی" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "مدیریت ارزش افزوده" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "حسابرسی" } },
+        { "@type": "Offer", itemOffered: { "@type": "Service", name: "حقوق دستمزد" } },
+      ],
+    },
   };
 
   return (
@@ -132,6 +153,7 @@ export function ArticleSchema({
     author: {
       "@type": "Person",
       name: author || companyName,
+      url: domains.primary,
     },
     publisher: {
       "@type": "Organization",
@@ -139,11 +161,23 @@ export function ArticleSchema({
       logo: {
         "@type": "ImageObject",
         url: `${domains.primary}/images/logo.png`,
+        width: 200,
+        height: 200,
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${domains.primary}/articles/${slug}`,
+    },
+    inLanguage: "fa-IR",
+    copyrightYear: new Date().getFullYear(),
+    copyrightHolder: {
+      "@type": "Organization",
+      name: companyName,
+    },
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".article-content"],
     },
   };
 
@@ -212,6 +246,190 @@ export function GovernmentServiceSchema({
     datePublished: datePublished.toISOString(),
     areaServed: { "@type": "Country", name: "Iran" },
     url: `${domains.primary}/circulars/${slug}`,
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function ItemListSchema({
+  items,
+  name,
+}: {
+  items: { name: string; url: string; image?: string }[];
+  name: string;
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    numberOfItems: items.length,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: item.url.startsWith("http") ? item.url : `${domains.primary}${item.url}`,
+      ...(item.image && { image: item.image.startsWith("http") ? item.image : `${domains.primary}${item.image}` }),
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function SpeakableSchema({
+  cssSelector,
+  url,
+}: {
+  cssSelector: string[];
+  url: string;
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector,
+    },
+    inLanguage: "fa-IR",
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function WebSiteSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: companyName,
+    description: "خدمات تخصصی حسابداری، مالیاتی، مشاوره مالی و ثبت شرکت در تهران",
+    url: domains.primary,
+    inLanguage: "fa-IR",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${domains.primary}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function AboutPageSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: `درباره ${companyName}`,
+    description: "درباره تیم نیک محاسب سرو و خدمات حسابداری و مالیاتی",
+    url: `${domains.primary}/about`,
+    mainEntity: {
+      "@type": "Organization",
+      name: companyName,
+      url: domains.primary,
+      logo: `${domains.primary}/images/logo.png`,
+      description: "خدمات تخصصی حسابداری، مالیاتی، مشاوره مالی و ثبت شرکت در تهران",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: contactInfo.address,
+        addressLocality: "تهران",
+        addressCountry: "IR",
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: contactInfo.phones[0],
+        email: contactInfo.email,
+        contactType: "customer service",
+        availableLanguage: ["Persian"],
+      },
+    },
+    inLanguage: "fa-IR",
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function ContactPageSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: `تماس با ${companyName}`,
+    description: "راه‌های ارتباطی با نیک محاسب سرو",
+    url: `${domains.primary}/contact`,
+    mainEntity: {
+      "@type": "Organization",
+      name: companyName,
+      telephone: contactInfo.phones[0],
+      email: contactInfo.email,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: contactInfo.address,
+        addressLocality: "تهران",
+        addressCountry: "IR",
+      },
+    },
+    inLanguage: "fa-IR",
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function LegislationSchema({
+  title,
+  description,
+  datePublished,
+  issuer,
+  number,
+  slug,
+}: {
+  title: string;
+  description: string;
+  datePublished: Date;
+  issuer?: string;
+  number?: string;
+  slug: string;
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Legislation",
+    name: title,
+    description,
+    datePublished: datePublished.toISOString(),
+    url: `${domains.primary}/laws/${slug}`,
+    ...(issuer && { legislationPassedBy: { "@type": "Organization", name: issuer } }),
+    ...(number && { legislationIdentifier: number }),
+    inLanguage: "fa-IR",
   };
 
   return (

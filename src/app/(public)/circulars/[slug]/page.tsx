@@ -17,28 +17,28 @@ export async function generateMetadata({
   const { slug } = await params;
   const circular = await prisma.circular.findUnique({
     where: { slug: decodeURIComponent(slug), published: true },
-    select: { title: true, summary: true, slug: true },
+    select: { title: true, summary: true, slug: true, seoTitle: true, seoDescription: true, image: true },
   });
 
   if (!circular) return {};
 
   return {
-    title: circular.title,
-    description: circular.summary || `جزئیات بخشنامه ${circular.title}`,
+    title: circular.seoTitle || circular.title,
+    description: circular.seoDescription || circular.summary || `جزئیات بخشنامه ${circular.title}`,
     alternates: {
       canonical: `${domains.primary}/circulars/${circular.slug}`,
     },
     openGraph: {
-      title: circular.title,
-      description: circular.summary || undefined,
+      title: circular.seoTitle || circular.title,
+      description: circular.seoDescription || circular.summary || undefined,
       type: "article",
       url: `${domains.primary}/circulars/${circular.slug}`,
+      images: circular.image ? [{ url: circular.image, width: 1200, height: 630, alt: circular.title }] : undefined,
     },
   };
 }
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default async function CircularPage({
   params,

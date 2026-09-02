@@ -20,9 +20,11 @@ export function ServiceCard({ service }: ServiceCardProps) {
     <Card className="group flex flex-col bg-surface-card text-text border-border dark:bg-primary-navy/5 dark:border-primary-navy/20">
       {service.image ? (
         <div className="relative h-40 w-full overflow-hidden rounded-t-xl">
-          <img
+          <Image
             src={service.image}
             alt={service.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="h-full w-full object-cover transition-transform group-hover:scale-105"
           />
         </div>

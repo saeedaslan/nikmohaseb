@@ -3,6 +3,9 @@ import { contactInfo, domains } from "@/lib/nav";
 import { Award, Users, Clock, ShieldCheck, Target, Heart, CheckCircle, ArrowLeft, Phone, Mail } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { AboutPageSchema } from "@/components/structured-data";
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: "درباره ما | نیک محاسب سرو",
@@ -52,6 +55,7 @@ const timeline = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen">
+      <AboutPageSchema />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-navy via-primary-navy to-accent-green py-16 lg:py-24">
         {/* Animated Blobs */}

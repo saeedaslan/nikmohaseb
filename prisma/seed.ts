@@ -90,11 +90,7 @@ async function main() {
     const slug = slugify(s.title);
     await prisma.service.upsert({
       where: { slug },
-      update: {
-        title: s.title, summary: s.summary, icon: s.icon, order: 0,
-        published: true, categoryId: cat?.id,
-        content: sanitizeHtml(`<h3>${s.title}</h3><p>${s.summary}</p>`),
-      },
+      update: {},
       create: {
         title: s.title, slug, summary: s.summary, icon: s.icon, order: 0,
         published: true, categoryId: cat?.id,
@@ -153,12 +149,7 @@ async function main() {
   for (const a of articles) {
     await prisma.article.upsert({
       where: { slug: a.slug },
-      update: {
-        title: a.title, summary: a.summary, content: a.content,
-        published: true, publishedAt: new Date(),
-        seoTitle: a.seoTitle, seoDescription: a.seoDescription,
-        authorId: admin.id, categoryId: artCat?.id,
-      },
+      update: {},
       create: {
         title: a.title, slug: a.slug, summary: a.summary, image: a.image, content: a.content,
         published: true, publishedAt: new Date(),
@@ -222,11 +213,7 @@ async function main() {
   for (const c of circulars) {
     await prisma.circular.upsert({
       where: { slug: c.slug },
-      update: {
-        title: c.title, number: c.number, date: c.date, issuer: c.issuer,
-        summary: c.summary, content: c.content, published: true, publishedAt: new Date(),
-        file: c.file, categoryId: circCat?.id,
-      },
+      update: {},
       create: {
         title: c.title, slug: c.slug, number: c.number, date: c.date, issuer: c.issuer,
         summary: c.summary, content: c.content, published: true, publishedAt: new Date(),
@@ -347,11 +334,7 @@ async function main() {
   for (const l of laws) {
     await prisma.law.upsert({
       where: { slug: l.slug },
-      update: {
-        title: l.title, number: l.number, date: l.date, issuer: l.issuer,
-        summary: l.summary, content: l.content, published: true, publishedAt: new Date(),
-        type: l.type as "DIRECT_TAX" | "VAT" | "OTHER", file: l.file, categoryId: lawCat?.id,
-      },
+      update: {},
       create: {
         title: l.title, slug: l.slug, number: l.number, date: l.date, issuer: l.issuer,
         summary: l.summary, content: l.content, published: true, publishedAt: new Date(),
@@ -445,14 +428,7 @@ async function main() {
   for (const q of faqs) {
     await prisma.faq.upsert({
       where: { slug: q.slug },
-      update: {
-        question: q.question,
-        answer: q.answer,
-        category: q.category,
-        order: q.order,
-        published: true,
-        publishedAt: new Date(),
-      },
+      update: {},
       create: {
         question: q.question,
         slug: q.slug,

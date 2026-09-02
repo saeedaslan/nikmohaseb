@@ -21,6 +21,33 @@ export const TICKET_CATEGORY_LABELS: Record<string, string> = {
   GENERAL: "عمومی",
 };
 
+export const TICKET_CATEGORY_DESCRIPTIONS: Record<string, string> = {
+  TAX_CONSULTING: "سوالات مربوط به مالیات، اظهارنامه و برنامه‌ریزی مالیاتی",
+  MOADIAN_SYSTEM: "مشکلات فنی سامانه مودیان و فاکتور الکترونیکی",
+  VAT_DECLARATION: "سوالات مربوط به مالیات بر ارزش افزوده",
+  INSURANCE_PAYROLL: "بیمه تامین اجتماعی، حقوق و دستمزد",
+  TECHNICAL_SUPPORT: "مشکلات فنی سایت و خدمات آنلاین",
+  GENERAL: "سوالات و درخواست‌های عمومی",
+};
+
+export const TICKET_TEMPLATES: Array<{ label: string; subject: string; description: string }> = [
+  {
+    label: "سوال مالیاتی",
+    subject: "سوال درباره مالیات",
+    description: "سلام،\n\nسوالی داشتم درباره:\n\n",
+  },
+  {
+    label: "مشکل فنی",
+    subject: "گزارش مشکل فنی",
+    description: "سلام،\n\nبا مشکل مواجه شده‌ام:\n\n\nمراحل تکرار مشکل:\n1. \n2. \n3. \n\nنتیجه مورد انتظار:\n",
+  },
+  {
+    label: "درخواست مشاوره",
+    subject: "درخواست مشاوره",
+    description: "سلام،\n\nنیاز به مشاوره در زمینه:\n\n\nشرایط کار:\n",
+  },
+];
+
 export const TICKET_CATEGORIES = [
   "TAX_CONSULTING",
   "MOADIAN_SYSTEM",

@@ -11,12 +11,6 @@ import {
   ticketInternalNoteSchema,
 } from "@/lib/validations/admin";
 
-async function generateTrackingCode(): Promise<string> {
-  const year = 1403;
-  const random = Math.floor(1000 + Math.random() * 9000);
-  return `TK-${year}-${random}`;
-}
-
 export async function listAdminTickets(
   query?: string,
   statusFilter?: string,
@@ -83,7 +77,7 @@ export async function assignTicket(
   prevState: unknown,
   formData: FormData,
 ): Promise<{ ok?: boolean; error?: string }> {
-  const admin = await requireAdmin();
+  await requireAdminOrSupport();
 
   const parsed = ticketAssignSchema.safeParse({
     ticketId: formData.get("ticketId"),
@@ -285,6 +279,8 @@ export async function adminAddMessage(
     return { error: "تیکت یافت نشد." };
   }
 
+  const files = formData.getAll("attachments") as File[];
+
   const result = await prisma.$transaction(async (tx) => {
     const message = await tx.ticketMessage.create({
       data: {
@@ -311,24 +307,23 @@ export async function adminAddMessage(
       },
     });
 
+    for (const file of files) {
+      if (file instanceof File && file.size > 0) {
+        await tx.ticketAttachment.create({
+          data: {
+            filename: file.name,
+            path: `/uploads/${Date.now()}-${file.name}`,
+            mime: file.type,
+            size: file.size,
+            ticketMessageId: message.id,
+            userId: admin.id,
+          },
+        });
+      }
+    }
+
     return { message, newStatus };
   });
-
-  const files = formData.getAll("attachments") as File[];
-  for (const file of files) {
-    if (file instanceof File && file.size > 0) {
-      await prisma.ticketAttachment.create({
-        data: {
-          filename: file.name,
-          path: `/uploads/${Date.now()}-${file.name}`,
-          mime: file.type,
-          size: file.size,
-          ticketMessageId: result.message.id,
-          userId: admin.id,
-        },
-      });
-    }
-  }
 
   revalidatePath("/admin/tickets");
   revalidatePath(`/admin/tickets/${ticketId}`);
@@ -462,5 +457,3 @@ export async function getSupportStaff() {
     orderBy: { name: "asc" },
   });
 }
-
-export { generateTrackingCode };

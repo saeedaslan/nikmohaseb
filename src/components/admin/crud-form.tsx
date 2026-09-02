@@ -140,16 +140,18 @@ export function AdminCrudForm<T>({
     const init: Record<string, UploadedFileMeta[]> = {};
     for (const f of fields) {
       if (f.type === "image" && initialData && f.name in initialData) {
-        const val = String((initialData as Record<string, unknown>)[f.name]);
-        init[f.name] = [
-          {
-            url: val,
-            filename: val,
-            originalName: val,
-            mime: "image/jpeg",
-            size: 0,
-          },
-        ];
+        const val = (initialData as Record<string, unknown>)[f.name];
+        if (val) {
+          init[f.name] = [
+            {
+              url: String(val),
+              filename: String(val),
+              originalName: String(val),
+              mime: "image/jpeg",
+              size: 0,
+            },
+          ];
+        }
       }
     }
     return init;

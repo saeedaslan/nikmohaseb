@@ -32,6 +32,8 @@ export function ServiceForm({
     { name: "summary", label: "خلاصه", type: "textarea", description: "خلاصه کوتاه" },
     { name: "image", label: "تصویر شاخص", type: "image" },
     { name: "content", label: "محتوا (HTML)", type: "html", description: "محتوای کامل به صورت HTML" },
+    { name: "seoTitle", label: "SEO Title", type: "text", description: "عنوان سئو (حداکثر ۱۶۰ کاراکتر)" },
+    { name: "seoDescription", label: "SEO Description", type: "textarea", description: "توضیحات سئو (حداکثر ۳۲۰ کاراکتر)" },
   ];
 
   const serverAction = service

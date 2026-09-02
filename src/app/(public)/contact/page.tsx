@@ -5,6 +5,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MapPin, Mail, Phone, Clock, MessageSquare, Send, CheckCircle, ArrowLeft } from "lucide-react";
 import { contactInfo, domains } from "@/lib/nav";
+import { ContactPageSchema } from "@/components/structured-data";
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: "تماس با ما | نیک محاسب سرو",
@@ -19,6 +22,7 @@ export default async function ContactPage() {
 
   return (
     <div className="min-h-screen">
+      <ContactPageSchema />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-navy via-primary-navy to-accent-green py-16 lg:py-24">
         {/* Animated Blobs */}
@@ -53,7 +57,7 @@ export default async function ContactPage() {
               <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green/20 to-accent-green/10 transition-transform duration-300 group-hover:scale-110">
                 <MapPin className="h-7 w-7 text-accent-green" />
               </div>
-              <h3 className="mb-2 text-lg font-bold text-primary-navy">آدرس</h3>
+              <h2 className="mb-2 text-lg font-bold text-primary-navy">آدرس</h2>
               <p className="text-sm text-text-muted leading-relaxed">{contactInfo.address}</p>
             </div>
 
@@ -62,7 +66,7 @@ export default async function ContactPage() {
               <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green/20 to-accent-green/10 transition-transform duration-300 group-hover:scale-110">
                 <Mail className="h-7 w-7 text-accent-green" />
               </div>
-              <h3 className="mb-2 text-lg font-bold text-primary-navy">ایمیل</h3>
+              <h2 className="mb-2 text-lg font-bold text-primary-navy">ایمیل</h2>
               <a href={`mailto:${contactInfo.email}`} className="text-sm text-text-muted hover:text-accent-green transition-colors leading-relaxed">
                 {contactInfo.email}
               </a>
@@ -73,7 +77,7 @@ export default async function ContactPage() {
               <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green/20 to-accent-green/10 transition-transform duration-300 group-hover:scale-110">
                 <Phone className="h-7 w-7 text-accent-green" />
               </div>
-              <h3 className="mb-2 text-lg font-bold text-primary-navy">تلفن</h3>
+              <h2 className="mb-2 text-lg font-bold text-primary-navy">تلفن</h2>
               <div className="space-y-1">
                 {contactInfo.phones.map((phone) => (
                   <a key={phone} href={`tel:${phone.replace(/-/g, "")}`} className="block text-sm text-text-muted hover:text-accent-green transition-colors">

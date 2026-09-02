@@ -132,6 +132,8 @@ export const ServiceScalarFieldEnum = {
   image: 'image',
   order: 'order',
   published: 'published',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -173,6 +175,8 @@ export const CircularScalarFieldEnum = {
   file: 'file',
   published: 'published',
   publishedAt: 'publishedAt',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -194,6 +198,8 @@ export const LawScalarFieldEnum = {
   type: 'type',
   published: 'published',
   publishedAt: 'publishedAt',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

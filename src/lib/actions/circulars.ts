@@ -14,19 +14,27 @@ export async function listCirculars() {
 }
 
 function parseCircular(fd: FormData): CircularInput {
+  const dateStr = fd.get("date")?.toString();
+  const publishedAtStr = fd.get("publishedAt")?.toString();
+  const title = fd.get("title")?.toString() ?? "";
+  let slug = fd.get("slug")?.toString() ?? "";
+  if (!slug && title) {
+    slug = slugify(title);
+  }
   return {
-    title: fd.get("title")?.toString() ?? "",
-    slug: fd.get("slug")?.toString() ?? "",
+    title,
+    slug,
     number: fd.get("number")?.toString() || undefined,
-    date: fd.get("date") ? new Date(fd.get("date")!.toString()) : undefined,
+    date: dateStr ? new Date(dateStr) : undefined,
     issuer: fd.get("issuer")?.toString() || undefined,
     summary: fd.get("summary")?.toString() || undefined,
     content: fd.get("content")?.toString() || undefined,
+    image: fd.get("image")?.toString() || undefined,
     file: fd.get("file")?.toString() || undefined,
     published: fd.get("published") === "true",
-    publishedAt: fd.get("publishedAt")
-      ? new Date(fd.get("publishedAt")!.toString())
-      : undefined,
+    publishedAt: publishedAtStr ? new Date(publishedAtStr) : undefined,
+    seoTitle: fd.get("seoTitle")?.toString() || undefined,
+    seoDescription: fd.get("seoDescription")?.toString() || undefined,
     categoryId: fd.get("categoryId")?.toString() || undefined,
   };
 }
@@ -37,14 +45,11 @@ export async function createCircular(
   const parsed = circularSchema.safeParse(parseCircular(fd));
   if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors };
   const value = parsed.data;
-  if (!value.slug) value.slug = slugify(value.title);
   if (value.content) value.content = sanitizeHtml(value.content);
-  if (parsed.success) {
-    try {
-      await prisma.circular.create({ data: value });
-    } catch {
-      return { error: "خطا در ثبت بخشنامه." };
-    }
+  try {
+    await prisma.circular.create({ data: value });
+  } catch {
+    return { error: "خطا در ثبت بخشنامه." };
   }
   revalidatePath("/admin/circulars");
   revalidatePath("/circulars");
@@ -58,7 +63,6 @@ export async function updateCircular(
   const parsed = circularSchema.safeParse(parseCircular(fd));
   if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors };
   const value = parsed.data;
-  if (!value.slug) value.slug = slugify(value.title);
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
     await prisma.circular.update({ where: { id }, data: value });

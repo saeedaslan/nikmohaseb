@@ -14,9 +14,14 @@ export async function listArticles() {
 }
 
 function parseArticle(fd: FormData): ArticleInput {
+  const title = fd.get("title")?.toString() ?? "";
+  let slug = fd.get("slug")?.toString() ?? "";
+  if (!slug && title) {
+    slug = slugify(title);
+  }
   return {
-    title: fd.get("title")?.toString() ?? "",
-    slug: fd.get("slug")?.toString() ?? "",
+    title,
+    slug,
     summary: fd.get("summary")?.toString() || undefined,
     content: fd.get("content")?.toString() || undefined,
     image: fd.get("image")?.toString() || undefined,
@@ -37,7 +42,6 @@ export async function createArticle(
   const parsed = articleSchema.safeParse(parseArticle(fd));
   if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors };
   const value = parsed.data;
-  if (!value.slug) value.slug = slugify(value.title);
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
     await prisma.article.create({ data: value });
@@ -56,7 +60,6 @@ export async function updateArticle(
   const parsed = articleSchema.safeParse(parseArticle(fd));
   if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors };
   const value = parsed.data;
-  if (!value.slug) value.slug = slugify(value.title);
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
     await prisma.article.update({ where: { id }, data: value });

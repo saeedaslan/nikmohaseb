@@ -37,6 +37,8 @@ export type LawMinAggregateOutputType = {
   type: $Enums.LawType | null
   published: boolean | null
   publishedAt: Date | null
+  seoTitle: string | null
+  seoDescription: string | null
   categoryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -55,6 +57,8 @@ export type LawMaxAggregateOutputType = {
   type: $Enums.LawType | null
   published: boolean | null
   publishedAt: Date | null
+  seoTitle: string | null
+  seoDescription: string | null
   categoryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -73,6 +77,8 @@ export type LawCountAggregateOutputType = {
   type: number
   published: number
   publishedAt: number
+  seoTitle: number
+  seoDescription: number
   categoryId: number
   createdAt: number
   updatedAt: number
@@ -93,6 +99,8 @@ export type LawMinAggregateInputType = {
   type?: true
   published?: true
   publishedAt?: true
+  seoTitle?: true
+  seoDescription?: true
   categoryId?: true
   createdAt?: true
   updatedAt?: true
@@ -111,6 +119,8 @@ export type LawMaxAggregateInputType = {
   type?: true
   published?: true
   publishedAt?: true
+  seoTitle?: true
+  seoDescription?: true
   categoryId?: true
   createdAt?: true
   updatedAt?: true
@@ -129,6 +139,8 @@ export type LawCountAggregateInputType = {
   type?: true
   published?: true
   publishedAt?: true
+  seoTitle?: true
+  seoDescription?: true
   categoryId?: true
   createdAt?: true
   updatedAt?: true
@@ -220,6 +232,8 @@ export type LawGroupByOutputType = {
   type: $Enums.LawType
   published: boolean
   publishedAt: Date | null
+  seoTitle: string | null
+  seoDescription: string | null
   categoryId: string | null
   createdAt: Date
   updatedAt: Date
@@ -259,6 +273,8 @@ export type LawWhereInput = {
   type?: Prisma.EnumLawTypeFilter<"Law"> | $Enums.LawType
   published?: Prisma.BoolFilter<"Law"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Law"> | Date | string | null
+  seoTitle?: Prisma.StringNullableFilter<"Law"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"Law"> | string | null
   categoryId?: Prisma.StringNullableFilter<"Law"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Law"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Law"> | Date | string
@@ -278,6 +294,8 @@ export type LawOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -300,6 +318,8 @@ export type LawWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.EnumLawTypeFilter<"Law"> | $Enums.LawType
   published?: Prisma.BoolFilter<"Law"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Law"> | Date | string | null
+  seoTitle?: Prisma.StringNullableFilter<"Law"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"Law"> | string | null
   categoryId?: Prisma.StringNullableFilter<"Law"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Law"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Law"> | Date | string
@@ -319,6 +339,8 @@ export type LawOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -343,6 +365,8 @@ export type LawScalarWhereWithAggregatesInput = {
   type?: Prisma.EnumLawTypeWithAggregatesFilter<"Law"> | $Enums.LawType
   published?: Prisma.BoolWithAggregatesFilter<"Law"> | boolean
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Law"> | Date | string | null
+  seoTitle?: Prisma.StringNullableWithAggregatesFilter<"Law"> | string | null
+  seoDescription?: Prisma.StringNullableWithAggregatesFilter<"Law"> | string | null
   categoryId?: Prisma.StringNullableWithAggregatesFilter<"Law"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Law"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Law"> | Date | string
@@ -361,6 +385,8 @@ export type LawCreateInput = {
   type?: $Enums.LawType
   published?: boolean
   publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutLawsInput
@@ -379,6 +405,8 @@ export type LawUncheckedCreateInput = {
   type?: $Enums.LawType
   published?: boolean
   publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
   categoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -397,6 +425,8 @@ export type LawUpdateInput = {
   type?: Prisma.EnumLawTypeFieldUpdateOperationsInput | $Enums.LawType
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneWithoutLawsNestedInput
@@ -415,6 +445,8 @@ export type LawUncheckedUpdateInput = {
   type?: Prisma.EnumLawTypeFieldUpdateOperationsInput | $Enums.LawType
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -433,6 +465,8 @@ export type LawCreateManyInput = {
   type?: $Enums.LawType
   published?: boolean
   publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
   categoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -451,6 +485,8 @@ export type LawUpdateManyMutationInput = {
   type?: Prisma.EnumLawTypeFieldUpdateOperationsInput | $Enums.LawType
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -468,6 +504,8 @@ export type LawUncheckedUpdateManyInput = {
   type?: Prisma.EnumLawTypeFieldUpdateOperationsInput | $Enums.LawType
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -496,6 +534,8 @@ export type LawCountOrderByAggregateInput = {
   type?: Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -514,6 +554,8 @@ export type LawMaxOrderByAggregateInput = {
   type?: Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -532,6 +574,8 @@ export type LawMinOrderByAggregateInput = {
   type?: Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -596,6 +640,8 @@ export type LawCreateWithoutCategoryInput = {
   type?: $Enums.LawType
   published?: boolean
   publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -613,6 +659,8 @@ export type LawUncheckedCreateWithoutCategoryInput = {
   type?: $Enums.LawType
   published?: boolean
   publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -659,6 +707,8 @@ export type LawScalarWhereInput = {
   type?: Prisma.EnumLawTypeFilter<"Law"> | $Enums.LawType
   published?: Prisma.BoolFilter<"Law"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Law"> | Date | string | null
+  seoTitle?: Prisma.StringNullableFilter<"Law"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"Law"> | string | null
   categoryId?: Prisma.StringNullableFilter<"Law"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Law"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Law"> | Date | string
@@ -677,6 +727,8 @@ export type LawCreateManyCategoryInput = {
   type?: $Enums.LawType
   published?: boolean
   publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -694,6 +746,8 @@ export type LawUpdateWithoutCategoryInput = {
   type?: Prisma.EnumLawTypeFieldUpdateOperationsInput | $Enums.LawType
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -711,6 +765,8 @@ export type LawUncheckedUpdateWithoutCategoryInput = {
   type?: Prisma.EnumLawTypeFieldUpdateOperationsInput | $Enums.LawType
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -728,6 +784,8 @@ export type LawUncheckedUpdateManyWithoutCategoryInput = {
   type?: Prisma.EnumLawTypeFieldUpdateOperationsInput | $Enums.LawType
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -747,6 +805,8 @@ export type LawSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   type?: boolean
   published?: boolean
   publishedAt?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   categoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -766,6 +826,8 @@ export type LawSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   type?: boolean
   published?: boolean
   publishedAt?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   categoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -785,6 +847,8 @@ export type LawSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   type?: boolean
   published?: boolean
   publishedAt?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   categoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -804,12 +868,14 @@ export type LawSelectScalar = {
   type?: boolean
   published?: boolean
   publishedAt?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   categoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LawOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "number" | "date" | "issuer" | "summary" | "content" | "file" | "type" | "published" | "publishedAt" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["law"]>
+export type LawOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "number" | "date" | "issuer" | "summary" | "content" | "file" | "type" | "published" | "publishedAt" | "seoTitle" | "seoDescription" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["law"]>
 export type LawInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Law$categoryArgs<ExtArgs>
 }
@@ -838,6 +904,8 @@ export type $LawPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     type: $Enums.LawType
     published: boolean
     publishedAt: Date | null
+    seoTitle: string | null
+    seoDescription: string | null
     categoryId: string | null
     createdAt: Date
     updatedAt: Date
@@ -1277,6 +1345,8 @@ export interface LawFieldRefs {
   readonly type: Prisma.FieldRef<"Law", 'LawType'>
   readonly published: Prisma.FieldRef<"Law", 'Boolean'>
   readonly publishedAt: Prisma.FieldRef<"Law", 'DateTime'>
+  readonly seoTitle: Prisma.FieldRef<"Law", 'String'>
+  readonly seoDescription: Prisma.FieldRef<"Law", 'String'>
   readonly categoryId: Prisma.FieldRef<"Law", 'String'>
   readonly createdAt: Prisma.FieldRef<"Law", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Law", 'DateTime'>

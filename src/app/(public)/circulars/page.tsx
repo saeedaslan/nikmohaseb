@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toJalali } from "@/lib/jalali";
@@ -6,14 +7,39 @@ import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { Download, Search, FileText, AlertCircle } from "lucide-react";
 import { domains } from "@/lib/nav";
+import { ItemListSchema } from "@/components/structured-data";
 
-export const metadata = {
-  title: "بخشنامه‌های مالیاتی",
-  description: "جدیدترین بخشنامه‌های سازمان مالیاتی، توضیحات و دستورالعمل‌های اجرایی",
-  alternates: {
-    canonical: `${domains.primary}/circulars`,
-  },
-};
+export const revalidate = 300;
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
+  const pageNum = Number(page ?? 1);
+  
+  return {
+    title: pageNum > 1 ? `بخشنامه‌های مالیاتی - صفحه ${pageNum}` : "بخشنامه‌های مالیاتی",
+    description: "جدیدترین بخشنامه‌های سازمان مالیاتی، توضیحات و دستورالعمل‌های اجرایی",
+    alternates: {
+      canonical: pageNum > 1 ? `${domains.primary}/circulars?page=${pageNum}` : `${domains.primary}/circulars`,
+    },
+    ...(pageNum > 1 && {
+      openGraph: {
+        title: `بخشنامه‌های مالیاتی - صفحه ${pageNum}`,
+        url: `${domains.primary}/circulars?page=${pageNum}`,
+      },
+    }),
+    ...(pageNum > 1 && pageNum > 1 && {
+      other: {
+        "link": [
+          ...(pageNum > 1 ? [{ rel: "prev", href: `${domains.primary}/circulars?page=${pageNum - 1}` }] : []),
+        ],
+      },
+    }),
+  };
+}
 
 const PAGE_SIZE = 12;
 
@@ -57,6 +83,14 @@ export default async function CircularsPage({
 
   return (
     <div className="min-h-screen">
+      <ItemListSchema
+        name="بخشنامه‌های مالیاتی نیک محاسب سرو"
+        items={circulars.map((c) => ({
+          name: c.title,
+          url: `/circulars/${c.slug}`,
+          image: c.image || undefined,
+        }))}
+      />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-navy via-primary-navy to-accent-yellow py-16 lg:py-24">
         {/* Animated Blobs */}
@@ -91,7 +125,7 @@ export default async function CircularsPage({
                 <AlertCircle className="h-6 w-6 text-accent-yellow" />
               </div>
               <div>
-                <h3 className="mb-2 font-bold text-primary-navy">درباره بخشنامه‌ها</h3>
+                <h2 className="mb-2 font-bold text-primary-navy">درباره بخشنامه‌ها</h2>
                 <p className="text-sm text-text-muted leading-relaxed">
                   در این بخش جدیدترین بخشنامه‌های صادر شده توسط سازمان مالیاتی ایران را مطالعه کنید. این بخشنامه‌ها شامل دستورالعمل‌های اجرایی، توضیحات و راهنمایی‌های مربوط به قوانین مالیاتی هستند.
                 </p>
@@ -156,13 +190,6 @@ export default async function CircularsPage({
       {/* Circulars List */}
       <div className="pb-12">
         <div className="container mx-auto max-w-6xl px-4">
-          {current > 1 && (
-            <link rel="prev" href={`${domains.primary}/circulars?page=${current - 1}`} />
-          )}
-          {current < pages && (
-            <link rel="next" href={`${domains.primary}/circulars?page=${current + 1}`} />
-          )}
-
           {circulars.length === 0 ? (
             <div className="rounded-2xl border border-white/20 bg-white/80 p-12 text-center shadow-lg backdrop-blur-lg">
               <FileText className="mx-auto h-16 w-16 text-text-muted mb-4" />
@@ -175,16 +202,18 @@ export default async function CircularsPage({
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {circulars.map((c) => (
                   <div key={c.id} className="group rounded-2xl border border-white/20 bg-white/80 shadow-lg backdrop-blur-lg transition-all duration-300 hover:border-accent-yellow/50 hover:shadow-xl hover:shadow-accent-yellow/10 hover:-translate-y-1 overflow-hidden">
-                    {c.image && (
-                      <div className="relative h-32 w-full overflow-hidden">
-                        <img
-                          src={c.image}
-                          alt={c.title}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                      </div>
-                    )}
+                     {c.image && (
+                       <div className="relative h-32 w-full overflow-hidden">
+                         <Image
+                           src={c.image}
+                           alt={c.title}
+                           fill
+                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                         />
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                       </div>
+                     )}
                     <div className="p-6">
                       {c.category && (
                         <span className="inline-block rounded-full bg-accent-yellow/20 px-3 py-1 text-xs text-accent-yellow mb-3">

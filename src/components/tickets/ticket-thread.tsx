@@ -102,7 +102,7 @@ function MessageBubble({
           isInternal
             ? "bg-amber-50 border-2 border-amber-300 dark:bg-amber-950/30 dark:border-amber-700"
             : isAdmin
-              ? "bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800"
+              ? "bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/50 dark:border-emerald-700"
               : isOwn
                 ? "bg-blue-600 text-white border border-blue-500 dark:bg-blue-700"
                 : "bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700",

@@ -1,10 +1,14 @@
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { toJalali } from "@/lib/jalali";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { BookOpen, Calendar, ArrowLeft, Clock, Users } from "lucide-react";
 import { domains } from "@/lib/nav";
+import { ItemListSchema } from "@/components/structured-data";
+
+export const revalidate = 300;
 
 export const metadata = {
   title: "مقالات مالی و مالیاتی",
@@ -46,6 +50,14 @@ export default async function ArticlesPage({
 
   return (
     <div className="min-h-screen">
+      <ItemListSchema
+        name="مقالات مالی و مالیاتی نیک محاسب سرو"
+        items={articles.map((a) => ({
+          name: a.title,
+          url: `/articles/${a.slug}`,
+          image: a.image || undefined,
+        }))}
+      />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-navy via-primary-navy to-blue-600 py-16 lg:py-24">
         {/* Animated Blobs */}
@@ -81,10 +93,10 @@ export default async function ArticlesPage({
                   <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-100 to-blue-50 transition-transform duration-300 group-hover:scale-110">
                     <feature.icon className="h-6 w-6 text-blue-600" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-primary-navy">{feature.title}</h3>
-                    <p className="text-sm text-text-muted">{feature.description}</p>
-                  </div>
+                   <div>
+                     <h2 className="font-bold text-primary-navy">{feature.title}</h2>
+                     <p className="text-sm text-text-muted">{feature.description}</p>
+                   </div>
                 </div>
               </div>
             ))}
@@ -105,14 +117,16 @@ export default async function ArticlesPage({
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {articles.map((a) => (
                   <div key={a.id} className="group rounded-2xl border border-white/20 bg-white/80 shadow-lg backdrop-blur-lg transition-all duration-300 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-100 hover:-translate-y-1 overflow-hidden">
-                    {a.image ? (
-                      <div className="relative h-48 w-full overflow-hidden">
-                        <img
-                          src={a.image}
-                          alt={a.title}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                     {a.image ? (
+                       <div className="relative h-48 w-full overflow-hidden">
+                         <Image
+                           src={a.image}
+                           alt={a.title}
+                           fill
+                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                         />
+                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                         {a.category && (
                           <span className="absolute top-3 right-3 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-primary-navy">
                             {a.category.name}

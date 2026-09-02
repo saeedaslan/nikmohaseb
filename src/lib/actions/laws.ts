@@ -14,9 +14,14 @@ export async function listLaws() {
 }
 
 function parseLaw(fd: FormData): LawInput {
+  const title = fd.get("title")?.toString() ?? "";
+  let slug = fd.get("slug")?.toString() ?? "";
+  if (!slug && title) {
+    slug = slugify(title);
+  }
   return {
-    title: fd.get("title")?.toString() ?? "",
-    slug: fd.get("slug")?.toString() ?? "",
+    title,
+    slug,
     number: fd.get("number")?.toString() || undefined,
     date: fd.get("date") ? new Date(fd.get("date")!.toString()) : undefined,
     issuer: fd.get("issuer")?.toString() || undefined,
@@ -28,6 +33,8 @@ function parseLaw(fd: FormData): LawInput {
     publishedAt: fd.get("publishedAt")
       ? new Date(fd.get("publishedAt")!.toString())
       : undefined,
+    seoTitle: fd.get("seoTitle")?.toString() || undefined,
+    seoDescription: fd.get("seoDescription")?.toString() || undefined,
     categoryId: fd.get("categoryId")?.toString() || undefined,
   };
 }
@@ -38,7 +45,6 @@ export async function createLaw(
   const parsed = lawSchema.safeParse(parseLaw(fd));
   if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors };
   const value = parsed.data;
-  if (!value.slug) value.slug = slugify(value.title);
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
     await prisma.law.create({ data: value });
@@ -57,7 +63,6 @@ export async function updateLaw(
   const parsed = lawSchema.safeParse(parseLaw(fd));
   if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors };
   const value = parsed.data;
-  if (!value.slug) value.slug = slugify(value.title);
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
     await prisma.law.update({ where: { id }, data: value });

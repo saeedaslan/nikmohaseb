@@ -7,6 +7,7 @@ import { Download, ArrowLeft, Calendar, FileText } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { domains } from "@/lib/nav";
+import { BreadcrumbSchema, LegislationSchema } from "@/components/structured-data";
 
 export async function generateMetadata({
   params,
@@ -16,28 +17,28 @@ export async function generateMetadata({
   const { slug } = await params;
   const law = await prisma.law.findUnique({
     where: { slug: decodeURIComponent(slug), published: true },
-    select: { title: true, summary: true, slug: true },
+    select: { title: true, summary: true, slug: true, seoTitle: true, seoDescription: true },
   });
 
   if (!law) return {};
 
   return {
-    title: law.title,
-    description: law.summary || `جزئیات قانون ${law.title}`,
+    title: law.seoTitle || law.title,
+    description: law.seoDescription || law.summary || `جزئیات قانون ${law.title}`,
     alternates: {
       canonical: `${domains.primary}/laws/${law.slug}`,
     },
     openGraph: {
-      title: law.title,
-      description: law.summary || undefined,
+      title: law.seoTitle || law.title,
+      description: law.seoDescription || law.summary || undefined,
       type: "article",
       url: `${domains.primary}/laws/${law.slug}`,
+      images: [{ url: "/og.png", width: 1200, height: 630, alt: law.title }],
     },
   };
 }
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
 
 const lawTypeLabel: Record<string, string> = {
   DIRECT_TAX: "مالیات مستقیم",
@@ -60,6 +61,19 @@ export default async function LawPage({
 
   return (
     <article className="py-12">
+      <LegislationSchema
+        title={law.title}
+        description={law.summary || law.title}
+        datePublished={law.date ?? law.createdAt}
+        issuer={law.issuer || undefined}
+        number={law.number || undefined}
+        slug={law.slug}
+      />
+      <BreadcrumbSchema items={[
+        { name: "خانه", href: "/" },
+        { name: "قوانین", href: "/laws" },
+        { name: law.title, href: `/laws/${law.slug}` },
+      ]} />
       <div className="container mx-auto max-w-4xl px-4">
         <Link
           href="/laws"

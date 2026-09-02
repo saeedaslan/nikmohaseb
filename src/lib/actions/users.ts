@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma, Role } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
 export async function listUsers() {
@@ -44,6 +45,7 @@ export async function deleteUser(
   id: string,
 ): Promise<{ ok?: boolean; error?: string }> {
   try {
+    await requireAdmin();
     await prisma.user.delete({ where: { id } });
   } catch {
     return { error: "خطا در حذف کاربر." };

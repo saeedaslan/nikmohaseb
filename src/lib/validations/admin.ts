@@ -26,7 +26,7 @@ export const ticketReplySchema = z.object({
 
 export const ticketAssignSchema = z.object({
   ticketId: z.string().min(1),
-  assignedToId: z.string().min(1).optional(),
+  assignedToId: z.string().min(1).nullish(),
 });
 
 export const ticketUpdateStatusSchema = z.object({
@@ -56,6 +56,8 @@ export const serviceSchema = z.object({
   image: z.string().optional(),
   order: z.coerce.number().int().min(0).optional(),
   published: z.boolean().optional(),
+  seoTitle: z.string().max(160).optional(),
+  seoDescription: z.string().max(320).optional(),
   categoryId: z.string().optional(),
 });
 
@@ -85,6 +87,8 @@ export const circularSchema = z.object({
   file: z.string().optional(),
   published: z.boolean().optional(),
   publishedAt: z.coerce.date().optional(),
+  seoTitle: z.string().max(160).optional(),
+  seoDescription: z.string().max(320).optional(),
   categoryId: z.string().optional(),
 });
 
@@ -100,6 +104,8 @@ export const lawSchema = z.object({
   type: z.enum(["DIRECT_TAX", "VAT", "OTHER"]).optional(),
   published: z.boolean().optional(),
   publishedAt: z.coerce.date().optional(),
+  seoTitle: z.string().max(160).optional(),
+  seoDescription: z.string().max(320).optional(),
   categoryId: z.string().optional(),
 });
 

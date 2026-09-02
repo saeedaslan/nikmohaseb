@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { domains } from "@/lib/nav";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -14,7 +15,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/dashboard/", "/api/", "/unauthorized"],
       },
     ],
-    sitemap: "https://nikmohaseb.ir/sitemap.xml",
-    host: "https://nikmohaseb.ir",
+    sitemap: `${domains.primary}/sitemap.xml`,
+    host: domains.primary,
   };
 }

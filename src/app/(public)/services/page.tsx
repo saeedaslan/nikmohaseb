@@ -4,6 +4,9 @@ import { Briefcase, ArrowLeft, Users, Clock, ShieldCheck } from "lucide-react";
 import { domains } from "@/lib/nav";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ItemListSchema } from "@/components/structured-data";
+
+export const revalidate = 300;
 
 export const metadata = {
   title: "خدمات حسابداری و مالیاتی",
@@ -25,6 +28,14 @@ export default async function ServicesPage() {
 
   return (
     <div className="min-h-screen">
+      <ItemListSchema
+        name="خدمات حسابداری و مالیاتی نیک محاسب سرو"
+        items={services.map((s) => ({
+          name: s.title,
+          url: `/services/${s.slug}`,
+          image: s.image || undefined,
+        }))}
+      />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-navy via-primary-navy to-accent-green py-16 lg:py-24">
         {/* Animated Blobs */}
@@ -60,10 +71,10 @@ export default async function ServicesPage() {
                   <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green/20 to-accent-green/10 transition-transform duration-300 group-hover:scale-110">
                     <feature.icon className="h-6 w-6 text-accent-green" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-primary-navy">{feature.title}</h3>
-                    <p className="text-sm text-text-muted">{feature.description}</p>
-                  </div>
+                   <div>
+                     <h2 className="font-bold text-primary-navy">{feature.title}</h2>
+                     <p className="text-sm text-text-muted">{feature.description}</p>
+                   </div>
                 </div>
               </div>
             ))}

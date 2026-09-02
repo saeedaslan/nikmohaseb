@@ -62,5 +62,6 @@ COPY --from=builder /app/generated/prisma ./generated/prisma
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x ./docker-entrypoint.sh
 
+
 EXPOSE 3000
 CMD ["sh", "./docker-entrypoint.sh"]

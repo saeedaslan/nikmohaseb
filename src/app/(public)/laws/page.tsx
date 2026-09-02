@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { Download, FileText, Scale, AlertCircle } from "lucide-react";
 import { domains } from "@/lib/nav";
+import { ItemListSchema } from "@/components/structured-data";
+
+export const revalidate = 300;
 
 export const metadata = {
   title: "قوانین مالی و مالیاتی",
@@ -46,6 +49,13 @@ export default async function LawsPage({
 
   return (
     <div className="min-h-screen">
+      <ItemListSchema
+        name="قوانین مالی و مالیاتی نیک محاسب سرو"
+        items={laws.map((l) => ({
+          name: l.title,
+          url: `/laws/${l.slug}`,
+        }))}
+      />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary-navy via-primary-navy to-purple-600 py-16 lg:py-24">
         {/* Animated Blobs */}
@@ -80,7 +90,7 @@ export default async function LawsPage({
                 <AlertCircle className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <h3 className="mb-2 font-bold text-primary-navy">درباره قوانین</h3>
+                <h2 className="mb-2 font-bold text-primary-navy">درباره قوانین</h2>
                 <p className="text-sm text-text-muted leading-relaxed">
                   در این بخش جدیدترین قوانین مالی و مالیاتی منتشر شده توسط مراجع قانونی را مطالعه کنید. این قوانین شامل مالیات مستقیم، مالیات بر ارزش افزوده و سایر مقررات مالی هستند.
                 </p>

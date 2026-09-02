@@ -3,17 +3,22 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { toJalali } from "@/lib/jalali";
 import { Button } from "@/components/ui/button";
+import { Pagination } from "@/components/ui/pagination";
 import { Plus, Search, Filter, Ticket, AlertCircle, AlertTriangle, ArrowDownCircle, CheckCircle2, MessageSquare, Hash } from "lucide-react";
 import { TICKET_CATEGORY_LABELS } from "@/lib/constants";
+
+const PAGE_SIZE = 10;
 
 export default async function DashboardTicketsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; status?: string; priority?: string }>;
+  searchParams: Promise<{ q?: string; status?: string; priority?: string; page?: string }>;
 }) {
   const user = await getCurrentUser();
   if (!user) return null;
-  const { q: query, status: statusFilter, priority: priorityFilter } = await searchParams;
+  const { q: query, status: statusFilter, priority: priorityFilter, page: pageParam } = await searchParams;
+  const currentPage = Math.max(1, Number(pageParam ?? 1));
+  const skip = (currentPage - 1) * PAGE_SIZE;
 
   const where = {
     userId: user.id,
@@ -23,21 +28,22 @@ export default async function DashboardTicketsPage({
     ...(query ? { OR: [{ subject: { contains: query } }, { trackingCode: { contains: query } }] } : {}),
   };
 
-  const tickets = await prisma.ticket.findMany({
-    where,
-    orderBy: { updatedAt: "desc" },
-    include: {
-      messages: {
-        select: { id: true },
+  const [tickets, total] = await Promise.all([
+    prisma.ticket.findMany({
+      where,
+      orderBy: { updatedAt: "desc" },
+      skip,
+      take: PAGE_SIZE,
+      include: {
+        messages: { select: { id: true } },
+        attachments: { select: { id: true } },
+        assignedTo: { select: { id: true, name: true } },
       },
-      attachments: {
-        select: { id: true },
-      },
-      assignedTo: {
-        select: { id: true, name: true },
-      },
-    },
-  });
+    }),
+    prisma.ticket.count({ where }),
+  ]);
+
+  const totalPages = Math.ceil(total / PAGE_SIZE);
 
   const ticketsWithCounts = tickets.map((t) => ({
     ...t,
@@ -65,7 +71,6 @@ export default async function DashboardTicketsPage({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-primary-navy">تیکت‌های من</h1>
@@ -79,7 +84,6 @@ export default async function DashboardTicketsPage({
         </Button>
       </div>
 
-      {/* Filters */}
       <div className="rounded-2xl border border-white/20 bg-white/80 p-4 shadow-lg backdrop-blur-lg dark:bg-surface-card/80">
         <form className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
@@ -122,11 +126,11 @@ export default async function DashboardTicketsPage({
         </form>
       </div>
 
-      {/* Tickets List */}
       {ticketsWithCounts.length === 0 ? (
-        <div className="rounded-2xl border border-white/20 bg-white/80 p-12 text-center shadow-lg backdrop-blur-lg dark:bg-surface-card/80">
+        <div className="rounded-2xl border border-white/20 bg-white/80 p-12 text-center shadow-lg backdrop-blur-lg dark:bg-surface-card/80 animate-fade-in-up">
           <Ticket className="mx-auto h-16 w-16 text-text-muted mb-4" />
-          <p className="text-lg text-text-muted mb-4">تیکتی یافت نشد.</p>
+          <p className="text-lg text-text-muted mb-2">تیکتی یافت نشد</p>
+          <p className="text-sm text-text-muted mb-6">هنوز تیکتی ثبت نکرده‌اید یا فیلترها نتیجه‌ای ندارند.</p>
           <Button asChild className="bg-accent-green hover:bg-accent-green/90">
             <Link href="/dashboard/tickets/new" className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
@@ -135,71 +139,84 @@ export default async function DashboardTicketsPage({
           </Button>
         </div>
       ) : (
-        <div className="space-y-3">
-          {ticketsWithCounts.map((t) => {
-            const priority = priorityConfig[t.priority] ?? priorityConfig.NORMAL;
-            const status = statusConfig[t.status] ?? statusConfig.NEW;
-            const PriorityIcon = priority.icon;
+        <>
+          <div className="space-y-3">
+            {ticketsWithCounts.map((t, index) => {
+              const priority = priorityConfig[t.priority] ?? priorityConfig.NORMAL;
+              const status = statusConfig[t.status] ?? statusConfig.NEW;
+              const PriorityIcon = priority.icon;
 
-            return (
-              <Link
-                key={t.id}
-                href={`/dashboard/tickets/${t.id}`}
-                className="group block rounded-2xl border border-white/20 bg-white/80 p-4 shadow-lg backdrop-blur-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 dark:bg-surface-card/80"
-              >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-start gap-3">
-                    <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${priority.bgColor} transition-transform duration-300 group-hover:scale-110`}>
-                      <PriorityIcon className={`h-5 w-5 ${priority.color}`} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-bold text-primary-navy truncate group-hover:text-accent-green transition-colors">
-                        {t.subject}
-                      </h3>
-                      <div className="flex flex-wrap items-center gap-2 mt-1">
-                        <span className="text-xs text-text-muted">
-                          {TICKET_CATEGORY_LABELS[t.category as keyof typeof TICKET_CATEGORY_LABELS] ?? t.category}
-                        </span>
-                        <span className="text-xs text-text-muted">•</span>
-                        <span className="text-xs text-text-muted">{toJalali(t.updatedAt)}</span>
-                        {t._count.messages > 0 && (
-                          <>
-                            <span className="text-xs text-text-muted">•</span>
-                            <span className="flex items-center gap-1 text-xs text-text-muted">
-                              <MessageSquare className="h-3 w-3" />
-                              {t._count.messages}
-                            </span>
-                          </>
-                        )}
+              return (
+                <Link
+                  key={t.id}
+                  href={`/dashboard/tickets/${t.id}`}
+                  className="group block rounded-2xl border border-white/20 bg-white/80 p-4 shadow-lg backdrop-blur-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 dark:bg-surface-card/80 animate-fade-in-up"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-start gap-3">
+                      <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${priority.bgColor} transition-transform duration-300 group-hover:scale-110`}>
+                        <PriorityIcon className={`h-5 w-5 ${priority.color}`} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-bold text-primary-navy truncate group-hover:text-accent-green transition-colors">
+                          {t.subject}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-2 mt-1">
+                          <span className="text-xs text-text-muted">
+                            {TICKET_CATEGORY_LABELS[t.category as keyof typeof TICKET_CATEGORY_LABELS] ?? t.category}
+                          </span>
+                          <span className="text-xs text-text-muted">•</span>
+                          <span className="text-xs text-text-muted">{toJalali(t.updatedAt)}</span>
+                          {t._count.messages > 0 && (
+                            <>
+                              <span className="text-xs text-text-muted">•</span>
+                              <span className="flex items-center gap-1 text-xs text-text-muted">
+                                <MessageSquare className="h-3 w-3" />
+                                {t._count.messages}
+                              </span>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {t.assignedTo && (
-                      <span className="flex items-center gap-1 rounded-full bg-accent-green/10 px-2 py-1 text-xs text-accent-green">
-                        {t.assignedTo.name}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {t.assignedTo && (
+                        <span className="flex items-center gap-1 rounded-full bg-accent-green/10 px-2 py-1 text-xs text-accent-green">
+                          {t.assignedTo.name}
+                        </span>
+                      )}
+                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${priority.bgColor} ${priority.color}`}>
+                        <PriorityIcon className="h-3 w-3" />
+                        {priority.label}
                       </span>
-                    )}
-                    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${priority.bgColor} ${priority.color}`}>
-                      <PriorityIcon className="h-3 w-3" />
-                      {priority.label}
-                    </span>
-                    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${status.bgColor} ${status.color}`}>
-                      {status.label}
-                    </span>
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${status.bgColor} ${status.color}`}>
+                        {status.label}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Tracking Code */}
-                <div className="mt-3 flex items-center gap-2 border-t border-border/40 pt-3">
-                  <Hash className="h-3 w-3 text-text-muted" />
-                  <span className="text-xs text-text-muted">کد پیگیری:</span>
-                  <span className="font-mono text-xs font-medium text-primary-navy">{t.trackingCode}</span>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+                  <div className="mt-3 flex items-center gap-2 border-t border-border/40 pt-3">
+                    <Hash className="h-3 w-3 text-text-muted" />
+                    <span className="text-xs text-text-muted">کد پیگیری:</span>
+                    <span className="font-mono text-xs font-medium text-primary-navy">{t.trackingCode}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex justify-center pt-4">
+              <Pagination
+                current={currentPage}
+                pages={totalPages}
+                total={total}
+                basePath="/dashboard/tickets"
+              />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

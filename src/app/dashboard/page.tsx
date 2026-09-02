@@ -65,7 +65,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Total Tickets */}
-      <div className="rounded-2xl border border-white/20 bg-gradient-to-br from-accent-green/10 to-accent-green/5 p-6 shadow-lg backdrop-blur-lg">
+      <div className="rounded-2xl border border-white/20 bg-gradient-to-br from-accent-green/10 to-accent-green/5 p-6 shadow-lg backdrop-blur-lg animate-fade-in-up">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-text-muted">کل تیکت‌ها</p>
@@ -79,12 +79,13 @@ export default async function DashboardPage() {
 
       {/* Status Stats */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {statusConfig.map((s) => {
+        {statusConfig.map((s, index) => {
           const Icon = s.icon;
           return (
             <div
               key={s.status}
-              className="group rounded-2xl border border-white/20 bg-white/80 p-4 shadow-lg backdrop-blur-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              className="group rounded-2xl border border-white/20 bg-white/80 p-4 shadow-lg backdrop-blur-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-fade-in-up"
+              style={{ animationDelay: `${(index + 1) * 0.1}s` }}
             >
               <div className="flex items-center gap-3">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${s.bgColor} transition-transform duration-300 group-hover:scale-110`}>
@@ -101,21 +102,24 @@ export default async function DashboardPage() {
       </div>
 
       {/* Recent Tickets */}
-      {recentTickets.length > 0 && (
-        <div className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-primary-navy">آخرین تیکت‌ها</h2>
+      <div className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg animate-fade-in-up stagger-3">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-primary-navy">آخرین تیکت‌ها</h2>
+          {recentTickets.length > 0 && (
             <Link href="/dashboard/tickets" className="text-sm text-accent-green hover:underline flex items-center gap-1">
               مشاهده همه
               <ArrowLeft className="h-3 w-3" />
             </Link>
-          </div>
+          )}
+        </div>
+        {recentTickets.length > 0 ? (
           <div className="space-y-3">
-            {recentTickets.map((t) => (
+            {recentTickets.map((t, index) => (
               <Link
                 key={t.id}
                 href={`/dashboard/tickets/${t.id}`}
-                className="flex items-center justify-between rounded-xl bg-surface-background p-4 hover:bg-accent-green/5 transition-colors"
+                className="flex items-center justify-between rounded-xl bg-surface-background p-4 hover:bg-accent-green/5 transition-all duration-200 hover:translate-x-1 animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex items-center gap-3">
                   <div className={`h-2 w-2 rounded-full ${
@@ -136,8 +140,19 @@ export default async function DashboardPage() {
               </Link>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="py-8 text-center">
+            <Ticket className="mx-auto h-12 w-12 text-text-muted/50 mb-3" />
+            <p className="text-sm text-text-muted mb-4">هنوز تیکتی ثبت نکرده‌اید</p>
+            <Button asChild size="sm" className="bg-accent-green hover:bg-accent-green/90">
+              <Link href="/dashboard/tickets/new" className="flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                <span>ثبت اولین تیکت</span>
+              </Link>
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

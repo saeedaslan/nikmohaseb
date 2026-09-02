@@ -6,6 +6,12 @@ import { ArrowLeft, Calendar, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { domains } from "@/lib/nav";
+import { FAQSchema, BreadcrumbSchema } from "@/components/structured-data";
+
+function stripHtml(html: string | null): string {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, "").trim();
+}
 
 export async function generateMetadata({
   params,
@@ -20,23 +26,26 @@ export async function generateMetadata({
 
   if (!faq) return {};
 
+  const cleanAnswer = stripHtml(faq.answer);
+  const description = cleanAnswer.slice(0, 160) || faq.question;
+
   return {
     title: faq.question,
-    description: faq.answer?.slice(0, 160) || faq.question,
+    description,
     alternates: {
       canonical: `${domains.primary}/faqs/${faq.slug}`,
     },
     openGraph: {
       title: faq.question,
-      description: faq.answer?.slice(0, 160) || undefined,
+      description,
       type: "article",
       url: `${domains.primary}/faqs/${faq.slug}`,
+      images: [{ url: "/og.png", width: 1200, height: 630, alt: faq.question }],
     },
   };
 }
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default async function FaqPage({
   params,
@@ -52,6 +61,16 @@ export default async function FaqPage({
 
   return (
     <article className="py-12">
+      <FAQSchema
+        faqs={[{ question: faq.question, answer: faq.answer || "" }]}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "خانه", href: "/" },
+          { name: "سؤالات متداول", href: "/faqs" },
+          { name: faq.question, href: `/faqs/${faq.slug}` },
+        ]}
+      />
       <div className="container mx-auto max-w-4xl px-4">
         <Link
           href="/faqs"

@@ -90,19 +90,21 @@ model Category {
 }
 
 model Service {
-  id        String   @id @default(cuid())
-  title     String
-  slug      String   @unique
-  summary   String?
-  content   String?
-  icon      String?
-  image     String?
-  order     Int      @default(0)
-  published Boolean  @default(true)
-  categoryId String?
-  category  Category? @relation(fields: [categoryId], references: [id])
-  createdAt DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  summary        String?
+  content        String?
+  icon           String?
+  image          String?
+  order          Int      @default(0)
+  published      Boolean  @default(true)
+  seoTitle       String?
+  seoDescription String?
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id])
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime @updatedAt @db.Timestamptz(3)
 }
 
 model Article {
@@ -117,7 +119,7 @@ model Article {
   seoTitle      String?
   seoDescription String?
   authorId      String?
-  author        User?    @relation(fields: [authorId], references: [id])
+  author        User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
   categoryId    String?
   category      Category? @relation(fields: [categoryId], references: [id])
   createdAt     DateTime @default(now()) @db.Timestamptz(3)
@@ -125,41 +127,45 @@ model Article {
 }
 
 model Circular {
-  id            String   @id @default(cuid())
-  title         String
-  slug          String   @unique
-  number        String?
-  date          DateTime? @db.Timestamptz(3)
-  issuer        String?
-  summary       String?
-  content       String?
-  image         String?
-  file          String?
-  published     Boolean  @default(false)
-  publishedAt   DateTime? @db.Timestamptz(3)
-  categoryId    String?
-  category      Category? @relation(fields: [categoryId], references: [id])
-  createdAt     DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt     DateTime @updatedAt @db.Timestamptz(3)
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  number         String?
+  date           DateTime? @db.Timestamptz(3)
+  issuer         String?
+  summary        String?
+  content        String?
+  image          String?
+  file           String?
+  published      Boolean  @default(false)
+  publishedAt    DateTime? @db.Timestamptz(3)
+  seoTitle       String?
+  seoDescription String?
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id])
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime @updatedAt @db.Timestamptz(3)
 }
 
 model Law {
-  id            String   @id @default(cuid())
-  title         String
-  slug          String   @unique
-  number        String?
-  date          DateTime? @db.Timestamptz(3)
-  issuer        String?
-  summary       String?
-  content       String?
-  file          String?
-  type          LawType  @default(OTHER)
-  published     Boolean  @default(false)
-  publishedAt   DateTime? @db.Timestamptz(3)
-  categoryId    String?
-  category      Category? @relation(fields: [categoryId], references: [id])
-  createdAt     DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt     DateTime @updatedAt @db.Timestamptz(3)
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  number         String?
+  date           DateTime? @db.Timestamptz(3)
+  issuer         String?
+  summary        String?
+  content        String?
+  file           String?
+  type           LawType  @default(OTHER)
+  published      Boolean  @default(false)
+  publishedAt    DateTime? @db.Timestamptz(3)
+  seoTitle       String?
+  seoDescription String?
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id])
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime @updatedAt @db.Timestamptz(3)
 }
 
 enum LawType {
@@ -202,9 +208,9 @@ model Ticket {
   priority   TicketPriority @default(NORMAL)
   status     TicketStatus   @default(NEW)
   userId     String
-  user       User          @relation(fields: [userId], references: [id])
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   assignedToId String?
-  assignedTo User?         @relation("AssignedTickets", fields: [assignedToId], references: [id])
+  assignedTo User?         @relation("AssignedTickets", fields: [assignedToId], references: [id], onDelete: SetNull)
   isDeleted  Boolean       @default(false)
   deletedAt  DateTime?     @db.Timestamptz(3)
   createdAt  DateTime      @default(now()) @db.Timestamptz(3)
@@ -227,7 +233,7 @@ model TicketMessage {
   ticketId  String
   ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   senderRole Role     @default(USER)
   isInternal Boolean @default(false)
   createdAt DateTime @default(now()) @db.Timestamptz(3)
@@ -249,7 +255,7 @@ model TicketAttachment {
   ticketMessageId  String?
   ticketMessage    TicketMessage? @relation(fields: [ticketMessageId], references: [id], onDelete: Cascade)
   userId           String?
-  user             User? @relation(fields: [userId], references: [id])
+  user             User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt        DateTime @default(now()) @db.Timestamptz(3)
 
   @@index([ticketId])

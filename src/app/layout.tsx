@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { ThemeScript } from "@/components/theme/script";
-import { LocalBusinessSchema } from "@/components/structured-data";
+import { LocalBusinessSchema, WebSiteSchema } from "@/components/structured-data";
 import { domains } from "@/lib/nav";
 
 export const metadata: Metadata = {
@@ -78,11 +78,6 @@ export const metadata: Metadata = {
   category: "finance",
   classification: "AccountingService",
   referrer: "origin-when-cross-origin",
-  other: {
-    "google-site-verification": "",
-    "msvalidate.01": "",
-    "yandex-verification": "",
-  },
 };
 
 export default function RootLayout({
@@ -93,12 +88,17 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/images/logo.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#1a231f" />
         <link rel="alternate" href={domains.primary} hrefLang="fa-IR" />
         <link rel="alternate" href={domains.secondary} hrefLang="x-default" />
       </head>
       <body className="min-h-screen bg-surface-background text-text font-sans antialiasing">
         <ThemeScript />
         <LocalBusinessSchema />
+        <WebSiteSchema />
         <Providers>{children}</Providers>
       </body>
     </html>

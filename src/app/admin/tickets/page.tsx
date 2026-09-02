@@ -56,8 +56,6 @@ export default async function AdminTicketsPage({
     getSupportStaff(),
   ]);
 
-  const isAdmin = currentUser?.role === "ADMIN";
-
   return (
     <div className="space-y-6">
       {/* Header */}

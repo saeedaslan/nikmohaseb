@@ -44,6 +44,8 @@ export type ServiceMinAggregateOutputType = {
   image: string | null
   order: number | null
   published: boolean | null
+  seoTitle: string | null
+  seoDescription: string | null
   categoryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -59,6 +61,8 @@ export type ServiceMaxAggregateOutputType = {
   image: string | null
   order: number | null
   published: boolean | null
+  seoTitle: string | null
+  seoDescription: string | null
   categoryId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -74,6 +78,8 @@ export type ServiceCountAggregateOutputType = {
   image: number
   order: number
   published: number
+  seoTitle: number
+  seoDescription: number
   categoryId: number
   createdAt: number
   updatedAt: number
@@ -99,6 +105,8 @@ export type ServiceMinAggregateInputType = {
   image?: true
   order?: true
   published?: true
+  seoTitle?: true
+  seoDescription?: true
   categoryId?: true
   createdAt?: true
   updatedAt?: true
@@ -114,6 +122,8 @@ export type ServiceMaxAggregateInputType = {
   image?: true
   order?: true
   published?: true
+  seoTitle?: true
+  seoDescription?: true
   categoryId?: true
   createdAt?: true
   updatedAt?: true
@@ -129,6 +139,8 @@ export type ServiceCountAggregateInputType = {
   image?: true
   order?: true
   published?: true
+  seoTitle?: true
+  seoDescription?: true
   categoryId?: true
   createdAt?: true
   updatedAt?: true
@@ -231,6 +243,8 @@ export type ServiceGroupByOutputType = {
   image: string | null
   order: number
   published: boolean
+  seoTitle: string | null
+  seoDescription: string | null
   categoryId: string | null
   createdAt: Date
   updatedAt: Date
@@ -269,6 +283,8 @@ export type ServiceWhereInput = {
   image?: Prisma.StringNullableFilter<"Service"> | string | null
   order?: Prisma.IntFilter<"Service"> | number
   published?: Prisma.BoolFilter<"Service"> | boolean
+  seoTitle?: Prisma.StringNullableFilter<"Service"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"Service"> | string | null
   categoryId?: Prisma.StringNullableFilter<"Service"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
@@ -285,6 +301,8 @@ export type ServiceOrderByWithRelationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -304,6 +322,8 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   image?: Prisma.StringNullableFilter<"Service"> | string | null
   order?: Prisma.IntFilter<"Service"> | number
   published?: Prisma.BoolFilter<"Service"> | boolean
+  seoTitle?: Prisma.StringNullableFilter<"Service"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"Service"> | string | null
   categoryId?: Prisma.StringNullableFilter<"Service"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
@@ -320,6 +340,8 @@ export type ServiceOrderByWithAggregationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  seoDescription?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -343,6 +365,8 @@ export type ServiceScalarWhereWithAggregatesInput = {
   image?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
   order?: Prisma.IntWithAggregatesFilter<"Service"> | number
   published?: Prisma.BoolWithAggregatesFilter<"Service"> | boolean
+  seoTitle?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
+  seoDescription?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
   categoryId?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Service"> | Date | string
@@ -358,6 +382,8 @@ export type ServiceCreateInput = {
   image?: string | null
   order?: number
   published?: boolean
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutServicesInput
@@ -373,6 +399,8 @@ export type ServiceUncheckedCreateInput = {
   image?: string | null
   order?: number
   published?: boolean
+  seoTitle?: string | null
+  seoDescription?: string | null
   categoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -388,6 +416,8 @@ export type ServiceUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneWithoutServicesNestedInput
@@ -403,6 +433,8 @@ export type ServiceUncheckedUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -418,6 +450,8 @@ export type ServiceCreateManyInput = {
   image?: string | null
   order?: number
   published?: boolean
+  seoTitle?: string | null
+  seoDescription?: string | null
   categoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -433,6 +467,8 @@ export type ServiceUpdateManyMutationInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -447,6 +483,8 @@ export type ServiceUncheckedUpdateManyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -472,6 +510,8 @@ export type ServiceCountOrderByAggregateInput = {
   image?: Prisma.SortOrder
   order?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -491,6 +531,8 @@ export type ServiceMaxOrderByAggregateInput = {
   image?: Prisma.SortOrder
   order?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -506,6 +548,8 @@ export type ServiceMinOrderByAggregateInput = {
   image?: Prisma.SortOrder
   order?: Prisma.SortOrder
   published?: Prisma.SortOrder
+  seoTitle?: Prisma.SortOrder
+  seoDescription?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -575,6 +619,8 @@ export type ServiceCreateWithoutCategoryInput = {
   image?: string | null
   order?: number
   published?: boolean
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -589,6 +635,8 @@ export type ServiceUncheckedCreateWithoutCategoryInput = {
   image?: string | null
   order?: number
   published?: boolean
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -632,6 +680,8 @@ export type ServiceScalarWhereInput = {
   image?: Prisma.StringNullableFilter<"Service"> | string | null
   order?: Prisma.IntFilter<"Service"> | number
   published?: Prisma.BoolFilter<"Service"> | boolean
+  seoTitle?: Prisma.StringNullableFilter<"Service"> | string | null
+  seoDescription?: Prisma.StringNullableFilter<"Service"> | string | null
   categoryId?: Prisma.StringNullableFilter<"Service"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
@@ -647,6 +697,8 @@ export type ServiceCreateManyCategoryInput = {
   image?: string | null
   order?: number
   published?: boolean
+  seoTitle?: string | null
+  seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -661,6 +713,8 @@ export type ServiceUpdateWithoutCategoryInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -675,6 +729,8 @@ export type ServiceUncheckedUpdateWithoutCategoryInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -689,6 +745,8 @@ export type ServiceUncheckedUpdateManyWithoutCategoryInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -705,6 +763,8 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   image?: boolean
   order?: boolean
   published?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   categoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -721,6 +781,8 @@ export type ServiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   image?: boolean
   order?: boolean
   published?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   categoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -737,6 +799,8 @@ export type ServiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   image?: boolean
   order?: boolean
   published?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   categoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -753,12 +817,14 @@ export type ServiceSelectScalar = {
   image?: boolean
   order?: boolean
   published?: boolean
+  seoTitle?: boolean
+  seoDescription?: boolean
   categoryId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "summary" | "content" | "icon" | "image" | "order" | "published" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
+export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "summary" | "content" | "icon" | "image" | "order" | "published" | "seoTitle" | "seoDescription" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
 export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Service$categoryArgs<ExtArgs>
 }
@@ -784,6 +850,8 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     image: string | null
     order: number
     published: boolean
+    seoTitle: string | null
+    seoDescription: string | null
     categoryId: string | null
     createdAt: Date
     updatedAt: Date
@@ -1220,6 +1288,8 @@ export interface ServiceFieldRefs {
   readonly image: Prisma.FieldRef<"Service", 'String'>
   readonly order: Prisma.FieldRef<"Service", 'Int'>
   readonly published: Prisma.FieldRef<"Service", 'Boolean'>
+  readonly seoTitle: Prisma.FieldRef<"Service", 'String'>
+  readonly seoDescription: Prisma.FieldRef<"Service", 'String'>
   readonly categoryId: Prisma.FieldRef<"Service", 'String'>
   readonly createdAt: Prisma.FieldRef<"Service", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Service", 'DateTime'>
