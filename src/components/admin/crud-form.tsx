@@ -21,6 +21,7 @@ export type AdminFieldType =
   | "checkbox"
   | "select"
   | "image"
+  | "gallery"
   | "html"
   | "date";
 
@@ -108,6 +109,18 @@ function renderField(f: AdminField, field: { value?: unknown; onChange?: (value:
         </>
       );
     }
+    case "gallery": {
+      const arr = fileStates[field.name] ?? [];
+      return (
+        <FileUpload
+          value={arr}
+          multiple
+          onChange={(newFiles) => {
+            setFileStates((prev) => ({ ...prev, [field.name]: newFiles }));
+          }}
+        />
+      );
+    }
     case "html":
       return (
         <Textarea
@@ -153,6 +166,25 @@ export function AdminCrudForm<T>({
           ];
         }
       }
+      if (f.type === "gallery" && initialData && f.name in initialData) {
+        const val = (initialData as Record<string, unknown>)[f.name];
+        if (Array.isArray(val)) {
+          init[f.name] = val
+            .filter(
+              (v): v is { url: string; filename: string; alt?: string | null } =>
+                typeof v === "object" &&
+                v !== null &&
+                typeof (v as { url?: unknown }).url === "string",
+            )
+            .map((v) => ({
+              url: v.url,
+              filename: v.filename ?? v.url,
+              originalName: v.filename ?? v.url,
+              mime: "image/jpeg",
+              size: 0,
+            }));
+        }
+      }
     }
     return init;
   });
@@ -183,15 +215,39 @@ export function AdminCrudForm<T>({
           setValue(f.name, filesFor[0].url);
         }
       }
+      if (f.type === "gallery") {
+        const filesFor = fileStates[f.name] ?? [];
+        if (filesFor.length >= 0) {
+          setValue(f.name, filesFor as any);
+        }
+      }
     }
   }, [fileStates, setValue, fields]);
 
   const onSubmit = async (data: Record<string, unknown>) => {
     const fd = new FormData();
     for (const f of fields) {
+      if (f.type === "image") {
+        const arr = fileStates[f.name] ?? [];
+        fd.append(f.name, arr[0]?.url ?? "");
+        continue;
+      }
+      if (f.type === "gallery") {
+        const arr = fileStates[f.name] ?? [];
+        fd.append(f.name, JSON.stringify(arr));
+        continue;
+      }
       const val = data[f.name];
       if (val === undefined || val === null) continue;
-      fd.append(f.name, typeof val === "boolean" ? String(val) : String(val));
+      const strVal = typeof val === "boolean" ? String(val) : String(val);
+      if (f.type === "date" && strVal === "") continue;
+      fd.append(f.name, strVal);
+    }
+
+    if (process.env.NODE_ENV !== "production") {
+      const entries: string[] = [];
+      fd.forEach((v, k) => entries.push(`${k}=${typeof v === "string" ? v.slice(0, 80) : "blob"}`));
+      console.log("[AdminForm submit]", entries.join(" | "));
     }
 
     setSubmitting(true);

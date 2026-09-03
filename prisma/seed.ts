@@ -463,6 +463,119 @@ async function main() {
       },
     });
   }
+  console.log("Seeding library...");
+  const taxCategory = await prisma.libraryCategory.upsert({
+    where: { slug: "tax-laws" },
+    update: {},
+    create: {
+      title: "قوانین مالیاتی",
+      slug: "tax-laws",
+      description: "قوانین و مقررات مالیات مستقیم، ارزش افزوده و مالیات بر ارث",
+      icon: "scale",
+      order: 1,
+      published: true,
+    },
+  });
+
+  const directTaxLaw = await prisma.libraryLaw.upsert({
+    where: { slug: "direct-taxes-law" },
+    update: {},
+    create: {
+      categoryId: taxCategory.id,
+      title: "قانون مالیات‌های مستقیم",
+      slug: "direct-taxes-law",
+      description:
+        "قانون مالیات‌های مستقیم شامل پنج باب و مواد مربوط به مالیات بر درآمد، مالیات بر دارایی و سازمان تشخیص و مراجع مالیاتی است.",
+      approvalDate: new Date("1366-12-03"),
+      executionDate: new Date("1367-01-01"),
+      status: "پایدار با اصلاحات",
+      published: true,
+      order: 1,
+    },
+  });
+
+  const book5 = await prisma.libraryBook.upsert({
+    where: { lawId_number: { lawId: directTaxLaw.id, number: 5 } },
+    update: {},
+    create: {
+      lawId: directTaxLaw.id,
+      number: 5,
+      title: "باب پنجم - سازمان تشخیص و مراجع مالیاتی",
+      order: 5,
+    },
+  });
+
+  const chapter1 = await prisma.libraryChapter.upsert({
+    where: { bookId_number: { bookId: book5.id, number: 1 } },
+    update: {},
+    create: {
+      bookId: book5.id,
+      number: 1,
+      title: "فصل اول - مراجع تشخیص مالیات",
+      order: 1,
+    },
+  });
+
+  const article232 = await prisma.libraryArticle.upsert({
+    where: { chapterId_number: { chapterId: chapter1.id, number: 232 } },
+    update: {},
+    create: {
+      chapterId: chapter1.id,
+      number: 232,
+      title: "وظایف ماموران تشخیص مالیات",
+      slug: "m232",
+      published: true,
+      content: `<p>مأموران تشخیص مالیات موظف‌اند اطلاعاتی را که ضمن رسیدگی به امور مالیاتی مودی به دست می‌آورند، محرمانه تلقی کرده و جز در مواردی که قانون مقرر می‌دارد، افشاء ننمایند.</p><p><strong>تبصره ۱:</strong> متخلف از حکم این ماده به مجازات مقرر در قانون مجازات اسلامی محکوم خواهد شد.</p><p><strong>تبصره ۲:</strong> سازمان امور مالیاتی کشور می‌تواند در موارد ضروری با رعایت مقررات مربوطه اطلاعات لازم را در اختیار مراجع ذی‌صلاح قرار دهد.</p>`,
+    },
+  });
+
+  const article233 = await prisma.libraryArticle.upsert({
+    where: { chapterId_number: { chapterId: chapter1.id, number: 233 } },
+    update: {},
+    create: {
+      chapterId: chapter1.id,
+      number: 233,
+      title: "نحوه رسیدگی به پرونده‌های مالیاتی",
+      slug: "m233",
+      published: true,
+      content: `<p>رسیدگی به پرونده‌های مالیاتی باید بر اساس مدارک و اسناد مثبته و با رعایت عدالت و انصاف صورت پذیرد.</p><p>مودیان مالیاتی حق دارند نسبت به مفاد برگ تشخیص صادره اعتراض نمایند.</p>`,
+    },
+  });
+
+  const article230 = await prisma.libraryArticle.upsert({
+    where: { chapterId_number: { chapterId: chapter1.id, number: 230 } },
+    update: {},
+    create: {
+      chapterId: chapter1.id,
+      number: 230,
+      title: "تشکیل پرونده مالیاتی",
+      slug: "m230",
+      published: true,
+      content: `<p>مودیان مالیاتی موظف‌اند نسبت به تشکیل پرونده مالیاتی در حوزه مالیاتی مربوطه اقدام نمایند.</p><p>مدارک لازم شامل اظهارنامه مالیاتی، مدارک هویتی و سایر اسناد مرتبط است.</p>`,
+    },
+  });
+
+  await prisma.libraryArticleRelation.upsert({
+    where: { fromId_toId: { fromId: article232.id, toId: article230.id } },
+    update: {},
+    create: { fromId: article232.id, toId: article230.id },
+  });
+  await prisma.libraryArticleRelation.upsert({
+    where: { fromId_toId: { fromId: article232.id, toId: article233.id } },
+    update: {},
+    create: { fromId: article232.id, toId: article233.id },
+  });
+
+  await prisma.libraryArticleHistory.create({
+    data: {
+      articleId: article232.id,
+      changeDate: new Date("1394-02-15"),
+      changeType: "اصلاح",
+      description: "افزودن تبصره ۲ به موجب اصلاحیه سال ۱۳۹۴",
+      source: "قانون اصلاح قانون مالیات‌های مستقیم - ۱۳۹۴",
+    },
+  });
+
   console.log("Seed completed.");
 }
 

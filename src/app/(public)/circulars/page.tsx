@@ -88,7 +88,6 @@ export default async function CircularsPage({
         items={circulars.map((c) => ({
           name: c.title,
           url: `/circulars/${c.slug}`,
-          image: c.image || undefined,
         }))}
       />
       {/* Hero Section */}
@@ -202,18 +201,6 @@ export default async function CircularsPage({
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {circulars.map((c) => (
                   <div key={c.id} className="group rounded-2xl border border-white/20 bg-white/80 shadow-lg backdrop-blur-lg transition-all duration-300 hover:border-accent-yellow/50 hover:shadow-xl hover:shadow-accent-yellow/10 hover:-translate-y-1 overflow-hidden">
-                     {c.image && (
-                       <div className="relative h-32 w-full overflow-hidden">
-                         <Image
-                           src={c.image}
-                           alt={c.title}
-                           fill
-                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                         />
-                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                       </div>
-                     )}
                     <div className="p-6">
                       {c.category && (
                         <span className="inline-block rounded-full bg-accent-yellow/20 px-3 py-1 text-xs text-accent-yellow mb-3">

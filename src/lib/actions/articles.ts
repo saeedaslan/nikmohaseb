@@ -44,8 +44,9 @@ export async function createArticle(
   const value = parsed.data;
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
-    await prisma.article.create({ data: value });
-  } catch {
+    await prisma.article.create({ data: value as any });
+  } catch (error) {
+    console.error("Create article error:", error);
     return { error: "خطا در ثبت مقاله." };
   }
   revalidatePath("/admin/articles");
@@ -62,8 +63,9 @@ export async function updateArticle(
   const value = parsed.data;
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
-    await prisma.article.update({ where: { id }, data: value });
-  } catch {
+    await prisma.article.update({ where: { id }, data: value as any });
+  } catch (error) {
+    console.error("Update article error:", error);
     return { error: "خطا در بروزرسانی." };
   }
   revalidatePath("/admin/articles");

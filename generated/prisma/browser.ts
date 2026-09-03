@@ -48,6 +48,11 @@ export type Article = Prisma.ArticleModel
  */
 export type Circular = Prisma.CircularModel
 /**
+ * Model CircularImage
+ * 
+ */
+export type CircularImage = Prisma.CircularImageModel
+/**
  * Model Law
  * 
  */
@@ -57,6 +62,51 @@ export type Law = Prisma.LawModel
  * 
  */
 export type Faq = Prisma.FaqModel
+/**
+ * Model LibraryCategory
+ * 
+ */
+export type LibraryCategory = Prisma.LibraryCategoryModel
+/**
+ * Model LibraryLaw
+ * 
+ */
+export type LibraryLaw = Prisma.LibraryLawModel
+/**
+ * Model LibraryBook
+ * 
+ */
+export type LibraryBook = Prisma.LibraryBookModel
+/**
+ * Model LibraryChapter
+ * 
+ */
+export type LibraryChapter = Prisma.LibraryChapterModel
+/**
+ * Model LibraryArticle
+ * 
+ */
+export type LibraryArticle = Prisma.LibraryArticleModel
+/**
+ * Model LibraryArticleCircular
+ * 
+ */
+export type LibraryArticleCircular = Prisma.LibraryArticleCircularModel
+/**
+ * Model LibraryArticleNote
+ * 
+ */
+export type LibraryArticleNote = Prisma.LibraryArticleNoteModel
+/**
+ * Model LibraryArticleRelation
+ * 
+ */
+export type LibraryArticleRelation = Prisma.LibraryArticleRelationModel
+/**
+ * Model LibraryArticleHistory
+ * 
+ */
+export type LibraryArticleHistory = Prisma.LibraryArticleHistoryModel
 /**
  * Model Banner
  * 

@@ -49,7 +49,7 @@ export const ticketInternalNoteSchema = z.object({
 
 export const serviceSchema = z.object({
   title: z.string().min(2, "عنوان الزامی است").max(120),
-  slug: z.string().min(2, "اسلاک الزامی است").max(120),
+  slug: z.string().max(120).optional(),
   summary: z.string().optional(),
   content: z.string().optional(),
   icon: z.string().optional(),
@@ -63,7 +63,7 @@ export const serviceSchema = z.object({
 
 export const articleSchema = z.object({
   title: z.string().min(2, "عنوان الزامی است").max(180),
-  slug: z.string().min(2, "اسلاک الزامی است").max(180),
+  slug: z.string().max(180).optional(),
   summary: z.string().optional(),
   content: z.string().optional(),
   image: z.string().optional(),
@@ -77,16 +77,25 @@ export const articleSchema = z.object({
 
 export const circularSchema = z.object({
   title: z.string().min(2, "عنوان الزامی است").max(180),
-  slug: z.string().min(2, "اسلاک الزامی است").max(180),
+  slug: z.string().max(180).optional(),
   number: z.string().optional(),
-  date: z.coerce.date().optional(),
+  date: z
+    .preprocess(
+      (v) => (v === "" || v === null || v === undefined ? undefined : v),
+      z.coerce.date().optional(),
+    )
+    .optional(),
   issuer: z.string().optional(),
   summary: z.string().optional(),
   content: z.string().optional(),
-  image: z.string().optional(),
   file: z.string().optional(),
   published: z.boolean().optional(),
-  publishedAt: z.coerce.date().optional(),
+  publishedAt: z
+    .preprocess(
+      (v) => (v === "" || v === null || v === undefined ? undefined : v),
+      z.coerce.date().optional(),
+    )
+    .optional(),
   seoTitle: z.string().max(160).optional(),
   seoDescription: z.string().max(320).optional(),
   categoryId: z.string().optional(),
@@ -94,7 +103,7 @@ export const circularSchema = z.object({
 
 export const lawSchema = z.object({
   title: z.string().min(2, "عنوان الزامی است").max(180),
-  slug: z.string().min(2, "اسلاک الزامی است").max(180),
+  slug: z.string().max(180).optional(),
   number: z.string().optional(),
   date: z.coerce.date().optional(),
   issuer: z.string().optional(),

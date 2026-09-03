@@ -17,10 +17,19 @@ export async function generateMetadata({
   const { slug } = await params;
   const circular = await prisma.circular.findUnique({
     where: { slug: decodeURIComponent(slug), published: true },
-    select: { title: true, summary: true, slug: true, seoTitle: true, seoDescription: true, image: true },
+    select: {
+      title: true,
+      summary: true,
+      slug: true,
+      seoTitle: true,
+      seoDescription: true,
+      images: { take: 1, orderBy: { order: "asc" } },
+    },
   });
 
   if (!circular) return {};
+
+  const firstImage = circular.images?.[0]?.url;
 
   return {
     title: circular.seoTitle || circular.title,
@@ -33,7 +42,7 @@ export async function generateMetadata({
       description: circular.seoDescription || circular.summary || undefined,
       type: "article",
       url: `${domains.primary}/circulars/${circular.slug}`,
-      images: circular.image ? [{ url: circular.image, width: 1200, height: 630, alt: circular.title }] : undefined,
+      images: firstImage ? [{ url: firstImage, width: 1200, height: 630, alt: circular.title }] : undefined,
     },
   };
 }
@@ -48,7 +57,7 @@ export default async function CircularPage({
   const { slug } = await params;
   const circular = await prisma.circular.findUnique({
     where: { slug: decodeURIComponent(slug), published: true },
-    include: { category: true },
+    include: { category: true, images: { orderBy: { order: "asc" } } },
   });
 
   if (!circular) notFound();
@@ -104,6 +113,33 @@ export default async function CircularPage({
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: circular.content }}
           />
+        )}
+
+        {circular.images && circular.images.length > 0 && (
+          <div className="mt-8">
+            <h2 className="mb-4 text-lg font-semibold text-primary-navy">
+              تصاویر بخشنامه
+            </h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {circular.images.map((img) => (
+                <a
+                  key={img.id}
+                  href={img.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block overflow-hidden rounded-lg border border-border bg-surface-card transition-shadow hover:shadow-lg"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={img.url}
+                    alt={img.alt || img.filename}
+                    className="aspect-[4/3] w-full object-cover transition-transform group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </a>
+              ))}
+            </div>
+          </div>
         )}
 
         {circular.file && (

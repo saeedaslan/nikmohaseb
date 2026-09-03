@@ -41,8 +41,9 @@ export async function createService(fd: FormData): Promise<{ ok?: boolean; error
   const value = parsed.data;
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
-    await prisma.service.create({ data: value });
-  } catch {
+    await prisma.service.create({ data: value as any });
+  } catch (error) {
+    console.error("Create service error:", error);
     return { error: "خطا در ثبت خدمت." };
   }
   revalidatePath("/admin/services");
@@ -57,8 +58,9 @@ export async function updateService(id: string, fd: FormData): Promise<{ ok?: bo
   const value = parsed.data;
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
-    await prisma.service.update({ where: { id }, data: value });
-  } catch {
+    await prisma.service.update({ where: { id }, data: value as any });
+  } catch (error) {
+    console.error("Update service error:", error);
     return { error: "خطا در بروزرسانی." };
   }
   revalidatePath("/admin/services");

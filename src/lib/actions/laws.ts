@@ -47,8 +47,9 @@ export async function createLaw(
   const value = parsed.data;
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
-    await prisma.law.create({ data: value });
-  } catch {
+    await prisma.law.create({ data: value as any });
+  } catch (error) {
+    console.error("Create law error:", error);
     return { error: "خطا در ثبت قانون." };
   }
   revalidatePath("/admin/laws");
@@ -65,8 +66,9 @@ export async function updateLaw(
   const value = parsed.data;
   if (value.content) value.content = sanitizeHtml(value.content);
   try {
-    await prisma.law.update({ where: { id }, data: value });
-  } catch {
+    await prisma.law.update({ where: { id }, data: value as any });
+  } catch (error) {
+    console.error("Update law error:", error);
     return { error: "خطا در بروزرسانی." };
   }
   revalidatePath("/admin/laws");

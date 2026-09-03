@@ -100,18 +100,18 @@ export function FileUpload({
 
       {value.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-3">
-          {value.map((f, i) => (
-            <div key={f.filename} className="relative">
-              {f.mime.startsWith("image/") ? (
+          {value.filter(Boolean).map((f, i) => (
+            <div key={f.url ?? i} className="relative">
+              {f.mime?.startsWith("image/") ? (
                 <img
                   src={f.url}
-                  alt={f.originalName}
+                  alt={f.originalName ?? f.filename ?? ""}
                   className="h-20 w-20 rounded border object-cover"
                 />
               ) : (
                 <div className="flex h-20 w-20 items-center justify-center rounded border bg-surface-background">
                   <span className="text-xs text-text-muted">
-                    {f.originalName}
+                    {f.originalName ?? f.filename ?? "فایل"}
                   </span>
                 </div>
               )}

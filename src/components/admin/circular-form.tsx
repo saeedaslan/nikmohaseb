@@ -10,18 +10,24 @@ interface CategoryOpt {
   label: string;
 }
 
+interface ExistingImage {
+  url: string;
+  filename: string;
+  alt?: string | null;
+}
+
 export function CircularForm({
   circular,
   categories,
-  files: existingFiles,
+  existingImages = [],
 }: {
   circular?: Circular;
   categories: CategoryOpt[];
-  files?: { url: string; filename: string }[];
+  existingImages?: ExistingImage[];
 }) {
   const fields: AdminField[] = [
     { name: "title", label: "عنوان", type: "text", description: "عنوان بخشنامه" },
-    { name: "slug", label: "اسلاک", type: "text", description: "مثال: bazneshane-1403" },
+    { name: "slug", label: "اسلاگ", type: "text", description: "مثال: bazneshane-1403" },
     { name: "number", label: "شماره", type: "text", description: "شماره بخشنامه" },
     { name: "date", label: "تاریخ", type: "date" },
     { name: "issuer", label: "سازمان صادرکننده", type: "text" },
@@ -31,7 +37,7 @@ export function CircularForm({
       type: "select",
       options: [{ value: "", label: "بدون دسته" }, ...categories],
     },
-    { name: "image", label: "تصویر شاخص", type: "image" },
+    { name: "gallery", label: "گالری تصاویر", type: "gallery" },
     { name: "summary", label: "خلاصه", type: "textarea", description: "خلاصه کوتاه" },
     { name: "content", label: "محتوا (HTML)", type: "html", description: "متن کامل بخشنامه" },
     { name: "published", label: "منتشر شود", type: "checkbox" },
@@ -49,7 +55,7 @@ export function CircularForm({
       schema={circularSchema}
       fields={fields}
       serverAction={serverAction}
-      initialData={circular as any}
+      initialData={{ ...(circular as any), gallery: existingImages }}
       redirectTo="/admin/circulars"
     />
   );

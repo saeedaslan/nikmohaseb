@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [services, articles, circulars, laws, faqs] = await Promise.all([
+  const [services, articles, circulars, laws, faqs, libraryLaws, libraryArticles] = await Promise.all([
     prisma.service.findMany({
       where: { published: true },
       select: { slug: true, updatedAt: true },
@@ -31,6 +31,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       where: { published: true },
       select: { slug: true, updatedAt: true },
       orderBy: { updatedAt: "desc" },
+    }),
+    prisma.libraryLaw.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true },
+    }),
+    prisma.libraryArticle.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true, chapter: { select: { book: { select: { law: { select: { slug: true } } } } } } },
     }),
   ]);
 
@@ -72,6 +80,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: "monthly" as const,
       priority: 0.7,
+    },
+    {
+      url: `${domains.primary}/library`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
     },
     {
       url: `${domains.primary}/about`,
@@ -122,6 +136,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const libraryLawPages: MetadataRoute.Sitemap = libraryLaws.map((l) => ({
+    url: `${domains.primary}/library/laws/${l.slug}`,
+    lastModified: l.updatedAt,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  const libraryArticlePages: MetadataRoute.Sitemap = libraryArticles.map((a) => ({
+    url: `${domains.primary}/library/laws/${a.chapter.book.law.slug}/articles/${a.slug}`,
+    lastModified: a.updatedAt,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
   return [
     ...staticPages,
     ...articlePages,
@@ -129,5 +157,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...circularPages,
     ...lawPages,
     ...faqPages,
+    ...libraryLawPages,
+    ...libraryArticlePages,
   ];
 }

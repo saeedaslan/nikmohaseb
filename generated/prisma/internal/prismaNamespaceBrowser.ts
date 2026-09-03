@@ -57,8 +57,18 @@ export const ModelName = {
   Service: 'Service',
   Article: 'Article',
   Circular: 'Circular',
+  CircularImage: 'CircularImage',
   Law: 'Law',
   Faq: 'Faq',
+  LibraryCategory: 'LibraryCategory',
+  LibraryLaw: 'LibraryLaw',
+  LibraryBook: 'LibraryBook',
+  LibraryChapter: 'LibraryChapter',
+  LibraryArticle: 'LibraryArticle',
+  LibraryArticleCircular: 'LibraryArticleCircular',
+  LibraryArticleNote: 'LibraryArticleNote',
+  LibraryArticleRelation: 'LibraryArticleRelation',
+  LibraryArticleHistory: 'LibraryArticleHistory',
   Banner: 'Banner',
   Ticket: 'Ticket',
   TicketMessage: 'TicketMessage',
@@ -171,7 +181,6 @@ export const CircularScalarFieldEnum = {
   issuer: 'issuer',
   summary: 'summary',
   content: 'content',
-  image: 'image',
   file: 'file',
   published: 'published',
   publishedAt: 'publishedAt',
@@ -183,6 +192,19 @@ export const CircularScalarFieldEnum = {
 } as const
 
 export type CircularScalarFieldEnum = (typeof CircularScalarFieldEnum)[keyof typeof CircularScalarFieldEnum]
+
+
+export const CircularImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  filename: 'filename',
+  alt: 'alt',
+  order: 'order',
+  circularId: 'circularId',
+  createdAt: 'createdAt'
+} as const
+
+export type CircularImageScalarFieldEnum = (typeof CircularImageScalarFieldEnum)[keyof typeof CircularImageScalarFieldEnum]
 
 
 export const LawScalarFieldEnum = {
@@ -222,6 +244,127 @@ export const FaqScalarFieldEnum = {
 } as const
 
 export type FaqScalarFieldEnum = (typeof FaqScalarFieldEnum)[keyof typeof FaqScalarFieldEnum]
+
+
+export const LibraryCategoryScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  icon: 'icon',
+  order: 'order',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LibraryCategoryScalarFieldEnum = (typeof LibraryCategoryScalarFieldEnum)[keyof typeof LibraryCategoryScalarFieldEnum]
+
+
+export const LibraryLawScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  approvalDate: 'approvalDate',
+  executionDate: 'executionDate',
+  lastAmendment: 'lastAmendment',
+  status: 'status',
+  published: 'published',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LibraryLawScalarFieldEnum = (typeof LibraryLawScalarFieldEnum)[keyof typeof LibraryLawScalarFieldEnum]
+
+
+export const LibraryBookScalarFieldEnum = {
+  id: 'id',
+  lawId: 'lawId',
+  title: 'title',
+  number: 'number',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LibraryBookScalarFieldEnum = (typeof LibraryBookScalarFieldEnum)[keyof typeof LibraryBookScalarFieldEnum]
+
+
+export const LibraryChapterScalarFieldEnum = {
+  id: 'id',
+  bookId: 'bookId',
+  title: 'title',
+  number: 'number',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LibraryChapterScalarFieldEnum = (typeof LibraryChapterScalarFieldEnum)[keyof typeof LibraryChapterScalarFieldEnum]
+
+
+export const LibraryArticleScalarFieldEnum = {
+  id: 'id',
+  chapterId: 'chapterId',
+  number: 'number',
+  title: 'title',
+  slug: 'slug',
+  content: 'content',
+  order: 'order',
+  published: 'published',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LibraryArticleScalarFieldEnum = (typeof LibraryArticleScalarFieldEnum)[keyof typeof LibraryArticleScalarFieldEnum]
+
+
+export const LibraryArticleCircularScalarFieldEnum = {
+  articleId: 'articleId',
+  circularId: 'circularId',
+  createdAt: 'createdAt'
+} as const
+
+export type LibraryArticleCircularScalarFieldEnum = (typeof LibraryArticleCircularScalarFieldEnum)[keyof typeof LibraryArticleCircularScalarFieldEnum]
+
+
+export const LibraryArticleNoteScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  content: 'content',
+  order: 'order',
+  createdAt: 'createdAt'
+} as const
+
+export type LibraryArticleNoteScalarFieldEnum = (typeof LibraryArticleNoteScalarFieldEnum)[keyof typeof LibraryArticleNoteScalarFieldEnum]
+
+
+export const LibraryArticleRelationScalarFieldEnum = {
+  id: 'id',
+  fromId: 'fromId',
+  toId: 'toId',
+  createdAt: 'createdAt'
+} as const
+
+export type LibraryArticleRelationScalarFieldEnum = (typeof LibraryArticleRelationScalarFieldEnum)[keyof typeof LibraryArticleRelationScalarFieldEnum]
+
+
+export const LibraryArticleHistoryScalarFieldEnum = {
+  id: 'id',
+  articleId: 'articleId',
+  changeDate: 'changeDate',
+  changeType: 'changeType',
+  description: 'description',
+  source: 'source',
+  createdAt: 'createdAt'
+} as const
+
+export type LibraryArticleHistoryScalarFieldEnum = (typeof LibraryArticleHistoryScalarFieldEnum)[keyof typeof LibraryArticleHistoryScalarFieldEnum]
 
 
 export const BannerScalarFieldEnum = {

@@ -412,6 +412,7 @@ export function LegislationSchema({
   issuer,
   number,
   slug,
+  path,
 }: {
   title: string;
   description: string;
@@ -419,6 +420,7 @@ export function LegislationSchema({
   issuer?: string;
   number?: string;
   slug: string;
+  path?: string;
 }) {
   const schema = {
     "@context": "https://schema.org",
@@ -426,12 +428,106 @@ export function LegislationSchema({
     name: title,
     description,
     datePublished: datePublished.toISOString(),
-    url: `${domains.primary}/laws/${slug}`,
+    url: `${domains.primary}${path ?? `/laws/${slug}`}`,
     ...(issuer && { legislationPassedBy: { "@type": "Organization", name: issuer } }),
     ...(number && { legislationIdentifier: number }),
     inLanguage: "fa-IR",
   };
 
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function LibraryLawSchema({
+  title,
+  description,
+  datePublished,
+  dateModified,
+  slug,
+  categoryTitle,
+  articles,
+}: {
+  title: string;
+  description: string;
+  datePublished?: Date | null;
+  dateModified?: Date | null;
+  slug: string;
+  categoryTitle: string;
+  articles: { id: string; number: number; title: string | null; slug: string }[];
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Legislation",
+    name: title,
+    description,
+    url: `${domains.primary}/library/laws/${slug}`,
+    legislationPassedBy: { "@type": "Organization", name: "مجلس شورای اسلامی" },
+    inLanguage: "fa-IR",
+    genre: categoryTitle,
+    ...(datePublished && { datePublished: datePublished.toISOString() }),
+    ...(dateModified && { dateModified: dateModified.toISOString() }),
+    hasPart: articles.slice(0, 20).map((a) => ({
+      "@type": "LegislationObject",
+      identifier: String(a.number),
+      name: a.title || `ماده ${a.number}`,
+      url: `${domains.primary}/library/laws/${slug}/articles/${a.slug}`,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+export function LibraryArticleSchema({
+  lawTitle,
+  articleNumber,
+  articleTitle,
+  articleSlug,
+  lawSlug,
+  description,
+  datePublished,
+  dateModified,
+}: {
+  lawTitle: string;
+  articleNumber: number;
+  articleTitle: string | null;
+  articleSlug: string;
+  lawSlug: string;
+  description: string;
+  datePublished?: Date | null;
+  dateModified?: Date | null;
+}) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${domains.primary}/library/laws/${lawSlug}/articles/${articleSlug}`,
+    name: articleTitle
+      ? `ماده ${articleNumber} - ${articleTitle}`
+      : `ماده ${articleNumber}`,
+    description,
+    inLanguage: "fa-IR",
+    isPartOf: {
+      "@type": "Legislation",
+      name: lawTitle,
+      url: `${domains.primary}/library/laws/${lawSlug}`,
+    },
+    mainEntity: {
+      "@type": "LegislationObject",
+      identifier: String(articleNumber),
+      name: articleTitle || `ماده ${articleNumber}`,
+      url: `${domains.primary}/library/laws/${lawSlug}/articles/${articleSlug}`,
+    },
+    ...(datePublished && { datePublished: datePublished.toISOString() }),
+    ...(dateModified && { dateModified: dateModified.toISOString() }),
+  };
   return (
     <script
       type="application/ld+json"

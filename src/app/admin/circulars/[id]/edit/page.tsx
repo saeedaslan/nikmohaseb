@@ -15,7 +15,7 @@ export default async function EditCircularPage({
   const { id } = await params;
   const circular = await prisma.circular.findUnique({
     where: { id },
-    include: { category: true },
+    include: { category: true, images: { orderBy: { order: "asc" } } },
   });
   if (!circular) notFound();
 
@@ -27,7 +27,15 @@ export default async function EditCircularPage({
       <h1 className="mb-4 text-xl font-bold text-primary-navy">
         ویرایش بخشنامه «{circular.title}»
       </h1>
-      <CircularForm circular={circular} categories={catOpts} />
+      <CircularForm
+        circular={circular}
+        categories={catOpts}
+        existingImages={circular.images.map((img) => ({
+          url: img.url,
+          filename: img.filename,
+          alt: img.alt,
+        }))}
+      />
     </div>
   );
 }

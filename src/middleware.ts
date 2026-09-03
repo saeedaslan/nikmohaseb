@@ -31,6 +31,27 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
+  if (pathname === "/library/terms-and-conditions" || pathname === "/library/terms-and-conditions/") {
+    const cat = req.nextUrl.searchParams.get("category");
+    const target = cat
+      ? new URL(`/library/categories/${cat}`, req.url)
+      : new URL("/library", req.url);
+    return NextResponse.redirect(target, 301);
+  }
+  const tncMatch = pathname.match(/^\/library\/terms-and-conditions\/([^/]+)(?:\/([^/]+))?\/?$/);
+  if (tncMatch) {
+    const lawSlug = tncMatch[1];
+    const articleSlug = tncMatch[2];
+    const target = articleSlug
+      ? new URL(`/library/laws/${lawSlug}/articles/${articleSlug}`, req.url)
+      : new URL(`/library/laws/${lawSlug}`, req.url);
+    return NextResponse.redirect(target, 301);
+  }
+  if (pathname === "/library" && req.nextUrl.searchParams.has("category")) {
+    const slug = req.nextUrl.searchParams.get("category")!;
+    return NextResponse.redirect(new URL(`/library/categories/${slug}`, req.url), 301);
+  }
+
   if (authRoutes.includes(pathname)) {
     if (isLoggedIn && (role === ADMIN || role === SUPPORT)) {
       return NextResponse.redirect(new URL("/admin", req.url));

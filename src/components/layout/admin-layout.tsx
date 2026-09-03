@@ -16,6 +16,7 @@ import {
   X,
   LogOut,
   Bell,
+  Library,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
@@ -29,6 +30,7 @@ const nav = [
   { label: "مقالات", href: "/admin/articles", icon: FileText, color: "text-green-500", badge: false },
   { label: "بخشنامه‌ها", href: "/admin/circulars", icon: ReceiptText, color: "text-yellow-500", badge: false },
   { label: "قوانین", href: "/admin/laws", icon: FileText, color: "text-red-500", badge: false },
+  { label: "کتابخانه قوانین", href: "/admin/library", icon: Library, color: "text-emerald-500", badge: false },
   { label: "سؤالات متداول", href: "/admin/faqs", icon: HelpCircle, color: "text-cyan-500", badge: false },
   { label: "خدمات", href: "/admin/services", icon: Settings, color: "text-gray-500", badge: false },
 ];

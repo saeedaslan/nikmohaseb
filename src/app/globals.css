@@ -460,4 +460,28 @@
   code {
     @apply rounded bg-surface-background px-2 py-1 text-sm;
   }
+
+  a.article-ref {
+    @apply inline-block rounded-md bg-accent-green/10 px-1.5 py-0.5 font-medium text-accent-green no-underline transition-colors hover:bg-accent-green/20;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media print {
+  header, footer, nav, aside, .print\:hidden {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .article-content {
+    font-size: 14pt;
+    line-height: 2;
+  }
 }

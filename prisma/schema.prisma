@@ -135,7 +135,6 @@ model Circular {
   issuer         String?
   summary        String?
   content        String?
-  image          String?
   file           String?
   published      Boolean  @default(false)
   publishedAt    DateTime? @db.Timestamptz(3)
@@ -143,8 +142,24 @@ model Circular {
   seoDescription String?
   categoryId     String?
   category       Category? @relation(fields: [categoryId], references: [id])
-  createdAt      DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt      DateTime @updatedAt @db.Timestamptz(3)
+  createdAt      DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime  @updatedAt @db.Timestamptz(3)
+
+  images CircularImage[]
+  libraryArticles LibraryArticleCircular[]
+}
+
+model CircularImage {
+  id         String   @id @default(cuid())
+  url        String
+  filename   String
+  alt        String?
+  order      Int      @default(0)
+  circularId String
+  circular   Circular @relation(fields: [circularId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([circularId])
 }
 
 model Law {
@@ -185,6 +200,149 @@ model Faq {
   publishedAt DateTime? @db.Timestamptz(3)
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   updatedAt  DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model LibraryCategory {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  icon        String?
+  order       Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @db.Timestamptz(3)
+
+  laws LibraryLaw[]
+}
+
+model LibraryLaw {
+  id              String   @id @default(cuid())
+  categoryId      String
+  category        LibraryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  title           String
+  slug            String   @unique
+  description     String?
+  approvalDate    DateTime? @db.Timestamptz(3)
+  executionDate   DateTime? @db.Timestamptz(3)
+  lastAmendment   DateTime? @db.Timestamptz(3)
+  status          String?
+  published       Boolean  @default(false)
+  seoTitle        String?
+  seoDescription  String?
+  order           Int      @default(0)
+  createdAt       DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime @updatedAt @db.Timestamptz(3)
+
+  books LibraryBook[]
+
+  @@index([categoryId])
+  @@index([published])
+}
+
+model LibraryBook {
+  id        String   @id @default(cuid())
+  lawId     String
+  law       LibraryLaw @relation(fields: [lawId], references: [id], onDelete: Cascade)
+  title     String
+  number    Int
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  chapters LibraryChapter[]
+
+  @@unique([lawId, number])
+  @@index([lawId])
+}
+
+model LibraryChapter {
+  id        String   @id @default(cuid())
+  bookId    String
+  book      LibraryBook @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  title     String
+  number    Int
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  articles LibraryArticle[]
+
+  @@unique([bookId, number])
+  @@index([bookId])
+}
+
+model LibraryArticle {
+  id         String   @id @default(cuid())
+  chapterId  String
+  chapter    LibraryChapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  number     Int
+  title      String?
+  slug       String
+  content    String  @db.Text
+  order      Int     @default(0)
+  published  Boolean @default(true)
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime @updatedAt @db.Timestamptz(3)
+
+  notes        LibraryArticleNote[]
+  history      LibraryArticleHistory[]
+  relationsFrom LibraryArticleRelation[] @relation("RelationFrom")
+  relationsTo   LibraryArticleRelation[] @relation("RelationTo")
+  circulars    LibraryArticleCircular[]
+
+  @@unique([chapterId, number])
+  @@index([chapterId])
+  @@index([slug])
+}
+
+model LibraryArticleCircular {
+  articleId  String
+  article    LibraryArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  circularId String
+  circular   Circular @relation(fields: [circularId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+
+  @@id([articleId, circularId])
+  @@index([articleId])
+  @@index([circularId])
+}
+
+model LibraryArticleNote {
+  id         String   @id @default(cuid())
+  articleId  String
+  article    LibraryArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  content    String   @db.Text
+  order      Int      @default(0)
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([articleId])
+}
+
+model LibraryArticleRelation {
+  id           String   @id @default(cuid())
+  fromId       String
+  from         LibraryArticle @relation("RelationFrom", fields: [fromId], references: [id], onDelete: Cascade)
+  toId         String
+  to           LibraryArticle @relation("RelationTo", fields: [toId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+
+  @@unique([fromId, toId])
+  @@index([fromId])
+  @@index([toId])
+}
+
+model LibraryArticleHistory {
+  id         String   @id @default(cuid())
+  articleId  String
+  article    LibraryArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  changeDate DateTime @db.Timestamptz(3)
+  changeType String
+  description String  @db.Text
+  source     String?
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([articleId])
 }
 
 model Banner {

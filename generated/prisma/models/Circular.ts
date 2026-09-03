@@ -33,7 +33,6 @@ export type CircularMinAggregateOutputType = {
   issuer: string | null
   summary: string | null
   content: string | null
-  image: string | null
   file: string | null
   published: boolean | null
   publishedAt: Date | null
@@ -53,7 +52,6 @@ export type CircularMaxAggregateOutputType = {
   issuer: string | null
   summary: string | null
   content: string | null
-  image: string | null
   file: string | null
   published: boolean | null
   publishedAt: Date | null
@@ -73,7 +71,6 @@ export type CircularCountAggregateOutputType = {
   issuer: number
   summary: number
   content: number
-  image: number
   file: number
   published: number
   publishedAt: number
@@ -95,7 +92,6 @@ export type CircularMinAggregateInputType = {
   issuer?: true
   summary?: true
   content?: true
-  image?: true
   file?: true
   published?: true
   publishedAt?: true
@@ -115,7 +111,6 @@ export type CircularMaxAggregateInputType = {
   issuer?: true
   summary?: true
   content?: true
-  image?: true
   file?: true
   published?: true
   publishedAt?: true
@@ -135,7 +130,6 @@ export type CircularCountAggregateInputType = {
   issuer?: true
   summary?: true
   content?: true
-  image?: true
   file?: true
   published?: true
   publishedAt?: true
@@ -228,7 +222,6 @@ export type CircularGroupByOutputType = {
   issuer: string | null
   summary: string | null
   content: string | null
-  image: string | null
   file: string | null
   published: boolean
   publishedAt: Date | null
@@ -269,7 +262,6 @@ export type CircularWhereInput = {
   issuer?: Prisma.StringNullableFilter<"Circular"> | string | null
   summary?: Prisma.StringNullableFilter<"Circular"> | string | null
   content?: Prisma.StringNullableFilter<"Circular"> | string | null
-  image?: Prisma.StringNullableFilter<"Circular"> | string | null
   file?: Prisma.StringNullableFilter<"Circular"> | string | null
   published?: Prisma.BoolFilter<"Circular"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Circular"> | Date | string | null
@@ -279,6 +271,8 @@ export type CircularWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Circular"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Circular"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
+  images?: Prisma.CircularImageListRelationFilter
+  libraryArticles?: Prisma.LibraryArticleCircularListRelationFilter
 }
 
 export type CircularOrderByWithRelationInput = {
@@ -290,7 +284,6 @@ export type CircularOrderByWithRelationInput = {
   issuer?: Prisma.SortOrderInput | Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
-  image?: Prisma.SortOrderInput | Prisma.SortOrder
   file?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -300,6 +293,8 @@ export type CircularOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
+  images?: Prisma.CircularImageOrderByRelationAggregateInput
+  libraryArticles?: Prisma.LibraryArticleCircularOrderByRelationAggregateInput
 }
 
 export type CircularWhereUniqueInput = Prisma.AtLeast<{
@@ -314,7 +309,6 @@ export type CircularWhereUniqueInput = Prisma.AtLeast<{
   issuer?: Prisma.StringNullableFilter<"Circular"> | string | null
   summary?: Prisma.StringNullableFilter<"Circular"> | string | null
   content?: Prisma.StringNullableFilter<"Circular"> | string | null
-  image?: Prisma.StringNullableFilter<"Circular"> | string | null
   file?: Prisma.StringNullableFilter<"Circular"> | string | null
   published?: Prisma.BoolFilter<"Circular"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Circular"> | Date | string | null
@@ -324,6 +318,8 @@ export type CircularWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Circular"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Circular"> | Date | string
   category?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
+  images?: Prisma.CircularImageListRelationFilter
+  libraryArticles?: Prisma.LibraryArticleCircularListRelationFilter
 }, "id" | "slug">
 
 export type CircularOrderByWithAggregationInput = {
@@ -335,7 +331,6 @@ export type CircularOrderByWithAggregationInput = {
   issuer?: Prisma.SortOrderInput | Prisma.SortOrder
   summary?: Prisma.SortOrderInput | Prisma.SortOrder
   content?: Prisma.SortOrderInput | Prisma.SortOrder
-  image?: Prisma.SortOrderInput | Prisma.SortOrder
   file?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -361,7 +356,6 @@ export type CircularScalarWhereWithAggregatesInput = {
   issuer?: Prisma.StringNullableWithAggregatesFilter<"Circular"> | string | null
   summary?: Prisma.StringNullableWithAggregatesFilter<"Circular"> | string | null
   content?: Prisma.StringNullableWithAggregatesFilter<"Circular"> | string | null
-  image?: Prisma.StringNullableWithAggregatesFilter<"Circular"> | string | null
   file?: Prisma.StringNullableWithAggregatesFilter<"Circular"> | string | null
   published?: Prisma.BoolWithAggregatesFilter<"Circular"> | boolean
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Circular"> | Date | string | null
@@ -381,7 +375,6 @@ export type CircularCreateInput = {
   issuer?: string | null
   summary?: string | null
   content?: string | null
-  image?: string | null
   file?: string | null
   published?: boolean
   publishedAt?: Date | string | null
@@ -390,6 +383,8 @@ export type CircularCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category?: Prisma.CategoryCreateNestedOneWithoutCircularsInput
+  images?: Prisma.CircularImageCreateNestedManyWithoutCircularInput
+  libraryArticles?: Prisma.LibraryArticleCircularCreateNestedManyWithoutCircularInput
 }
 
 export type CircularUncheckedCreateInput = {
@@ -401,7 +396,6 @@ export type CircularUncheckedCreateInput = {
   issuer?: string | null
   summary?: string | null
   content?: string | null
-  image?: string | null
   file?: string | null
   published?: boolean
   publishedAt?: Date | string | null
@@ -410,6 +404,8 @@ export type CircularUncheckedCreateInput = {
   categoryId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  images?: Prisma.CircularImageUncheckedCreateNestedManyWithoutCircularInput
+  libraryArticles?: Prisma.LibraryArticleCircularUncheckedCreateNestedManyWithoutCircularInput
 }
 
 export type CircularUpdateInput = {
@@ -421,7 +417,6 @@ export type CircularUpdateInput = {
   issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -430,6 +425,8 @@ export type CircularUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.CategoryUpdateOneWithoutCircularsNestedInput
+  images?: Prisma.CircularImageUpdateManyWithoutCircularNestedInput
+  libraryArticles?: Prisma.LibraryArticleCircularUpdateManyWithoutCircularNestedInput
 }
 
 export type CircularUncheckedUpdateInput = {
@@ -441,7 +438,6 @@ export type CircularUncheckedUpdateInput = {
   issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -450,6 +446,8 @@ export type CircularUncheckedUpdateInput = {
   categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.CircularImageUncheckedUpdateManyWithoutCircularNestedInput
+  libraryArticles?: Prisma.LibraryArticleCircularUncheckedUpdateManyWithoutCircularNestedInput
 }
 
 export type CircularCreateManyInput = {
@@ -461,7 +459,6 @@ export type CircularCreateManyInput = {
   issuer?: string | null
   summary?: string | null
   content?: string | null
-  image?: string | null
   file?: string | null
   published?: boolean
   publishedAt?: Date | string | null
@@ -481,7 +478,6 @@ export type CircularUpdateManyMutationInput = {
   issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -500,7 +496,6 @@ export type CircularUncheckedUpdateManyInput = {
   issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -530,7 +525,6 @@ export type CircularCountOrderByAggregateInput = {
   issuer?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  image?: Prisma.SortOrder
   file?: Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -550,7 +544,6 @@ export type CircularMaxOrderByAggregateInput = {
   issuer?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  image?: Prisma.SortOrder
   file?: Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -570,7 +563,6 @@ export type CircularMinOrderByAggregateInput = {
   issuer?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   content?: Prisma.SortOrder
-  image?: Prisma.SortOrder
   file?: Prisma.SortOrder
   published?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -579,6 +571,11 @@ export type CircularMinOrderByAggregateInput = {
   categoryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type CircularScalarRelationFilter = {
+  is?: Prisma.CircularWhereInput
+  isNot?: Prisma.CircularWhereInput
 }
 
 export type CircularCreateNestedManyWithoutCategoryInput = {
@@ -623,6 +620,34 @@ export type CircularUncheckedUpdateManyWithoutCategoryNestedInput = {
   deleteMany?: Prisma.CircularScalarWhereInput | Prisma.CircularScalarWhereInput[]
 }
 
+export type CircularCreateNestedOneWithoutImagesInput = {
+  create?: Prisma.XOR<Prisma.CircularCreateWithoutImagesInput, Prisma.CircularUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.CircularCreateOrConnectWithoutImagesInput
+  connect?: Prisma.CircularWhereUniqueInput
+}
+
+export type CircularUpdateOneRequiredWithoutImagesNestedInput = {
+  create?: Prisma.XOR<Prisma.CircularCreateWithoutImagesInput, Prisma.CircularUncheckedCreateWithoutImagesInput>
+  connectOrCreate?: Prisma.CircularCreateOrConnectWithoutImagesInput
+  upsert?: Prisma.CircularUpsertWithoutImagesInput
+  connect?: Prisma.CircularWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CircularUpdateToOneWithWhereWithoutImagesInput, Prisma.CircularUpdateWithoutImagesInput>, Prisma.CircularUncheckedUpdateWithoutImagesInput>
+}
+
+export type CircularCreateNestedOneWithoutLibraryArticlesInput = {
+  create?: Prisma.XOR<Prisma.CircularCreateWithoutLibraryArticlesInput, Prisma.CircularUncheckedCreateWithoutLibraryArticlesInput>
+  connectOrCreate?: Prisma.CircularCreateOrConnectWithoutLibraryArticlesInput
+  connect?: Prisma.CircularWhereUniqueInput
+}
+
+export type CircularUpdateOneRequiredWithoutLibraryArticlesNestedInput = {
+  create?: Prisma.XOR<Prisma.CircularCreateWithoutLibraryArticlesInput, Prisma.CircularUncheckedCreateWithoutLibraryArticlesInput>
+  connectOrCreate?: Prisma.CircularCreateOrConnectWithoutLibraryArticlesInput
+  upsert?: Prisma.CircularUpsertWithoutLibraryArticlesInput
+  connect?: Prisma.CircularWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CircularUpdateToOneWithWhereWithoutLibraryArticlesInput, Prisma.CircularUpdateWithoutLibraryArticlesInput>, Prisma.CircularUncheckedUpdateWithoutLibraryArticlesInput>
+}
+
 export type CircularCreateWithoutCategoryInput = {
   id?: string
   title: string
@@ -632,7 +657,6 @@ export type CircularCreateWithoutCategoryInput = {
   issuer?: string | null
   summary?: string | null
   content?: string | null
-  image?: string | null
   file?: string | null
   published?: boolean
   publishedAt?: Date | string | null
@@ -640,6 +664,8 @@ export type CircularCreateWithoutCategoryInput = {
   seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  images?: Prisma.CircularImageCreateNestedManyWithoutCircularInput
+  libraryArticles?: Prisma.LibraryArticleCircularCreateNestedManyWithoutCircularInput
 }
 
 export type CircularUncheckedCreateWithoutCategoryInput = {
@@ -651,7 +677,6 @@ export type CircularUncheckedCreateWithoutCategoryInput = {
   issuer?: string | null
   summary?: string | null
   content?: string | null
-  image?: string | null
   file?: string | null
   published?: boolean
   publishedAt?: Date | string | null
@@ -659,6 +684,8 @@ export type CircularUncheckedCreateWithoutCategoryInput = {
   seoDescription?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  images?: Prisma.CircularImageUncheckedCreateNestedManyWithoutCircularInput
+  libraryArticles?: Prisma.LibraryArticleCircularUncheckedCreateNestedManyWithoutCircularInput
 }
 
 export type CircularCreateOrConnectWithoutCategoryInput = {
@@ -699,7 +726,6 @@ export type CircularScalarWhereInput = {
   issuer?: Prisma.StringNullableFilter<"Circular"> | string | null
   summary?: Prisma.StringNullableFilter<"Circular"> | string | null
   content?: Prisma.StringNullableFilter<"Circular"> | string | null
-  image?: Prisma.StringNullableFilter<"Circular"> | string | null
   file?: Prisma.StringNullableFilter<"Circular"> | string | null
   published?: Prisma.BoolFilter<"Circular"> | boolean
   publishedAt?: Prisma.DateTimeNullableFilter<"Circular"> | Date | string | null
@@ -708,6 +734,198 @@ export type CircularScalarWhereInput = {
   categoryId?: Prisma.StringNullableFilter<"Circular"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Circular"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Circular"> | Date | string
+}
+
+export type CircularCreateWithoutImagesInput = {
+  id?: string
+  title: string
+  slug: string
+  number?: string | null
+  date?: Date | string | null
+  issuer?: string | null
+  summary?: string | null
+  content?: string | null
+  file?: string | null
+  published?: boolean
+  publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category?: Prisma.CategoryCreateNestedOneWithoutCircularsInput
+  libraryArticles?: Prisma.LibraryArticleCircularCreateNestedManyWithoutCircularInput
+}
+
+export type CircularUncheckedCreateWithoutImagesInput = {
+  id?: string
+  title: string
+  slug: string
+  number?: string | null
+  date?: Date | string | null
+  issuer?: string | null
+  summary?: string | null
+  content?: string | null
+  file?: string | null
+  published?: boolean
+  publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  categoryId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  libraryArticles?: Prisma.LibraryArticleCircularUncheckedCreateNestedManyWithoutCircularInput
+}
+
+export type CircularCreateOrConnectWithoutImagesInput = {
+  where: Prisma.CircularWhereUniqueInput
+  create: Prisma.XOR<Prisma.CircularCreateWithoutImagesInput, Prisma.CircularUncheckedCreateWithoutImagesInput>
+}
+
+export type CircularUpsertWithoutImagesInput = {
+  update: Prisma.XOR<Prisma.CircularUpdateWithoutImagesInput, Prisma.CircularUncheckedUpdateWithoutImagesInput>
+  create: Prisma.XOR<Prisma.CircularCreateWithoutImagesInput, Prisma.CircularUncheckedCreateWithoutImagesInput>
+  where?: Prisma.CircularWhereInput
+}
+
+export type CircularUpdateToOneWithWhereWithoutImagesInput = {
+  where?: Prisma.CircularWhereInput
+  data: Prisma.XOR<Prisma.CircularUpdateWithoutImagesInput, Prisma.CircularUncheckedUpdateWithoutImagesInput>
+}
+
+export type CircularUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.CategoryUpdateOneWithoutCircularsNestedInput
+  libraryArticles?: Prisma.LibraryArticleCircularUpdateManyWithoutCircularNestedInput
+}
+
+export type CircularUncheckedUpdateWithoutImagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  libraryArticles?: Prisma.LibraryArticleCircularUncheckedUpdateManyWithoutCircularNestedInput
+}
+
+export type CircularCreateWithoutLibraryArticlesInput = {
+  id?: string
+  title: string
+  slug: string
+  number?: string | null
+  date?: Date | string | null
+  issuer?: string | null
+  summary?: string | null
+  content?: string | null
+  file?: string | null
+  published?: boolean
+  publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category?: Prisma.CategoryCreateNestedOneWithoutCircularsInput
+  images?: Prisma.CircularImageCreateNestedManyWithoutCircularInput
+}
+
+export type CircularUncheckedCreateWithoutLibraryArticlesInput = {
+  id?: string
+  title: string
+  slug: string
+  number?: string | null
+  date?: Date | string | null
+  issuer?: string | null
+  summary?: string | null
+  content?: string | null
+  file?: string | null
+  published?: boolean
+  publishedAt?: Date | string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
+  categoryId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  images?: Prisma.CircularImageUncheckedCreateNestedManyWithoutCircularInput
+}
+
+export type CircularCreateOrConnectWithoutLibraryArticlesInput = {
+  where: Prisma.CircularWhereUniqueInput
+  create: Prisma.XOR<Prisma.CircularCreateWithoutLibraryArticlesInput, Prisma.CircularUncheckedCreateWithoutLibraryArticlesInput>
+}
+
+export type CircularUpsertWithoutLibraryArticlesInput = {
+  update: Prisma.XOR<Prisma.CircularUpdateWithoutLibraryArticlesInput, Prisma.CircularUncheckedUpdateWithoutLibraryArticlesInput>
+  create: Prisma.XOR<Prisma.CircularCreateWithoutLibraryArticlesInput, Prisma.CircularUncheckedCreateWithoutLibraryArticlesInput>
+  where?: Prisma.CircularWhereInput
+}
+
+export type CircularUpdateToOneWithWhereWithoutLibraryArticlesInput = {
+  where?: Prisma.CircularWhereInput
+  data: Prisma.XOR<Prisma.CircularUpdateWithoutLibraryArticlesInput, Prisma.CircularUncheckedUpdateWithoutLibraryArticlesInput>
+}
+
+export type CircularUpdateWithoutLibraryArticlesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.CategoryUpdateOneWithoutCircularsNestedInput
+  images?: Prisma.CircularImageUpdateManyWithoutCircularNestedInput
+}
+
+export type CircularUncheckedUpdateWithoutLibraryArticlesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  seoTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  categoryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.CircularImageUncheckedUpdateManyWithoutCircularNestedInput
 }
 
 export type CircularCreateManyCategoryInput = {
@@ -719,7 +937,6 @@ export type CircularCreateManyCategoryInput = {
   issuer?: string | null
   summary?: string | null
   content?: string | null
-  image?: string | null
   file?: string | null
   published?: boolean
   publishedAt?: Date | string | null
@@ -738,7 +955,6 @@ export type CircularUpdateWithoutCategoryInput = {
   issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -746,6 +962,8 @@ export type CircularUpdateWithoutCategoryInput = {
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.CircularImageUpdateManyWithoutCircularNestedInput
+  libraryArticles?: Prisma.LibraryArticleCircularUpdateManyWithoutCircularNestedInput
 }
 
 export type CircularUncheckedUpdateWithoutCategoryInput = {
@@ -757,7 +975,6 @@ export type CircularUncheckedUpdateWithoutCategoryInput = {
   issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -765,6 +982,8 @@ export type CircularUncheckedUpdateWithoutCategoryInput = {
   seoDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  images?: Prisma.CircularImageUncheckedUpdateManyWithoutCircularNestedInput
+  libraryArticles?: Prisma.LibraryArticleCircularUncheckedUpdateManyWithoutCircularNestedInput
 }
 
 export type CircularUncheckedUpdateManyWithoutCategoryInput = {
@@ -776,7 +995,6 @@ export type CircularUncheckedUpdateManyWithoutCategoryInput = {
   issuer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   content?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   file?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -786,6 +1004,44 @@ export type CircularUncheckedUpdateManyWithoutCategoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type CircularCountOutputType
+ */
+
+export type CircularCountOutputType = {
+  images: number
+  libraryArticles: number
+}
+
+export type CircularCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  images?: boolean | CircularCountOutputTypeCountImagesArgs
+  libraryArticles?: boolean | CircularCountOutputTypeCountLibraryArticlesArgs
+}
+
+/**
+ * CircularCountOutputType without action
+ */
+export type CircularCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CircularCountOutputType
+   */
+  select?: Prisma.CircularCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CircularCountOutputType without action
+ */
+export type CircularCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CircularImageWhereInput
+}
+
+/**
+ * CircularCountOutputType without action
+ */
+export type CircularCountOutputTypeCountLibraryArticlesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LibraryArticleCircularWhereInput
+}
 
 
 export type CircularSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -797,7 +1053,6 @@ export type CircularSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   issuer?: boolean
   summary?: boolean
   content?: boolean
-  image?: boolean
   file?: boolean
   published?: boolean
   publishedAt?: boolean
@@ -807,6 +1062,9 @@ export type CircularSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.Circular$categoryArgs<ExtArgs>
+  images?: boolean | Prisma.Circular$imagesArgs<ExtArgs>
+  libraryArticles?: boolean | Prisma.Circular$libraryArticlesArgs<ExtArgs>
+  _count?: boolean | Prisma.CircularCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["circular"]>
 
 export type CircularSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -818,7 +1076,6 @@ export type CircularSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   issuer?: boolean
   summary?: boolean
   content?: boolean
-  image?: boolean
   file?: boolean
   published?: boolean
   publishedAt?: boolean
@@ -839,7 +1096,6 @@ export type CircularSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   issuer?: boolean
   summary?: boolean
   content?: boolean
-  image?: boolean
   file?: boolean
   published?: boolean
   publishedAt?: boolean
@@ -860,7 +1116,6 @@ export type CircularSelectScalar = {
   issuer?: boolean
   summary?: boolean
   content?: boolean
-  image?: boolean
   file?: boolean
   published?: boolean
   publishedAt?: boolean
@@ -871,9 +1126,12 @@ export type CircularSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CircularOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "number" | "date" | "issuer" | "summary" | "content" | "image" | "file" | "published" | "publishedAt" | "seoTitle" | "seoDescription" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["circular"]>
+export type CircularOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "number" | "date" | "issuer" | "summary" | "content" | "file" | "published" | "publishedAt" | "seoTitle" | "seoDescription" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["circular"]>
 export type CircularInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Circular$categoryArgs<ExtArgs>
+  images?: boolean | Prisma.Circular$imagesArgs<ExtArgs>
+  libraryArticles?: boolean | Prisma.Circular$libraryArticlesArgs<ExtArgs>
+  _count?: boolean | Prisma.CircularCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CircularIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.Circular$categoryArgs<ExtArgs>
@@ -886,6 +1144,8 @@ export type $CircularPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Circular"
   objects: {
     category: Prisma.$CategoryPayload<ExtArgs> | null
+    images: Prisma.$CircularImagePayload<ExtArgs>[]
+    libraryArticles: Prisma.$LibraryArticleCircularPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -896,7 +1156,6 @@ export type $CircularPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     issuer: string | null
     summary: string | null
     content: string | null
-    image: string | null
     file: string | null
     published: boolean
     publishedAt: Date | null
@@ -1300,6 +1559,8 @@ readonly fields: CircularFieldRefs;
 export interface Prisma__CircularClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   category<T extends Prisma.Circular$categoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circular$categoryArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  images<T extends Prisma.Circular$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circular$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CircularImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  libraryArticles<T extends Prisma.Circular$libraryArticlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circular$libraryArticlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LibraryArticleCircularPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1337,7 +1598,6 @@ export interface CircularFieldRefs {
   readonly issuer: Prisma.FieldRef<"Circular", 'String'>
   readonly summary: Prisma.FieldRef<"Circular", 'String'>
   readonly content: Prisma.FieldRef<"Circular", 'String'>
-  readonly image: Prisma.FieldRef<"Circular", 'String'>
   readonly file: Prisma.FieldRef<"Circular", 'String'>
   readonly published: Prisma.FieldRef<"Circular", 'Boolean'>
   readonly publishedAt: Prisma.FieldRef<"Circular", 'DateTime'>
@@ -1763,6 +2023,54 @@ export type Circular$categoryArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.CategoryInclude<ExtArgs> | null
   where?: Prisma.CategoryWhereInput
+}
+
+/**
+ * Circular.images
+ */
+export type Circular$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CircularImage
+   */
+  select?: Prisma.CircularImageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CircularImage
+   */
+  omit?: Prisma.CircularImageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CircularImageInclude<ExtArgs> | null
+  where?: Prisma.CircularImageWhereInput
+  orderBy?: Prisma.CircularImageOrderByWithRelationInput | Prisma.CircularImageOrderByWithRelationInput[]
+  cursor?: Prisma.CircularImageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CircularImageScalarFieldEnum | Prisma.CircularImageScalarFieldEnum[]
+}
+
+/**
+ * Circular.libraryArticles
+ */
+export type Circular$libraryArticlesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LibraryArticleCircular
+   */
+  select?: Prisma.LibraryArticleCircularSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LibraryArticleCircular
+   */
+  omit?: Prisma.LibraryArticleCircularOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LibraryArticleCircularInclude<ExtArgs> | null
+  where?: Prisma.LibraryArticleCircularWhereInput
+  orderBy?: Prisma.LibraryArticleCircularOrderByWithRelationInput | Prisma.LibraryArticleCircularOrderByWithRelationInput[]
+  cursor?: Prisma.LibraryArticleCircularWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LibraryArticleCircularScalarFieldEnum | Prisma.LibraryArticleCircularScalarFieldEnum[]
 }
 
 /**

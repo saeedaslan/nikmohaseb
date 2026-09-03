@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, FileDown, Calendar, Building } from "lucide-react";
 import { toJalali } from "@/lib/jalali";
@@ -47,45 +46,20 @@ export async function CircularsSection({ circulars }: { circulars: Circular[] })
             {circulars.map((c, index) => (
               <Link key={c.id} href={`/circulars/${c.slug}`} className="group block">
                 <article className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-xl border border-border">
-                  {/* Image / Header */}
-                  {c.image ? (
-                    <div className="relative h-52 w-full overflow-hidden">
-                      <Image
-                        src={c.image}
-                        alt={c.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                      <div className="absolute bottom-4 right-4 flex items-center gap-2">
-                        {c.category && (
-                          <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-primary-navy backdrop-blur">
-                            {c.category.name}
-                          </span>
-                        )}
-                      </div>
-                      {c.number && (
-                        <span className="absolute left-4 top-4 rounded-full bg-accent-yellow/90 px-3 py-1 text-xs font-bold text-white">
-                          شماره {c.number}
-                        </span>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="relative flex h-52 w-full items-center justify-center bg-gradient-to-br from-accent-yellow/15 to-accent-yellow/5">
-                      <FileDown className="h-16 w-16 text-accent-yellow/30" />
-                      {c.number && (
-                        <span className="absolute left-4 top-4 rounded-full bg-accent-yellow/90 px-3 py-1 text-xs font-bold text-white">
-                          شماره {c.number}
-                        </span>
-                      )}
-                      {c.category && (
-                        <span className="absolute bottom-4 right-4 rounded-full bg-accent-yellow/10 px-3 py-1 text-xs font-medium text-accent-yellow">
-                          {c.category.name}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                  {/* Header */}
+                  <div className="relative flex h-52 w-full items-center justify-center bg-gradient-to-br from-accent-yellow/15 to-accent-yellow/5">
+                    <FileDown className="h-16 w-16 text-accent-yellow/30" />
+                    {c.number && (
+                      <span className="absolute left-4 top-4 rounded-full bg-accent-yellow/90 px-3 py-1 text-xs font-bold text-white">
+                        شماره {c.number}
+                      </span>
+                    )}
+                    {c.category && (
+                      <span className="absolute bottom-4 right-4 rounded-full bg-accent-yellow/10 px-3 py-1 text-xs font-medium text-accent-yellow">
+                        {c.category.name}
+                      </span>
+                    )}
+                  </div>
 
                   {/* Content */}
                   <div className="flex flex-1 flex-col p-6">
