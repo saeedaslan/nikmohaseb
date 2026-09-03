@@ -1,20 +1,25 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import {
-  FileCheck,
+  ChevronLeft,
+  Library as LibraryIcon,
   Layers,
-  BookMarked,
   Inbox,
+  FileText,
+  BookOpen,
+  ArrowLeft,
 } from "lucide-react";
-import {
-  getLibraryLawBySlug,
-  getLibraryLawToc,
-} from "@/lib/queries/library";
+import { getLibraryLawBySlug } from "@/lib/queries/library";
 import { domains } from "@/lib/nav";
+import { BreadcrumbSchema } from "@/components/structured-data";
 import { notFoundMeta } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export const revalidate = 600;
+
+function toPersian(n: number): string {
+  return String(n).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
+}
 
 export async function generateMetadata({
   params,
@@ -61,29 +66,44 @@ export default async function LibraryLawPage({
   const law = await getLibraryLawBySlug(lawSlug);
   if (!law || !law.published) notFound();
 
-  const toc = await getLibraryLawToc(law.id);
-  const tocItems = toc.map((a) => ({
-    id: a.id,
-    number: a.number,
-    title: a.title,
-    slug: a.slug,
-  }));
-
   const basePath = `/library/laws/${law.slug}`;
 
-  if (tocItems.length === 0) {
+  // Compute total article count and per-chapter article ranges
+  const chapters = law.books.flatMap((b) =>
+    b.chapters.map((c) => ({
+      ...c,
+      book: { id: b.id, number: b.number, title: b.title },
+    })),
+  );
+  const totalArticles = chapters.reduce(
+    (s, c) => s + c.articles.length,
+    0,
+  );
+
+  // Single-article law: skip chapter list and go straight to the article
+  if (totalArticles === 1) {
+    const only = chapters.flatMap((c) => c.articles)[0];
+    if (only) redirect(`${basePath}/articles/${only.slug}`);
+  }
+
+  // No articles at all → empty state
+  if (totalArticles === 0) {
     return (
       <div className="min-h-screen bg-surface-background">
-        <LawHeader law={law} />
+        <BreadcrumbSchema
+          items={[
+            { name: "خانه", href: "/" },
+            { name: "کتابخانه قوانین", href: "/library" },
+            { name: law.title, href: basePath },
+          ]}
+        />
         <div className="container mx-auto max-w-5xl px-4 py-16">
-          <div className="rounded-3xl border border-dashed border-border bg-white p-12 text-center">
-            <div className="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-background">
-              <Inbox className="h-8 w-8 text-text-muted" />
-            </div>
-            <h2 className="mt-4 text-lg font-bold text-primary-navy">
+          <div className="rounded-2xl border border-dashed border-border bg-white p-12 text-center">
+            <Inbox className="mx-auto h-12 w-12 text-text-muted" />
+            <h2 className="mt-3 text-lg font-bold text-primary-navy">
               هنوز ماده‌ای برای این قانون ثبت نشده است
             </h2>
-            <p className="mt-2 text-sm text-text-muted">
+            <p className="mt-1 text-sm text-text-muted">
               ساختار کامل این قانون به‌زودی اضافه خواهد شد.
             </p>
           </div>
@@ -92,75 +112,143 @@ export default async function LibraryLawPage({
     );
   }
 
-  redirect(`${basePath}/articles/${tocItems[0].slug}`);
-}
-
-function LawHeader({
-  law,
-}: {
-  law: {
-    title: string;
-    description: string | null;
-    status: string | null;
-    category: { title: string; slug: string };
-  };
-}) {
   return (
-    <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-primary-navy via-primary-navy to-accent-green">
-      <div className="absolute inset-0 mesh-gradient opacity-30" />
-      <div className="absolute inset-0 grid-pattern opacity-10" />
-      <div className="absolute -right-20 top-0 h-72 w-72 rounded-full bg-accent-green/30 blur-3xl animate-float" />
-      <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-accent-yellow/20 blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+    <div className="min-h-screen bg-surface-background">
+      <BreadcrumbSchema
+        items={[
+          { name: "خانه", href: "/" },
+          { name: "کتابخانه قوانین", href: "/library" },
+          { name: law.title, href: basePath },
+        ]}
+      />
 
-      <div className="relative z-10 container mx-auto max-w-7xl px-4 py-8 lg:py-10">
-        <nav className="mb-5 text-sm text-white/70" aria-label="breadcrumb">
-          <ol className="flex flex-wrap items-center gap-1.5">
-            <li>
-              <Link href="/" className="hover:text-accent-yellow">خانه</Link>
-            </li>
-            <li className="text-white/40">‹</li>
-            <li>
-              <Link href="/library" className="hover:text-accent-yellow">
-                کتابخانه قوانین
-              </Link>
-            </li>
-            <li className="text-white/40">‹</li>
-            <li>
-              <Link
-                href={`/library/categories/${law.category.slug}`}
-                className="hover:text-accent-yellow"
-              >
-                {law.category.title}
-              </Link>
-            </li>
-            <li className="text-white/40">‹</li>
-            <li className="font-medium text-white">{law.title}</li>
-          </ol>
-        </nav>
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-surface-card to-surface-background">
+        <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-accent-green/10 blur-3xl" />
+        <div className="absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-accent-yellow/10 blur-3xl" />
+        <div className="relative container mx-auto max-w-5xl px-4 py-8 lg:py-12">
+          <nav className="mb-4 text-sm text-text-muted" aria-label="breadcrumb">
+            <ol className="flex flex-wrap items-center gap-1.5">
+              <li>
+                <Link href="/" className="hover:text-accent-green">خانه</Link>
+              </li>
+              <li className="text-text-muted/50">‹</li>
+              <li>
+                <Link href="/library" className="hover:text-accent-green">
+                  کتابخانه قوانین
+                </Link>
+              </li>
+              <li className="text-text-muted/50">‹</li>
+              <li className="font-bold text-primary-navy">{law.title}</li>
+            </ol>
+          </nav>
 
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">
-              <Layers className="h-3.5 w-3.5 text-accent-yellow" />
-              {law.category.title}
-            </span>
-            {law.status && (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-yellow/30 bg-accent-yellow/10 px-3 py-1 text-xs font-medium text-accent-yellow backdrop-blur">
-                <FileCheck className="h-3.5 w-3.5" />
-                {law.status}
-              </span>
-            )}
-          </div>
-          <h1 className="text-2xl font-black leading-tight text-white lg:text-4xl">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-green/10 px-3 py-1 text-xs font-bold text-accent-green">
+            <Layers className="h-3.5 w-3.5" />
+            {law.category.title}
+          </span>
+          <h1 className="mt-3 text-2xl font-extrabold text-primary-navy lg:text-3xl">
             {law.title}
           </h1>
           {law.description && (
-            <p className="max-w-3xl text-sm leading-8 text-white/80 lg:text-base">
+            <p className="mt-2 max-w-2xl text-sm leading-8 text-text-muted">
               {law.description}
             </p>
           )}
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-text-muted">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-card px-3 py-1">
+              <BookOpen className="h-3.5 w-3.5" />
+              {toPersian(law.books.length)} کتاب
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-card px-3 py-1">
+              <FileText className="h-3.5 w-3.5" />
+              {toPersian(chapters.length)} فصل
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-card px-3 py-1">
+              <LibraryIcon className="h-3.5 w-3.5" />
+              {toPersian(totalArticles)} ماده
+            </span>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Chapter list */}
+      <section className="container mx-auto max-w-5xl px-4 py-10">
+        <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-text-muted">
+          فهرست مطالب
+        </h2>
+        <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+          {law.books.map((book, bi) => (
+            <div
+              key={book.id}
+              className={bi > 0 ? "border-t border-border" : ""}
+            >
+              <div className="flex items-center gap-3 bg-surface-background/50 px-5 py-3">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary-navy text-xs font-extrabold text-white">
+                  {toPersian(book.number)}
+                </span>
+                <h3 className="text-sm font-extrabold text-primary-navy">
+                  کتاب {toPersian(book.number)} — {book.title}
+                </h3>
+              </div>
+              {book.chapters.length === 0 ? (
+                <p className="px-5 py-4 text-center text-xs text-text-muted">
+                  فصلی ثبت نشده است.
+                </p>
+              ) : (
+                <ul>
+                  {book.chapters.map((chapter, ci) => {
+                    const first = chapter.articles[0]?.number;
+                    const last = chapter.articles[chapter.articles.length - 1]?.number;
+                    const range =
+                      first && last
+                        ? first === last
+                          ? `ماده ${toPersian(first)}`
+                          : `مواد ${toPersian(first)} تا ${toPersian(last)}`
+                        : "—";
+                    return (
+                      <li
+                        key={chapter.id}
+                        className={ci > 0 ? "border-t border-border/60" : ""}
+                      >
+                        <Link
+                          href={`${basePath}/articles/${chapter.articles[0]?.slug ?? ""}`}
+                          className="group flex items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-accent-green/5"
+                        >
+                          <div className="flex min-w-0 items-center gap-3">
+                            <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-accent-green/10 text-xs font-extrabold text-accent-green">
+                              {toPersian(chapter.number)}
+                            </span>
+                            <div className="min-w-0">
+                              <div className="text-sm font-bold text-primary-navy group-hover:text-accent-green">
+                                فصل {toPersian(chapter.number)}: {chapter.title}
+                              </div>
+                              <div className="mt-0.5 text-xs text-text-muted">
+                                {range} · {toPersian(chapter.articles.length)} ماده
+                              </div>
+                            </div>
+                          </div>
+                          <ChevronLeft className="h-4 w-4 flex-shrink-0 text-text-muted transition-transform group-hover:-translate-x-1 group-hover:text-accent-green" />
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 text-center">
+          <Link
+            href="/library"
+            className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-accent-green"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            بازگشت به کتابخانه
+          </Link>
+        </div>
+      </section>
+    </div>
   );
 }

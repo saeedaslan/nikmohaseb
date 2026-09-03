@@ -3,21 +3,16 @@ import { notFound } from "next/navigation";
 import {
   ChevronLeft,
   Library as LibraryIcon,
-  BookOpen,
-  FileText,
 } from "lucide-react";
 import {
   getLibraryLawBySlug,
-  getLibraryLawToc,
   getLibraryArticle,
   getRelatedLaws,
 } from "@/lib/queries/library";
 import { domains } from "@/lib/nav";
 import { BreadcrumbSchema, LibraryArticleSchema } from "@/components/structured-data";
-import { LibrarySidebar } from "@/components/library/library-sidebar";
 import { ArticleDisplay } from "@/components/library/article-display";
 import { ArticleNav, type LawTocItem } from "@/components/library/article-nav";
-import { ArticleActions } from "@/components/library/article-actions";
 import { notFoundMeta, stripHtml } from "@/lib/seo";
 import type { Metadata } from "next";
 
@@ -76,23 +71,37 @@ export default async function LibraryArticlePage({
 
   if (!law || !law.published || !data) notFound();
 
-  const toc = await getLibraryLawToc(law.id);
-  const tocItems: LawTocItem[] = toc.map((a) => ({
-    id: a.id,
-    number: a.number,
-    title: a.title,
-    slug: a.slug,
-    chapter: a.chapter,
-  }));
-
-  const relatedLawsList = await getRelatedLaws(law.id, law.categoryId, 6);
-
   const { article } = data;
-  const publishedDate = law.approvalDate ?? law.createdAt;
   const basePath = `/library/laws/${law.slug}`;
   const articleUrl = `${basePath}/articles/${article.slug}`;
+  const publishedDate = law.approvalDate ?? law.createdAt;
 
-  const articleChapter = toc.find((a) => a.id === article.id)?.chapter;
+  const toc: LawTocItem[] = law.books
+    .flatMap((b) =>
+      b.chapters.flatMap((c) =>
+        c.articles.map((a) => ({
+          id: a.id,
+          number: a.number,
+          title: a.title,
+          slug: a.slug,
+          chapter: {
+            id: c.id,
+            number: c.number,
+            title: c.title,
+            book: { id: b.id, number: b.number, title: b.title },
+          },
+        })),
+      ),
+    )
+    .sort((a, b) => {
+      if (a.chapter.book.number !== b.chapter.book.number)
+        return a.chapter.book.number - b.chapter.book.number;
+      if (a.chapter.number !== b.chapter.number) return a.chapter.number - b.chapter.number;
+      return a.number - b.number;
+    });
+
+  const relatedLawsList = await getRelatedLaws(law.id, law.categoryId, 6);
+  const relatedArticles = article.relationsFrom.map((r) => r.to).slice(0, 9);
 
   return (
     <div className="min-h-screen bg-surface-background">
@@ -100,7 +109,6 @@ export default async function LibraryArticlePage({
         items={[
           { name: "خانه", href: "/" },
           { name: "کتابخانه قوانین", href: "/library" },
-          { name: law.category.title, href: `/library/categories/${law.category.slug}` },
           { name: law.title, href: basePath },
           { name: `ماده ${toPersian(article.number)}`, href: articleUrl },
         ]}
@@ -116,195 +124,101 @@ export default async function LibraryArticlePage({
         dateModified={article.updatedAt}
       />
 
-      {/* Hero / Header */}
-      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-primary-navy via-primary-navy to-accent-green">
-        <div className="absolute inset-0 mesh-gradient opacity-30" />
-        <div className="absolute inset-0 grid-pattern opacity-10" />
-        <div className="absolute -right-20 top-0 h-72 w-72 rounded-full bg-accent-green/30 blur-3xl animate-float" />
-        <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-accent-yellow/20 blur-3xl animate-float" style={{ animationDelay: '1s' }} />
-
-        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-6 lg:py-8">
-          <nav className="mb-4 text-sm text-white/70" aria-label="breadcrumb">
+      {/* Header — simple, no video, no banner */}
+      <section className="border-b border-border bg-gradient-to-b from-surface-card to-surface-background">
+        <div className="container mx-auto max-w-4xl px-4 py-6 lg:py-8">
+          <nav className="mb-4 text-sm text-text-muted" aria-label="breadcrumb">
             <ol className="flex flex-wrap items-center gap-1.5">
               <li>
-                <Link href="/" className="hover:text-accent-yellow">خانه</Link>
+                <Link href="/" className="hover:text-accent-green">خانه</Link>
               </li>
-              <li className="text-white/40">‹</li>
+              <li className="text-text-muted/50">‹</li>
               <li>
-                <Link href="/library" className="hover:text-accent-yellow">
+                <Link href="/library" className="hover:text-accent-green">
                   کتابخانه قوانین
                 </Link>
               </li>
-              <li className="text-white/40">‹</li>
+              <li className="text-text-muted/50">‹</li>
               <li>
-                <Link
-                  href={`/library/categories/${law.category.slug}`}
-                  className="hover:text-accent-yellow"
-                >
-                  {law.category.title}
+                <Link href={basePath} className="hover:text-accent-green">
+                  {law.title}
                 </Link>
               </li>
-              <li className="text-white/40">‹</li>
-              <li className="font-bold text-accent-yellow">
+              <li className="text-text-muted/50">‹</li>
+              <li className="font-bold text-primary-navy">
                 ماده {toPersian(article.number)}
               </li>
             </ol>
           </nav>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">
-                <LibraryIcon className="h-3.5 w-3.5 text-accent-yellow" />
-                {law.title}
-              </span>
-              {law.status && (
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-accent-yellow/30 bg-accent-yellow/10 px-3 py-1 text-xs font-medium text-accent-yellow backdrop-blur">
-                  <FileText className="h-3.5 w-3.5" />
-                  {law.status}
-                </span>
-              )}
-            </div>
-
-            <h1 className="text-2xl font-black leading-tight text-white lg:text-3xl">
-              ماده {toPersian(article.number)}
-              {article.title ? (
-                <span className="text-accent-yellow"> — {article.title}</span>
-              ) : null}
-            </h1>
-
-            {articleChapter && (
-              <div className="text-sm text-white/75">
-                <span className="text-white/50">از </span>
-                <span>{articleChapter.book.title}</span>
-                <span className="text-white/50">، </span>
-                <span>{articleChapter.title}</span>
-              </div>
-            )}
-          </div>
+          <h1 className="text-2xl font-extrabold text-primary-navy lg:text-3xl">
+            ماده {toPersian(article.number)}، {law.title}
+          </h1>
+          {article.title && (
+            <p className="mt-2 text-sm font-bold text-accent-green lg:text-base">
+              {article.title}
+            </p>
+          )}
         </div>
       </section>
 
-      {/* Main Content */}
-      <div className="container mx-auto max-w-7xl px-4 py-8">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
-          {/* Sidebar */}
-          <aside className="hidden lg:block lg:w-72 lg:flex-shrink-0">
-            <div className="sticky top-4">
-              <LawStructurePanel law={law} lawSlug={law.slug} activeArticleId={article.id} />
+      {/* Main content */}
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <ArticleDisplay
+          id={article.id}
+          number={article.number}
+          title={article.title}
+          content={article.content}
+          circulars={article.circulars.map((ac) => ac.circular)}
+          notes={article.notes}
+          history={article.history}
+          related={relatedArticles}
+          articleUrl={articleUrl}
+          articleTitle={`ماده ${toPersian(article.number)}${article.title ? ` - ${article.title}` : ""}`}
+        />
+
+        <div className="mt-6">
+          <ArticleNav
+            lawSlug={law.slug}
+            articles={toc}
+            activeArticleId={article.id}
+          />
+        </div>
+
+        {relatedLawsList.length > 0 && (
+          <section className="mt-10">
+            <header className="mb-4 flex items-center gap-2">
+              <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green">
+                <LibraryIcon className="h-4 w-4" />
+              </div>
+              <h2 className="text-base font-extrabold text-primary-navy">قوانین مرتبط</h2>
+            </header>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {relatedLawsList.map((rl) => (
+                <Link
+                  key={rl.id}
+                  href={`/library/laws/${rl.slug}`}
+                  className="group flex items-start gap-3 rounded-2xl border border-border bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent-green/40 hover:shadow-md"
+                >
+                  <div className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green">
+                    <LibraryIcon className="h-4 w-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-bold text-primary-navy group-hover:text-accent-green line-clamp-1">
+                      {rl.title}
+                    </div>
+                    <div className="mt-0.5 text-xs text-text-muted">
+                      {rl.category.title}
+                      {rl.status ? ` • ${rl.status}` : ""}
+                    </div>
+                  </div>
+                  <ChevronLeft className="h-4 w-4 flex-shrink-0 text-text-muted transition-transform group-hover:-translate-x-1" />
+                </Link>
+              ))}
             </div>
-          </aside>
-
-          <div className="min-w-0 flex-1 space-y-6">
-            <ArticleDisplay
-              id={article.id}
-              number={article.number}
-              title={article.title}
-              content={article.content}
-              circulars={article.circulars.map((ac) => ac.circular)}
-              notes={article.notes}
-              history={article.history}
-              related={article.relationsFrom.map((r) => r.to)}
-              articleUrl={articleUrl}
-              articleTitle={`ماده ${toPersian(article.number)}${article.title ? ` - ${article.title}` : ""}`}
-            />
-
-            <ArticleNav
-              lawSlug={law.slug}
-              articles={tocItems}
-              activeArticleId={article.id}
-            />
-
-            {relatedLawsList.length > 0 && (
-              <section className="rounded-3xl border border-border bg-white p-6 shadow-sm lg:p-8">
-                <header className="mb-5 flex items-center gap-3">
-                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green">
-                    <LibraryIcon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-extrabold text-primary-navy">قوانین مرتبط</h2>
-                    <p className="text-xs text-text-muted">سایر قوانینی که ممکن است مفید باشند</p>
-                  </div>
-                </header>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {relatedLawsList.map((rl) => (
-                    <Link
-                      key={rl.id}
-                      href={`/library/laws/${rl.slug}`}
-                      className="group flex items-start gap-3 rounded-2xl border border-border bg-surface-background p-4 transition-all hover:-translate-y-0.5 hover:border-accent-green/40 hover:shadow-md cursor-pointer"
-                    >
-                      <div className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green transition-colors group-hover:bg-accent-green group-hover:text-white">
-                        <LibraryIcon className="h-5 w-5" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-sm font-bold text-primary-navy transition-colors group-hover:text-accent-green line-clamp-1">
-                          {rl.title}
-                        </div>
-                        <div className="mt-0.5 text-xs text-text-muted">
-                          {rl.category.title}
-                          {rl.status ? ` • ${rl.status}` : ""}
-                        </div>
-                      </div>
-                      <ChevronLeft className="h-4 w-4 flex-shrink-0 text-text-muted transition-transform group-hover:-translate-x-1" />
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
-        </div>
+          </section>
+        )}
       </div>
-    </div>
-  );
-}
-
-function LawStructurePanel({
-  law,
-  lawSlug,
-  activeArticleId,
-}: {
-  law: {
-    title: string;
-    books: {
-      id: string;
-      number: number;
-      title: string;
-      chapters: {
-        id: string;
-        number: number;
-        title: string;
-        articles: { id: string; number: number; title: string | null; slug: string }[];
-      }[];
-    }[];
-  };
-  lawSlug: string;
-  activeArticleId: string;
-}) {
-  return (
-    <div className="rounded-3xl border border-border bg-white p-5 shadow-sm">
-      <div className="mb-4 flex items-center gap-2 border-b border-border pb-3">
-        <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-accent-green/10 text-accent-green">
-          <BookOpen className="h-4 w-4" />
-        </div>
-        <h3 className="text-sm font-extrabold text-primary-navy">ساختار قانون</h3>
-      </div>
-      <LibrarySidebar
-        structure={law.books.map((b) => ({
-          id: b.id,
-          number: b.number,
-          title: b.title,
-          chapters: b.chapters.map((c) => ({
-            id: c.id,
-            number: c.number,
-            title: c.title,
-            articles: c.articles,
-          })),
-        }))}
-        lawSlug={lawSlug}
-        activeArticleSlug={law.books
-          .flatMap((b) => b.chapters)
-          .flatMap((c) => c.articles)
-          .find((a) => a.id === activeArticleId)?.slug}
-      />
     </div>
   );
 }
