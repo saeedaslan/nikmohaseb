@@ -9,9 +9,9 @@ export async function getActiveBanner() {
   return banner;
 }
 
-export async function getPublishedServices(limit = 6) {
+export async function getPublishedServices(limit = 6, extraWhere?: Record<string, unknown>) {
   const services = await prisma.service.findMany({
-    where: { published: true },
+    where: { published: true, ...(extraWhere ?? {}) },
     orderBy: [{ order: "asc" }, { createdAt: "desc" }],
     take: limit,
   });
@@ -51,19 +51,6 @@ export async function getCircularBySlug(slug: string) {
   return prisma.circular.findUnique({ where: { slug }, include: { category: true } });
 }
 
-export async function getPublishedLaws(limit = 3) {
-  return prisma.law.findMany({
-    where: { published: true },
-    orderBy: { date: "desc" },
-    include: { category: true },
-    take: limit,
-  });
-}
-
-export async function getLawBySlug(slug: string) {
-  return prisma.law.findUnique({ where: { slug }, include: { category: true } });
-}
-
 export async function getFaqBySlug(slug: string) {
   return prisma.faq.findUnique({ where: { slug } });
 }
@@ -82,7 +69,6 @@ export async function getAllCategories() {
 
 export type Article = Awaited<ReturnType<typeof getPublishedArticles>>[number];
 export type Circular = Awaited<ReturnType<typeof getPublishedCirculars>>[number];
-export type Law = Awaited<ReturnType<typeof getPublishedLaws>>[number];
 export type Service = Awaited<ReturnType<typeof getPublishedServices>>[number];
 export type Banner = NonNullable<Awaited<ReturnType<typeof getActiveBanner>>>;
 export type Faq = Awaited<ReturnType<typeof getPublishedFaqs>>[number];

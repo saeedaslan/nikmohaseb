@@ -18,14 +18,14 @@ type Stat = {
 };
 
 export default async function AdminDashboardPage() {
-  const [userCount, tickets, articles, circulars, faqs, laws, services, statusCounts] =
+  const [userCount, tickets, articles, circulars, faqs, libraryLaws, services, statusCounts] =
     await Promise.all([
       prisma.user.count(),
       prisma.ticket.count(),
       prisma.article.count(),
       prisma.circular.count(),
       prisma.faq.count(),
-      prisma.law.count(),
+      prisma.libraryLaw.count(),
       prisma.service.count(),
       prisma.ticket
         .groupBy({ by: ["status"], _count: { _all: true } })
@@ -37,7 +37,7 @@ export default async function AdminDashboardPage() {
     { label: "تیکت‌ها", value: tickets, icon: Ticket, color: "text-orange-500", bgColor: "bg-orange-500/10", href: "/admin/tickets" },
     { label: "مقالات", value: articles, icon: FileText, color: "text-green-500", bgColor: "bg-green-500/10", href: "/admin/articles" },
     { label: "بخشنامه‌ها", value: circulars, icon: ReceiptText, color: "text-yellow-500", bgColor: "bg-yellow-500/10", href: "/admin/circulars" },
-    { label: "قوانین", value: laws, icon: FileText, color: "text-red-500", bgColor: "bg-red-500/10", href: "/admin/laws" },
+    { label: "قوانین", value: libraryLaws, icon: FileText, color: "text-red-500", bgColor: "bg-red-500/10", href: "/admin/library/laws" },
     { label: "سؤالات متداول", value: faqs, icon: HelpCircle, color: "text-cyan-500", bgColor: "bg-cyan-500/10", href: "/admin/faqs" },
     { label: "خدمات", value: services, icon: Eye, color: "text-blue-500", bgColor: "bg-blue-500/10", href: "/admin/services" },
     { label: "تیکت‌های جدید", value: statusCounts[TicketStatus.NEW] ?? 0, icon: Ticket, color: "text-blue-600", bgColor: "bg-blue-600/10" },
@@ -89,7 +89,7 @@ export default async function AdminDashboardPage() {
           {[
             { label: "مقالۀ جدید", href: "/admin/articles/new", color: "bg-green-500" },
             { label: "بخشنامه جدید", href: "/admin/circulars/new", color: "bg-yellow-500" },
-            { label: "قانون جدید", href: "/admin/laws/new", color: "bg-red-500" },
+            { label: "قانون جدید", href: "/admin/library/laws/new", color: "bg-red-500" },
             { label: "سؤال جدید", href: "/admin/faqs/new", color: "bg-cyan-500" },
             { label: "سرویس جدید", href: "/admin/services/new", color: "bg-blue-500" },
             { label: "بنر جدید", href: "/admin/banners/new", color: "bg-pink-500" },

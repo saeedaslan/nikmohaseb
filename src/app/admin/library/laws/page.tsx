@@ -207,7 +207,7 @@ export default async function AdminLibraryLawsPage({
                       <span>·</span>
                       <span className="flex items-center gap-1">
                         <BookOpen className="h-3.5 w-3.5" />
-                        {toPersian(l._count.books)} کتاب
+                        {toPersian(l._count.chapters)} باب
                       </span>
                     </div>
                   </div>

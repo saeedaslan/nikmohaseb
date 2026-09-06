@@ -97,11 +97,6 @@ export type LibraryCategory = Prisma.LibraryCategoryModel
  */
 export type LibraryLaw = Prisma.LibraryLawModel
 /**
- * Model LibraryBook
- * 
- */
-export type LibraryBook = Prisma.LibraryBookModel
-/**
  * Model LibraryChapter
  * 
  */

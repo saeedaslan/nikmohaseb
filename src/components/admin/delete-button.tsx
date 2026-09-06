@@ -9,12 +9,11 @@ import { useRouter } from "next/navigation";
 import { deleteBanner } from "@/lib/actions/banners";
 import { deleteCircular } from "@/lib/actions/circulars";
 import { deleteArticle } from "@/lib/actions/articles";
-import { deleteLaw } from "@/lib/actions/laws";
 import { deleteFaq } from "@/lib/actions/faqs";
 import { deleteUser } from "@/lib/actions/users";
 import { deleteService } from "@/lib/actions/services";
 
-type EntityType = "banner" | "circular" | "article" | "law" | "faq" | "user" | "service";
+type EntityType = "banner" | "circular" | "article" | "faq" | "user" | "service";
 
 interface DeleteButtonProps {
   label: string;
@@ -41,9 +40,6 @@ export function DeleteButton({ label, entityType, entityId, destructive = true }
           break;
         case "article":
           await deleteArticle(entityId);
-          break;
-        case "law":
-          await deleteLaw(entityId);
           break;
         case "faq":
           await deleteFaq(entityId);

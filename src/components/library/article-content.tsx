@@ -19,9 +19,7 @@ export async function ArticleContent({ content, lawSlug }: ArticleContentProps) 
         number: { in: numbers },
         published: true,
         chapter: {
-          book: {
-            law: { slug: lawSlug },
-          },
+          law: { slug: lawSlug },
         },
       },
       select: { number: true, slug: true },

@@ -8,7 +8,6 @@ export const navLinks: NavLink[] = [
   { label: "خدمات", href: "/services" },
   { label: "مقالات", href: "/articles" },
   { label: "بخشنامه‌ها", href: "/circulars" },
-  { label: "قوانین", href: "/laws" },
   { label: "کتابخانه قوانین", href: "/library" },
   { label: "سؤالات متداول", href: "/faqs" },
   { label: "درباره ما", href: "/about" },

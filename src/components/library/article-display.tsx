@@ -5,6 +5,7 @@ import {
   Calendar,
   History,
   StickyNote,
+  Layers,
 } from "lucide-react";
 import { toJalali } from "@/lib/jalali";
 import Link from "next/link";
@@ -29,6 +30,7 @@ interface ArticleDisplayProps {
   related?: { id: string; number: number; title: string | null; slug: string }[];
   articleUrl?: string;
   articleTitle?: string;
+  chapterLabel?: string;
 }
 
 function toPersian(n: number): string {
@@ -46,6 +48,7 @@ export function ArticleDisplay({
   related = [],
   articleUrl,
   articleTitle,
+  chapterLabel,
 }: ArticleDisplayProps) {
   const sanitized = sanitizeHtml(content);
   const showActions = !!articleUrl && !!articleTitle;
@@ -55,56 +58,73 @@ export function ArticleDisplay({
       id={id}
       className="scroll-mt-24 overflow-hidden rounded-3xl border border-border bg-white shadow-sm"
     >
-      {/* Article header (compact — full title is shown above in the page H1) */}
-      <header className="relative flex flex-col gap-4 border-b border-border bg-surface-background/40 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-        <div className="flex items-center gap-3">
-          <div className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-accent-green to-accent-green-light text-lg font-black text-white shadow shadow-accent-green/30">
-            {toPersian(number)}
+      {/* Compact action bar — number/title are shown in the page H1 above */}
+      {showActions && (
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface-background/40 px-5 py-3 sm:px-6 print:hidden">
+          <div className="flex min-w-0 items-center gap-2 text-xs text-text-muted">
+            <Layers className="h-3.5 w-3.5 flex-shrink-0 text-accent-green" />
+            <span className="truncate">
+              {chapterLabel ?? "متن رسمی قانون"}
+            </span>
+            {title && (
+              <>
+                <span className="text-text-muted/40">·</span>
+                <span className="truncate font-bold text-accent-green">{title}</span>
+              </>
+            )}
           </div>
-          <div className="text-xs font-bold uppercase tracking-wider text-accent-green">
-            ماده {toPersian(number)} — متن رسمی قانون
-          </div>
-        </div>
-        {showActions && (
-          <div className="flex flex-shrink-0 items-center gap-1.5 print:hidden">
+          <div className="flex flex-shrink-0 items-center gap-1.5">
             <ArticleActions
               articleUrl={articleUrl!}
               articleTitle={articleTitle!}
               variant="card"
             />
           </div>
-        )}
-      </header>
+        </header>
+      )}
 
-      {/* Article content */}
-      <div className="p-6 lg:p-8">
+      {/* Article body — constrained reading width */}
+      <div className="px-5 py-7 sm:px-8 sm:py-10 lg:px-10">
         <div
-          className="article-content"
+          className="article-body article-content mx-auto max-w-[44rem]"
           dangerouslySetInnerHTML={{ __html: sanitized }}
         />
       </div>
 
-      {/* Notes (تبصره‌ها) */}
+      {/* Notes (تبصره‌ها) — visually distinct, numbered */}
       {notes.length > 0 && (
-        <section className="border-t border-border bg-accent-yellow/5 p-6 lg:p-8">
-          <header className="mb-4 flex items-center gap-2">
-            <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-accent-yellow/20 text-accent-yellow">
-              <StickyNote className="h-4 w-4" />
+        <section className="border-t border-border bg-accent-yellow/[0.04] px-5 py-7 sm:px-8 lg:px-10">
+          <header className="mx-auto mb-5 flex max-w-[44rem] items-center gap-2.5">
+            <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-accent-yellow/15 text-accent-yellow ring-1 ring-accent-yellow/20">
+              <StickyNote className="h-[18px] w-[18px]" />
             </div>
-            <h3 className="text-base font-extrabold text-primary-navy">
-              تبصره‌ها
-            </h3>
+            <div>
+              <h3 className="text-base font-extrabold text-primary-navy">
+                تبصره‌ها
+              </h3>
+              <p className="text-[11px] text-text-muted">
+                {toPersian(notes.length)} تبصره ضمیمه شده به این ماده
+              </p>
+            </div>
           </header>
-          <ol className="space-y-3">
+          <ol className="mx-auto max-w-[44rem] space-y-3">
             {notes.map((n, i) => (
               <li
                 key={n.id}
-                className="rounded-2xl border-r-4 border-accent-yellow bg-white p-4 text-sm leading-8 text-primary-navy/90 shadow-sm"
+                className="relative rounded-2xl border border-accent-yellow/25 border-r-[3px] border-r-accent-yellow bg-gradient-to-l from-accent-yellow/[0.06] to-white p-4 shadow-sm sm:p-5"
               >
-                <span className="mb-1 block text-xs font-extrabold text-accent-yellow">
-                  تبصره {toPersian(i + 1)}
-                </span>
-                <span className="block">{n.content}</span>
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-md bg-accent-yellow/15 px-2 text-[11px] font-black text-accent-yellow ring-1 ring-accent-yellow/20">
+                    {toPersian(i + 1)}
+                  </span>
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-accent-yellow">
+                    تبصره {toPersian(i + 1)}
+                  </span>
+                </div>
+                <div
+                  className="tabareh-content text-[0.95rem] leading-[2.1] text-text"
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(n.content) }}
+                />
               </li>
             ))}
           </ol>
@@ -113,14 +133,14 @@ export function ArticleDisplay({
 
       {/* Related articles (within same law) */}
       {related.length > 0 && (
-        <section className="border-t border-border p-6 lg:p-8">
-          <header className="mb-4 flex items-center gap-2">
+        <section className="border-t border-border px-5 py-7 sm:px-8 lg:px-10">
+          <header className="mx-auto mb-4 flex max-w-[44rem] items-center gap-2">
             <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green">
               <Link2 className="h-4 w-4" />
             </div>
             <h3 className="text-base font-extrabold text-primary-navy">مواد مرتبط</h3>
           </header>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+          <div className="mx-auto grid max-w-[44rem] grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
             {related.map((r) => (
               <Link
                 key={r.id}
@@ -141,8 +161,8 @@ export function ArticleDisplay({
 
       {/* Circulars (small related list) */}
       {circulars.length > 0 && (
-        <section className="border-t border-border bg-accent-yellow/5 p-6 lg:p-8">
-          <header className="mb-3 flex items-center gap-2">
+        <section className="border-t border-border bg-accent-yellow/[0.04] px-5 py-7 sm:px-8 lg:px-10">
+          <header className="mx-auto mb-3 flex max-w-[44rem] items-center gap-2">
             <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-accent-yellow/20 text-accent-yellow">
               <FileText className="h-4 w-4" />
             </div>
@@ -150,7 +170,7 @@ export function ArticleDisplay({
               بخشنامه‌های مرتبط ({toPersian(circulars.length)})
             </h3>
           </header>
-          <ul className="space-y-2">
+          <ul className="mx-auto max-w-[44rem] space-y-2">
             {circulars.map((c) => (
               <li key={c.id}>
                 <Link
@@ -179,14 +199,14 @@ export function ArticleDisplay({
 
       {/* History */}
       {history.length > 0 && (
-        <section className="border-t border-border p-6 lg:p-8">
-          <header className="mb-4 flex items-center gap-2">
+        <section className="border-t border-border px-5 py-7 sm:px-8 lg:px-10">
+          <header className="mx-auto mb-4 flex max-w-[44rem] items-center gap-2">
             <div className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green">
               <History className="h-4 w-4" />
             </div>
             <h3 className="text-base font-extrabold text-primary-navy">سیر تحول ماده</h3>
           </header>
-          <ol className="relative space-y-3 border-r-2 border-accent-green/30 pr-5">
+          <ol className="relative mx-auto max-w-[44rem] space-y-3 border-r-2 border-accent-green/30 pr-5">
             {history.map((h) => (
               <li key={h.id} className="relative">
                 <span className="absolute -right-[26px] top-3 inline-block h-3 w-3 rounded-full border-2 border-white bg-accent-green shadow" />

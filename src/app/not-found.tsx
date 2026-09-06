@@ -16,7 +16,7 @@ const quickLinks = [
   { label: "خدمات حسابداری", href: "/services" },
   { label: "مقالات مالیاتی", href: "/articles" },
   { label: "بخشنامه‌ها", href: "/circulars" },
-  { label: "قوانین", href: "/laws" },
+  { label: "کتابخانه قوانین", href: "/library" },
   { label: "سؤالات متداول", href: "/faqs" },
   { label: "تماس با ما", href: "/contact" },
 ];

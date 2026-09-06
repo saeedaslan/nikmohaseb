@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import {
   ChevronLeft,
   Library as LibraryIcon,
+  FileText,
 } from "lucide-react";
 import {
   getLibraryLawBySlug,
@@ -14,6 +15,7 @@ import { BreadcrumbSchema, LibraryArticleSchema } from "@/components/structured-
 import { ArticleDisplay } from "@/components/library/article-display";
 import { ArticleNav, type LawTocItem } from "@/components/library/article-nav";
 import { notFoundMeta, stripHtml } from "@/lib/seo";
+import { toOrdinalWord } from "@/lib/jalali";
 import type { Metadata } from "next";
 
 export const revalidate = 600;
@@ -76,32 +78,28 @@ export default async function LibraryArticlePage({
   const articleUrl = `${basePath}/articles/${article.slug}`;
   const publishedDate = law.approvalDate ?? law.createdAt;
 
-  const toc: LawTocItem[] = law.books
-    .flatMap((b) =>
-      b.chapters.flatMap((c) =>
-        c.articles.map((a) => ({
-          id: a.id,
-          number: a.number,
-          title: a.title,
-          slug: a.slug,
-          chapter: {
-            id: c.id,
-            number: c.number,
-            title: c.title,
-            book: { id: b.id, number: b.number, title: b.title },
-          },
-        })),
-      ),
+  const toc: LawTocItem[] = law.chapters
+    .flatMap((c) =>
+      c.articles.map((a) => ({
+        id: a.id,
+        number: a.number,
+        title: a.title,
+        slug: a.slug,
+        chapter: {
+          id: c.id,
+          number: c.number,
+          title: c.title,
+        },
+      })),
     )
     .sort((a, b) => {
-      if (a.chapter.book.number !== b.chapter.book.number)
-        return a.chapter.book.number - b.chapter.book.number;
       if (a.chapter.number !== b.chapter.number) return a.chapter.number - b.chapter.number;
       return a.number - b.number;
     });
 
   const relatedLawsList = await getRelatedLaws(law.id, law.categoryId, 6);
   const relatedArticles = article.relationsFrom.map((r) => r.to).slice(0, 9);
+  const articleChapter = law.chapters.find((c) => c.articles.some((a) => a.id === article.id));
 
   return (
     <div className="min-h-screen bg-surface-background">
@@ -124,10 +122,10 @@ export default async function LibraryArticlePage({
         dateModified={article.updatedAt}
       />
 
-      {/* Header — simple, no video, no banner */}
+      {/* Header — prominent number badge + secondary context */}
       <section className="border-b border-border bg-gradient-to-b from-surface-card to-surface-background">
         <div className="container mx-auto max-w-4xl px-4 py-6 lg:py-8">
-          <nav className="mb-4 text-sm text-text-muted" aria-label="breadcrumb">
+          <nav className="mb-5 text-sm text-text-muted" aria-label="breadcrumb">
             <ol className="flex flex-wrap items-center gap-1.5">
               <li>
                 <Link href="/" className="hover:text-accent-green">خانه</Link>
@@ -151,14 +149,28 @@ export default async function LibraryArticlePage({
             </ol>
           </nav>
 
-          <h1 className="text-2xl font-extrabold text-primary-navy lg:text-3xl">
-            ماده {toPersian(article.number)}، {law.title}
-          </h1>
-          {article.title && (
-            <p className="mt-2 text-sm font-bold text-accent-green lg:text-base">
-              {article.title}
-            </p>
-          )}
+          <div className="flex items-start gap-4">
+            <div className="relative inline-flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-primary-navy via-primary-navy to-accent-green shadow-lg shadow-primary-navy/30 sm:h-24 sm:w-24">
+              <span className="absolute inset-0 grid-pattern opacity-15" />
+              <span className="relative text-2xl font-black text-white sm:text-3xl">
+                {toPersian(article.number)}
+              </span>
+            </div>
+            <div className="min-w-0 flex-1 pt-1">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-accent-green/10 px-2.5 py-0.5 text-[11px] font-bold text-accent-green">
+                <FileText className="h-3 w-3" />
+                ماده {toPersian(article.number)}
+              </div>
+              <h1 className="mt-2 text-xl font-extrabold leading-snug text-primary-navy lg:text-2xl">
+                {law.title}
+              </h1>
+              {article.title && (
+                <p className="mt-1.5 text-sm font-bold leading-relaxed text-accent-green lg:text-base">
+                  {article.title}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -175,6 +187,7 @@ export default async function LibraryArticlePage({
           related={relatedArticles}
           articleUrl={articleUrl}
           articleTitle={`ماده ${toPersian(article.number)}${article.title ? ` - ${article.title}` : ""}`}
+          chapterLabel={articleChapter ? `باب ${toOrdinalWord(articleChapter.number)}: ${articleChapter.title}` : undefined}
         />
 
         <div className="mt-6">

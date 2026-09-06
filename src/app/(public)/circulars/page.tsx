@@ -5,9 +5,10 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 import { toJalali } from "@/lib/jalali";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
-import { Download, Search, FileText, AlertCircle } from "lucide-react";
+import { Download, FileText, AlertCircle } from "lucide-react";
 import { domains } from "@/lib/nav";
 import { ItemListSchema } from "@/components/structured-data";
+import { SearchFilterBar } from "@/components/public/search-filter-bar";
 
 export const revalidate = 300;
 
@@ -135,56 +136,14 @@ export default async function CircularsPage({
       </div>
 
       {/* Search & Filter */}
-      <div className="pb-8">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="rounded-2xl border border-white/20 bg-white/80 p-6 shadow-lg backdrop-blur-lg">
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <form className="flex-1" method="get" action="/circulars">
-                <div className="relative">
-                  <input
-                    type="text"
-                    name="q"
-                    defaultValue={q ?? ""}
-                    placeholder="جستجو در بخشنامه‌ها..."
-                    className="w-full rounded-xl border border-border bg-surface-card py-3 pl-4 pr-12 text-sm text-text focus:border-accent-yellow focus:outline-none focus:ring-2 focus:ring-accent-yellow/20"
-                  />
-                  <button
-                    type="submit"
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-accent-yellow transition-colors"
-                  >
-                    <Search className="h-5 w-5" />
-                  </button>
-                </div>
-                {category && <input type="hidden" name="category" value={category} />}
-              </form>
-
-              <form method="get" action="/circulars">
-                <div className="flex items-center gap-2">
-                  <select
-                    name="category"
-                    defaultValue={category ?? ""}
-                    className="rounded-xl border border-border bg-surface-card px-4 py-3 text-sm text-text focus:border-accent-yellow focus:outline-none focus:ring-2 focus:ring-accent-yellow/20"
-                  >
-                    <option value="">همه دسته‌ها</option>
-                    {categories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    type="submit"
-                    className="rounded-xl bg-accent-yellow px-6 py-3 text-sm font-medium text-white hover:bg-accent-yellow/90 transition-colors"
-                  >
-                    فیلتر
-                  </button>
-                </div>
-                {q && <input type="hidden" name="q" value={q} />}
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      <SearchFilterBar
+        basePath="/circulars"
+        searchValue={q}
+        categoryValue={category}
+        categories={categories}
+        placeholder="جستجو در بخشنامه‌ها..."
+        accent="yellow"
+      />
 
       {/* Circulars List */}
       <div className="pb-12">
@@ -207,7 +166,12 @@ export default async function CircularsPage({
                           {c.category.name}
                         </span>
                       )}
-                      <h3 className="mb-2 text-lg font-bold text-primary-navy line-clamp-1">{c.title}</h3>
+                      <h3 className="mb-2 text-lg font-bold text-primary-navy line-clamp-1">{c.shortTitle ?? c.title}</h3>
+                      {c.shortTitle && (
+                        <p className="text-[11px] text-text-muted line-clamp-1 mb-2" title={c.title}>
+                          {c.title}
+                        </p>
+                      )}
                       {c.number && (
                         <p className="text-sm text-text-muted mb-2">شماره: {c.number}</p>
                       )}
@@ -240,6 +204,7 @@ export default async function CircularsPage({
                   pages={pages}
                   total={total}
                   basePath="/circulars"
+                  searchParams={{ q, category }}
                 />
               </div>
             </>

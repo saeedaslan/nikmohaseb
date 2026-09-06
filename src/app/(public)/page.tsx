@@ -2,7 +2,7 @@ import { getActiveBanner } from "@/lib/queries";
 import { getPublishedServices } from "@/lib/queries";
 import { getPublishedArticles } from "@/lib/queries";
 import { getPublishedCirculars } from "@/lib/queries";
-import { getPublishedLaws } from "@/lib/queries";
+import { getPublishedLibraryLaws } from "@/lib/queries/library";
 import { Hero } from "@/components/public/hero";
 import { ServicesSection } from "@/components/public/services-section";
 import { AdvantagesSection } from "@/components/public/advantages-section";
@@ -22,12 +22,34 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const [banner, services, articles, circulars, laws] = await Promise.all([
+  const [banner, services, articles, circulars, libraryLaws] = await Promise.all([
     getActiveBanner(),
     getPublishedServices(6),
     getPublishedArticles(3),
     getPublishedCirculars(3),
-    getPublishedLaws(3),
+    getPublishedLibraryLaws().then((rows) =>
+      rows.slice(0, 3).map((l) => {
+        const articleCount = l.chapters.reduce(
+          (s, c) => s + c._count.articles,
+          0,
+        );
+        return {
+          id: l.id,
+          slug: l.slug,
+          title: l.title,
+          summary: l.description,
+          type: "OTHER" as const,
+          number: null,
+          issuer: null,
+          date: null,
+          createdAt: l.createdAt,
+          category: { name: l.category.title, icon: l.category.icon },
+          chapterCount: l._count.chapters,
+          articleCount,
+          latestUpdate: l.updatedAt,
+        };
+      }),
+    ),
   ]);
 
   return (
@@ -38,7 +60,7 @@ export default async function HomePage() {
       <CTASection />
       <ArticlesSection articles={articles} />
       <CircularsSection circulars={circulars} />
-      <LawsSection laws={laws} />
+      <LawsSection laws={libraryLaws} />
     </>
   );
 }

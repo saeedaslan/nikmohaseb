@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Search, Loader2, FileText, Sparkles, X } from "lucide-react";
+import { toOrdinalWord } from "@/lib/jalali";
 
 interface SearchResult {
   id: string;
@@ -131,7 +132,7 @@ export function LibrarySearch() {
                     {r.excerpt}
                   </div>
                   <div className="mt-1.5 text-[10px] text-text-muted">
-                    کتاب {toPersianDigits(r.path.bookNumber)} › فصل {toPersianDigits(r.path.chapterNumber)}
+                    {r.path.lawTitle} › باب {toOrdinalWord(r.path.chapterNumber)}
                   </div>
                 </div>
               </div>

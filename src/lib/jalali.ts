@@ -15,3 +15,42 @@ export function fromNow(date: Date | string | number): string {
   if (!isValid(d)) return "-";
   return formatDistanceToNow(d, { addSuffix: true });
 }
+
+const PERSIAN_ORDINAL_WORDS: ReadonlyArray<string> = [
+  "اول",
+  "دوم",
+  "سوم",
+  "چهارم",
+  "پنجم",
+  "ششم",
+  "هفتم",
+  "هشتم",
+  "نهم",
+  "دهم",
+  "یازدهم",
+  "دوازدهم",
+  "سیزدهم",
+  "چهاردهم",
+  "پانزدهم",
+  "شانزدهم",
+  "هفدهم",
+  "هجدهم",
+  "نوزدهم",
+  "بیستم",
+  "بیست و یکم",
+  "بیست و دوم",
+  "بیست و سوم",
+  "بیست و چهارم",
+  "بیست و پنجم",
+  "بیست و ششم",
+  "بیست و هفتم",
+  "بیست و هشتم",
+  "بیست و نهم",
+  "سی‌ام",
+];
+
+export function toOrdinalWord(n: number): string {
+  if (!Number.isFinite(n) || n < 1) return String(n);
+  if (n <= 30) return PERSIAN_ORDINAL_WORDS[n - 1];
+  return String(n);
+}

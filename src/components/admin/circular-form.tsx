@@ -27,6 +27,12 @@ export function CircularForm({
 }) {
   const fields: AdminField[] = [
     { name: "title", label: "عنوان", type: "text", description: "عنوان بخشنامه" },
+    {
+      name: "shortTitle",
+      label: "عنوان کوتاه",
+      type: "text",
+      description: "پیشنهاد: حداکثر ۶۰ کاراکتر — در کارت‌های فهرست نمایش داده می‌شود",
+    },
     { name: "slug", label: "اسلاگ", type: "text", description: "مثال: bazneshane-1403" },
     { name: "number", label: "شماره", type: "text", description: "شماره بخشنامه" },
     { name: "date", label: "تاریخ", type: "date" },

@@ -6,6 +6,16 @@ export async function getPublishedLibraryCategories() {
     orderBy: [{ order: "asc" }, { title: "asc" }],
     include: {
       _count: { select: { laws: { where: { published: true } } } },
+      laws: {
+        where: { published: true },
+        orderBy: { updatedAt: "desc" },
+        select: {
+          updatedAt: true,
+          chapters: {
+            select: { _count: { select: { articles: { where: { published: true } } } } },
+          },
+        },
+      },
     },
   });
 }
@@ -26,7 +36,17 @@ export async function getPublishedLibraryLaws() {
   return prisma.libraryLaw.findMany({
     where: { published: true },
     orderBy: [{ order: "asc" }, { title: "asc" }],
-    include: { category: true },
+    include: {
+      category: true,
+      _count: {
+        select: {
+          chapters: true,
+        },
+      },
+      chapters: {
+        select: { _count: { select: { articles: true } } },
+      },
+    },
   });
 }
 
@@ -35,17 +55,17 @@ export async function getLibraryLawBySlug(slug: string) {
     where: { slug },
     include: {
       category: true,
-      books: {
+      _count: {
+        select: {
+          chapters: true,
+        },
+      },
+      chapters: {
         orderBy: { number: "asc" },
         include: {
-          chapters: {
+          articles: {
             orderBy: { number: "asc" },
-            include: {
-              articles: {
-                orderBy: { number: "asc" },
-                select: { id: true, number: true, title: true, slug: true },
-              },
-            },
+            select: { id: true, number: true, title: true, slug: true, published: true },
           },
         },
       },
@@ -54,47 +74,31 @@ export async function getLibraryLawBySlug(slug: string) {
 }
 
 export async function getLibraryLawStructure(lawId: string) {
-  return prisma.libraryBook.findMany({
+  return prisma.libraryChapter.findMany({
     where: { lawId },
     orderBy: { number: "asc" },
     select: {
       id: true,
       title: true,
       number: true,
-      chapters: {
-        orderBy: { number: "asc" },
-        select: {
-          id: true,
-          title: true,
-          number: true,
-          _count: {
-            select: { articles: { where: { published: true } } },
-          },
-        },
+      _count: {
+        select: { articles: { where: { published: true } } },
       },
     },
   });
 }
 
 export async function getLibraryLawFullStructure(lawId: string) {
-  return prisma.libraryBook.findMany({
+  return prisma.libraryChapter.findMany({
     where: { lawId },
     orderBy: { number: "asc" },
     select: {
       id: true,
       title: true,
       number: true,
-      chapters: {
+      articles: {
         orderBy: { number: "asc" },
-        select: {
-          id: true,
-          title: true,
-          number: true,
-          articles: {
-            orderBy: { number: "asc" },
-            select: { id: true, number: true, title: true, slug: true, content: true, published: true },
-          },
-        },
+        select: { id: true, number: true, title: true, slug: true, content: true, published: true },
       },
     },
   });
@@ -105,37 +109,32 @@ export async function getLibraryArticle(lawSlug: string, articleSlug: string) {
     where: { slug: lawSlug },
     include: {
       category: true,
-      books: {
+      chapters: {
         orderBy: { number: "asc" },
         include: {
-          chapters: {
-            orderBy: { number: "asc" },
+          articles: {
+            where: { slug: articleSlug, published: true },
             include: {
-              articles: {
-                where: { slug: articleSlug, published: true },
+              notes: { orderBy: { order: "asc" } },
+              history: { orderBy: { changeDate: "asc" } },
+              circulars: {
                 include: {
-                  notes: { orderBy: { order: "asc" } },
-                  history: { orderBy: { changeDate: "asc" } },
-                  circulars: {
-                    include: {
-                      circular: {
-                        select: {
-                          id: true,
-                          title: true,
-                          slug: true,
-                          number: true,
-                          date: true,
-                        },
-                      },
+                  circular: {
+                    select: {
+                      id: true,
+                      title: true,
+                      slug: true,
+                      number: true,
+                      date: true,
                     },
                   },
-                  relationsFrom: {
+                },
+              },
+              relationsFrom: {
+                include: {
+                  to: {
                     include: {
-                      to: {
-                        include: {
-                          chapter: { include: { book: true } },
-                        },
-                      },
+                      chapter: true,
                     },
                   },
                 },
@@ -147,8 +146,7 @@ export async function getLibraryArticle(lawSlug: string, articleSlug: string) {
     },
   });
   if (!law) return null;
-  const article = law.books
-    .flatMap((b) => b.chapters)
+  const article = law.chapters
     .flatMap((c) => c.articles)[0];
   if (!article) return null;
   return { law, article };
@@ -186,14 +184,7 @@ export async function getLibraryArticleById(articleId: string) {
           id: true,
           number: true,
           title: true,
-          book: {
-            select: {
-              id: true,
-              number: true,
-              title: true,
-              law: { select: { id: true, title: true, slug: true, category: true } },
-            },
-          },
+          law: { select: { id: true, title: true, slug: true, category: true } },
         },
       },
     },
@@ -204,9 +195,9 @@ export async function getLibraryLawArticles(lawId: string) {
   return prisma.libraryArticle.findMany({
     where: {
       published: true,
-      chapter: { book: { lawId } },
+      chapter: { lawId },
     },
-    orderBy: [{ chapter: { book: { number: "asc" } } }, { chapter: { number: "asc" } }, { number: "asc" }],
+    orderBy: [{ chapter: { number: "asc" } }, { number: "asc" }],
     select: {
       id: true,
       number: true,
@@ -217,7 +208,6 @@ export async function getLibraryLawArticles(lawId: string) {
           id: true,
           number: true,
           title: true,
-          book: { select: { id: true, number: true, title: true } },
         },
       },
     },
@@ -228,16 +218,16 @@ export async function getLibraryLawToc(lawId: string) {
   return prisma.libraryArticle.findMany({
     where: {
       published: true,
-      chapter: { book: { lawId } },
+      chapter: { lawId },
     },
-    orderBy: [{ chapter: { book: { number: "asc" } } }, { chapter: { number: "asc" } }, { number: "asc" }],
+    orderBy: [{ chapter: { number: "asc" } }, { number: "asc" }],
     select: {
       id: true,
       number: true,
       title: true,
       slug: true,
       chapter: {
-        select: { id: true, number: true, title: true, book: { select: { id: true, number: true, title: true } } },
+        select: { id: true, number: true, title: true },
       },
     },
   });
@@ -299,9 +289,7 @@ export async function searchLibrary(query: string, limit = 20) {
     orderBy: { number: "asc" },
     include: {
       chapter: {
-        include: {
-          book: { include: { law: { select: { title: true, slug: true } } } },
-        },
+        include: { law: { select: { title: true, slug: true } } },
       },
     },
   });

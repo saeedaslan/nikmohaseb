@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, ArrowLeft } from "lucide-react";
+import { toOrdinalWord } from "@/lib/jalali";
 
 export interface LawTocItem {
   id: string;
@@ -12,7 +13,6 @@ export interface LawTocItem {
     id: string;
     number: number;
     title: string;
-    book: { id: string; number: number; title: string };
   };
 }
 
@@ -54,7 +54,7 @@ export function ArticleNav({ lawSlug, articles, activeArticleId }: ArticleNavPro
                 {prev.title ? ` - ${prev.title}` : ""}
               </div>
               <div className="mt-0.5 text-[10px] text-text-muted line-clamp-1">
-                کتاب {toPersian(prev.chapter.book.number)} › فصل {toPersian(prev.chapter.number)}
+                باب {toOrdinalWord(prev.chapter.number)}
               </div>
             </div>
           </div>
@@ -79,7 +79,7 @@ export function ArticleNav({ lawSlug, articles, activeArticleId }: ArticleNavPro
                 {next.title ? ` - ${next.title}` : ""}
               </div>
               <div className="mt-0.5 text-[10px] text-text-muted line-clamp-1">
-                کتاب {toPersian(next.chapter.book.number)} › فصل {toPersian(next.chapter.number)}
+                باب {toOrdinalWord(next.chapter.number)}
               </div>
             </div>
             <div className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green transition-colors group-hover:bg-accent-green group-hover:text-white">

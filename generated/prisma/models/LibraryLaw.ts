@@ -297,7 +297,7 @@ export type LibraryLawWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"LibraryLaw"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LibraryLaw"> | Date | string
   category?: Prisma.XOR<Prisma.LibraryCategoryScalarRelationFilter, Prisma.LibraryCategoryWhereInput>
-  books?: Prisma.LibraryBookListRelationFilter
+  chapters?: Prisma.LibraryChapterListRelationFilter
 }
 
 export type LibraryLawOrderByWithRelationInput = {
@@ -317,7 +317,7 @@ export type LibraryLawOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   category?: Prisma.LibraryCategoryOrderByWithRelationInput
-  books?: Prisma.LibraryBookOrderByRelationAggregateInput
+  chapters?: Prisma.LibraryChapterOrderByRelationAggregateInput
 }
 
 export type LibraryLawWhereUniqueInput = Prisma.AtLeast<{
@@ -340,7 +340,7 @@ export type LibraryLawWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"LibraryLaw"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LibraryLaw"> | Date | string
   category?: Prisma.XOR<Prisma.LibraryCategoryScalarRelationFilter, Prisma.LibraryCategoryWhereInput>
-  books?: Prisma.LibraryBookListRelationFilter
+  chapters?: Prisma.LibraryChapterListRelationFilter
 }, "id" | "slug">
 
 export type LibraryLawOrderByWithAggregationInput = {
@@ -403,7 +403,7 @@ export type LibraryLawCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category: Prisma.LibraryCategoryCreateNestedOneWithoutLawsInput
-  books?: Prisma.LibraryBookCreateNestedManyWithoutLawInput
+  chapters?: Prisma.LibraryChapterCreateNestedManyWithoutLawInput
 }
 
 export type LibraryLawUncheckedCreateInput = {
@@ -422,7 +422,7 @@ export type LibraryLawUncheckedCreateInput = {
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  books?: Prisma.LibraryBookUncheckedCreateNestedManyWithoutLawInput
+  chapters?: Prisma.LibraryChapterUncheckedCreateNestedManyWithoutLawInput
 }
 
 export type LibraryLawUpdateInput = {
@@ -441,7 +441,7 @@ export type LibraryLawUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.LibraryCategoryUpdateOneRequiredWithoutLawsNestedInput
-  books?: Prisma.LibraryBookUpdateManyWithoutLawNestedInput
+  chapters?: Prisma.LibraryChapterUpdateManyWithoutLawNestedInput
 }
 
 export type LibraryLawUncheckedUpdateInput = {
@@ -460,7 +460,7 @@ export type LibraryLawUncheckedUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  books?: Prisma.LibraryBookUncheckedUpdateManyWithoutLawNestedInput
+  chapters?: Prisma.LibraryChapterUncheckedUpdateManyWithoutLawNestedInput
 }
 
 export type LibraryLawCreateManyInput = {
@@ -635,18 +635,18 @@ export type LibraryLawUncheckedUpdateManyWithoutCategoryNestedInput = {
   deleteMany?: Prisma.LibraryLawScalarWhereInput | Prisma.LibraryLawScalarWhereInput[]
 }
 
-export type LibraryLawCreateNestedOneWithoutBooksInput = {
-  create?: Prisma.XOR<Prisma.LibraryLawCreateWithoutBooksInput, Prisma.LibraryLawUncheckedCreateWithoutBooksInput>
-  connectOrCreate?: Prisma.LibraryLawCreateOrConnectWithoutBooksInput
+export type LibraryLawCreateNestedOneWithoutChaptersInput = {
+  create?: Prisma.XOR<Prisma.LibraryLawCreateWithoutChaptersInput, Prisma.LibraryLawUncheckedCreateWithoutChaptersInput>
+  connectOrCreate?: Prisma.LibraryLawCreateOrConnectWithoutChaptersInput
   connect?: Prisma.LibraryLawWhereUniqueInput
 }
 
-export type LibraryLawUpdateOneRequiredWithoutBooksNestedInput = {
-  create?: Prisma.XOR<Prisma.LibraryLawCreateWithoutBooksInput, Prisma.LibraryLawUncheckedCreateWithoutBooksInput>
-  connectOrCreate?: Prisma.LibraryLawCreateOrConnectWithoutBooksInput
-  upsert?: Prisma.LibraryLawUpsertWithoutBooksInput
+export type LibraryLawUpdateOneRequiredWithoutChaptersNestedInput = {
+  create?: Prisma.XOR<Prisma.LibraryLawCreateWithoutChaptersInput, Prisma.LibraryLawUncheckedCreateWithoutChaptersInput>
+  connectOrCreate?: Prisma.LibraryLawCreateOrConnectWithoutChaptersInput
+  upsert?: Prisma.LibraryLawUpsertWithoutChaptersInput
   connect?: Prisma.LibraryLawWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.LibraryLawUpdateToOneWithWhereWithoutBooksInput, Prisma.LibraryLawUpdateWithoutBooksInput>, Prisma.LibraryLawUncheckedUpdateWithoutBooksInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LibraryLawUpdateToOneWithWhereWithoutChaptersInput, Prisma.LibraryLawUpdateWithoutChaptersInput>, Prisma.LibraryLawUncheckedUpdateWithoutChaptersInput>
 }
 
 export type LibraryLawCreateWithoutCategoryInput = {
@@ -664,7 +664,7 @@ export type LibraryLawCreateWithoutCategoryInput = {
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  books?: Prisma.LibraryBookCreateNestedManyWithoutLawInput
+  chapters?: Prisma.LibraryChapterCreateNestedManyWithoutLawInput
 }
 
 export type LibraryLawUncheckedCreateWithoutCategoryInput = {
@@ -682,7 +682,7 @@ export type LibraryLawUncheckedCreateWithoutCategoryInput = {
   order?: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  books?: Prisma.LibraryBookUncheckedCreateNestedManyWithoutLawInput
+  chapters?: Prisma.LibraryChapterUncheckedCreateNestedManyWithoutLawInput
 }
 
 export type LibraryLawCreateOrConnectWithoutCategoryInput = {
@@ -732,7 +732,7 @@ export type LibraryLawScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"LibraryLaw"> | Date | string
 }
 
-export type LibraryLawCreateWithoutBooksInput = {
+export type LibraryLawCreateWithoutChaptersInput = {
   id?: string
   title: string
   slug: string
@@ -750,7 +750,7 @@ export type LibraryLawCreateWithoutBooksInput = {
   category: Prisma.LibraryCategoryCreateNestedOneWithoutLawsInput
 }
 
-export type LibraryLawUncheckedCreateWithoutBooksInput = {
+export type LibraryLawUncheckedCreateWithoutChaptersInput = {
   id?: string
   categoryId: string
   title: string
@@ -768,23 +768,23 @@ export type LibraryLawUncheckedCreateWithoutBooksInput = {
   updatedAt?: Date | string
 }
 
-export type LibraryLawCreateOrConnectWithoutBooksInput = {
+export type LibraryLawCreateOrConnectWithoutChaptersInput = {
   where: Prisma.LibraryLawWhereUniqueInput
-  create: Prisma.XOR<Prisma.LibraryLawCreateWithoutBooksInput, Prisma.LibraryLawUncheckedCreateWithoutBooksInput>
+  create: Prisma.XOR<Prisma.LibraryLawCreateWithoutChaptersInput, Prisma.LibraryLawUncheckedCreateWithoutChaptersInput>
 }
 
-export type LibraryLawUpsertWithoutBooksInput = {
-  update: Prisma.XOR<Prisma.LibraryLawUpdateWithoutBooksInput, Prisma.LibraryLawUncheckedUpdateWithoutBooksInput>
-  create: Prisma.XOR<Prisma.LibraryLawCreateWithoutBooksInput, Prisma.LibraryLawUncheckedCreateWithoutBooksInput>
+export type LibraryLawUpsertWithoutChaptersInput = {
+  update: Prisma.XOR<Prisma.LibraryLawUpdateWithoutChaptersInput, Prisma.LibraryLawUncheckedUpdateWithoutChaptersInput>
+  create: Prisma.XOR<Prisma.LibraryLawCreateWithoutChaptersInput, Prisma.LibraryLawUncheckedCreateWithoutChaptersInput>
   where?: Prisma.LibraryLawWhereInput
 }
 
-export type LibraryLawUpdateToOneWithWhereWithoutBooksInput = {
+export type LibraryLawUpdateToOneWithWhereWithoutChaptersInput = {
   where?: Prisma.LibraryLawWhereInput
-  data: Prisma.XOR<Prisma.LibraryLawUpdateWithoutBooksInput, Prisma.LibraryLawUncheckedUpdateWithoutBooksInput>
+  data: Prisma.XOR<Prisma.LibraryLawUpdateWithoutChaptersInput, Prisma.LibraryLawUncheckedUpdateWithoutChaptersInput>
 }
 
-export type LibraryLawUpdateWithoutBooksInput = {
+export type LibraryLawUpdateWithoutChaptersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
@@ -802,7 +802,7 @@ export type LibraryLawUpdateWithoutBooksInput = {
   category?: Prisma.LibraryCategoryUpdateOneRequiredWithoutLawsNestedInput
 }
 
-export type LibraryLawUncheckedUpdateWithoutBooksInput = {
+export type LibraryLawUncheckedUpdateWithoutChaptersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -852,7 +852,7 @@ export type LibraryLawUpdateWithoutCategoryInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  books?: Prisma.LibraryBookUpdateManyWithoutLawNestedInput
+  chapters?: Prisma.LibraryChapterUpdateManyWithoutLawNestedInput
 }
 
 export type LibraryLawUncheckedUpdateWithoutCategoryInput = {
@@ -870,7 +870,7 @@ export type LibraryLawUncheckedUpdateWithoutCategoryInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  books?: Prisma.LibraryBookUncheckedUpdateManyWithoutLawNestedInput
+  chapters?: Prisma.LibraryChapterUncheckedUpdateManyWithoutLawNestedInput
 }
 
 export type LibraryLawUncheckedUpdateManyWithoutCategoryInput = {
@@ -896,11 +896,11 @@ export type LibraryLawUncheckedUpdateManyWithoutCategoryInput = {
  */
 
 export type LibraryLawCountOutputType = {
-  books: number
+  chapters: number
 }
 
 export type LibraryLawCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  books?: boolean | LibraryLawCountOutputTypeCountBooksArgs
+  chapters?: boolean | LibraryLawCountOutputTypeCountChaptersArgs
 }
 
 /**
@@ -916,8 +916,8 @@ export type LibraryLawCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.E
 /**
  * LibraryLawCountOutputType without action
  */
-export type LibraryLawCountOutputTypeCountBooksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LibraryBookWhereInput
+export type LibraryLawCountOutputTypeCountChaptersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LibraryChapterWhereInput
 }
 
 
@@ -938,7 +938,7 @@ export type LibraryLawSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.LibraryCategoryDefaultArgs<ExtArgs>
-  books?: boolean | Prisma.LibraryLaw$booksArgs<ExtArgs>
+  chapters?: boolean | Prisma.LibraryLaw$chaptersArgs<ExtArgs>
   _count?: boolean | Prisma.LibraryLawCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["libraryLaw"]>
 
@@ -1001,7 +1001,7 @@ export type LibraryLawSelectScalar = {
 export type LibraryLawOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "title" | "slug" | "description" | "approvalDate" | "executionDate" | "lastAmendment" | "status" | "published" | "seoTitle" | "seoDescription" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["libraryLaw"]>
 export type LibraryLawInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.LibraryCategoryDefaultArgs<ExtArgs>
-  books?: boolean | Prisma.LibraryLaw$booksArgs<ExtArgs>
+  chapters?: boolean | Prisma.LibraryLaw$chaptersArgs<ExtArgs>
   _count?: boolean | Prisma.LibraryLawCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LibraryLawIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1015,7 +1015,7 @@ export type $LibraryLawPayload<ExtArgs extends runtime.Types.Extensions.Internal
   name: "LibraryLaw"
   objects: {
     category: Prisma.$LibraryCategoryPayload<ExtArgs>
-    books: Prisma.$LibraryBookPayload<ExtArgs>[]
+    chapters: Prisma.$LibraryChapterPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1428,7 +1428,7 @@ readonly fields: LibraryLawFieldRefs;
 export interface Prisma__LibraryLawClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   category<T extends Prisma.LibraryCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LibraryCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__LibraryCategoryClient<runtime.Types.Result.GetResult<Prisma.$LibraryCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  books<T extends Prisma.LibraryLaw$booksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LibraryLaw$booksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LibraryBookPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  chapters<T extends Prisma.LibraryLaw$chaptersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LibraryLaw$chaptersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LibraryChapterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1874,27 +1874,27 @@ export type LibraryLawDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
- * LibraryLaw.books
+ * LibraryLaw.chapters
  */
-export type LibraryLaw$booksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type LibraryLaw$chaptersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the LibraryBook
+   * Select specific fields to fetch from the LibraryChapter
    */
-  select?: Prisma.LibraryBookSelect<ExtArgs> | null
+  select?: Prisma.LibraryChapterSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the LibraryBook
+   * Omit specific fields from the LibraryChapter
    */
-  omit?: Prisma.LibraryBookOmit<ExtArgs> | null
+  omit?: Prisma.LibraryChapterOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.LibraryBookInclude<ExtArgs> | null
-  where?: Prisma.LibraryBookWhereInput
-  orderBy?: Prisma.LibraryBookOrderByWithRelationInput | Prisma.LibraryBookOrderByWithRelationInput[]
-  cursor?: Prisma.LibraryBookWhereUniqueInput
+  include?: Prisma.LibraryChapterInclude<ExtArgs> | null
+  where?: Prisma.LibraryChapterWhereInput
+  orderBy?: Prisma.LibraryChapterOrderByWithRelationInput | Prisma.LibraryChapterOrderByWithRelationInput[]
+  cursor?: Prisma.LibraryChapterWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.LibraryBookScalarFieldEnum | Prisma.LibraryBookScalarFieldEnum[]
+  distinct?: Prisma.LibraryChapterScalarFieldEnum | Prisma.LibraryChapterScalarFieldEnum[]
 }
 
 /**

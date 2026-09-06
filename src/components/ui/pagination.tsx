@@ -9,9 +9,10 @@ interface PaginationProps {
   pages: number;
   total: number;
   basePath: string;
+  searchParams?: Record<string, string | undefined>;
 }
 
-export function Pagination({ current, pages, basePath }: PaginationProps) {
+export function Pagination({ current, pages, basePath, searchParams }: PaginationProps) {
   if (pages <= 1) return null;
 
   const range = generateRange(1, pages);
@@ -24,7 +25,16 @@ export function Pagination({ current, pages, basePath }: PaginationProps) {
     }
   });
 
-  const buildHref = (page: number) => `${basePath}?page=${page}`;
+  const buildHref = (page: number) => {
+    const params = new URLSearchParams();
+    if (searchParams) {
+      for (const [k, v] of Object.entries(searchParams)) {
+        if (v) params.set(k, v);
+      }
+    }
+    params.set("page", String(page));
+    return `${basePath}?${params.toString()}`;
+  };
 
   return (
     <nav

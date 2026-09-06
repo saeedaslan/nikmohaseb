@@ -6,20 +6,19 @@ import {
   Layers,
   Inbox,
   FileText,
-  BookOpen,
   ArrowLeft,
 } from "lucide-react";
 import { getLibraryLawBySlug } from "@/lib/queries/library";
 import { domains } from "@/lib/nav";
 import { BreadcrumbSchema } from "@/components/structured-data";
 import { notFoundMeta } from "@/lib/seo";
+import { ItemBadge, toPersianDigits } from "@/components/library/item-badge";
+import { toOrdinalWord } from "@/lib/jalali";
 import type { Metadata } from "next";
 
 export const revalidate = 600;
 
-function toPersian(n: number): string {
-  return String(n).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
-}
+const toPersian = toPersianDigits;
 
 export async function generateMetadata({
   params,
@@ -67,18 +66,8 @@ export default async function LibraryLawPage({
   if (!law || !law.published) notFound();
 
   const basePath = `/library/laws/${law.slug}`;
-
-  // Compute total article count and per-chapter article ranges
-  const chapters = law.books.flatMap((b) =>
-    b.chapters.map((c) => ({
-      ...c,
-      book: { id: b.id, number: b.number, title: b.title },
-    })),
-  );
-  const totalArticles = chapters.reduce(
-    (s, c) => s + c.articles.length,
-    0,
-  );
+  const chapters = law.chapters;
+  const totalArticles = chapters.reduce((s, c) => s + c.articles.length, 0);
 
   // Single-article law: skip chapter list and go straight to the article
   if (totalArticles === 1) {
@@ -157,12 +146,8 @@ export default async function LibraryLawPage({
           )}
           <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-text-muted">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-card px-3 py-1">
-              <BookOpen className="h-3.5 w-3.5" />
-              {toPersian(law.books.length)} کتاب
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-card px-3 py-1">
               <FileText className="h-3.5 w-3.5" />
-              {toPersian(chapters.length)} فصل
+              {toPersian(chapters.length)} باب
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-card px-3 py-1">
               <LibraryIcon className="h-3.5 w-3.5" />
@@ -172,74 +157,35 @@ export default async function LibraryLawPage({
         </div>
       </section>
 
-      {/* Chapter list */}
+      {/* Chapter list — table of contents */}
       <section className="container mx-auto max-w-5xl px-4 py-10">
-        <h2 className="mb-4 text-sm font-bold uppercase tracking-wider text-text-muted">
-          فهرست مطالب
-        </h2>
-        <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
-          {law.books.map((book, bi) => (
-            <div
-              key={book.id}
-              className={bi > 0 ? "border-t border-border" : ""}
-            >
-              <div className="flex items-center gap-3 bg-surface-background/50 px-5 py-3">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary-navy text-xs font-extrabold text-white">
-                  {toPersian(book.number)}
-                </span>
-                <h3 className="text-sm font-extrabold text-primary-navy">
-                  کتاب {toPersian(book.number)} — {book.title}
-                </h3>
-              </div>
-              {book.chapters.length === 0 ? (
-                <p className="px-5 py-4 text-center text-xs text-text-muted">
-                  فصلی ثبت نشده است.
-                </p>
-              ) : (
-                <ul>
-                  {book.chapters.map((chapter, ci) => {
-                    const first = chapter.articles[0]?.number;
-                    const last = chapter.articles[chapter.articles.length - 1]?.number;
-                    const range =
-                      first && last
-                        ? first === last
-                          ? `ماده ${toPersian(first)}`
-                          : `مواد ${toPersian(first)} تا ${toPersian(last)}`
-                        : "—";
-                    return (
-                      <li
-                        key={chapter.id}
-                        className={ci > 0 ? "border-t border-border/60" : ""}
-                      >
-                        <Link
-                          href={`${basePath}/articles/${chapter.articles[0]?.slug ?? ""}`}
-                          className="group flex items-center justify-between gap-3 px-5 py-3.5 transition-colors hover:bg-accent-green/5"
-                        >
-                          <div className="flex min-w-0 items-center gap-3">
-                            <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-md bg-accent-green/10 text-xs font-extrabold text-accent-green">
-                              {toPersian(chapter.number)}
-                            </span>
-                            <div className="min-w-0">
-                              <div className="text-sm font-bold text-primary-navy group-hover:text-accent-green">
-                                فصل {toPersian(chapter.number)}: {chapter.title}
-                              </div>
-                              <div className="mt-0.5 text-xs text-text-muted">
-                                {range} · {toPersian(chapter.articles.length)} ماده
-                              </div>
-                            </div>
-                          </div>
-                          <ChevronLeft className="h-4 w-4 flex-shrink-0 text-text-muted transition-transform group-hover:-translate-x-1 group-hover:text-accent-green" />
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-            </div>
-          ))}
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="text-base font-extrabold text-primary-navy lg:text-lg">
+              فهرست مطالب
+            </h2>
+            <p className="mt-1 text-xs text-text-muted">
+              ساختار کامل این قانون، فصل به فصل
+            </p>
+          </div>
+          <ProgressIndicator chapters={chapters} />
         </div>
 
-        <div className="mt-6 text-center">
+        {chapters.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-border bg-white p-12 text-center">
+            <Inbox className="mx-auto h-12 w-12 text-text-muted" />
+            <h3 className="mt-3 text-base font-bold text-primary-navy">
+              فصلی ثبت نشده است
+            </h3>
+            <p className="mt-1 text-sm text-text-muted">
+              به‌زودی فصل‌های این قانون اضافه خواهند شد.
+            </p>
+          </div>
+        ) : (
+          <ChapterToc chapters={chapters} basePath={basePath} />
+        )}
+
+        <div className="mt-8 text-center">
           <Link
             href="/library"
             className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-accent-green"
@@ -249,6 +195,124 @@ export default async function LibraryLawPage({
           </Link>
         </div>
       </section>
+    </div>
+  );
+}
+
+function ChapterToc({
+  chapters,
+  basePath,
+}: {
+  chapters: {
+    id: string;
+    number: number;
+    title: string;
+    articles: { id: string; number: number; title: string | null; slug: string; published: boolean }[];
+  }[];
+  basePath: string;
+}) {
+  return (
+    <ol className="relative space-y-2.5">
+      {/* Vertical connector line on the right (RTL start side) */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute right-[27px] top-3 bottom-3 w-px bg-gradient-to-b from-accent-green/40 via-accent-green/20 to-transparent"
+      />
+      {chapters.map((chapter) => {
+        const articles = chapter.articles;
+        const publishedCount = articles.filter((a) => a.published).length;
+        const first = articles[0]?.number;
+        const last = articles[articles.length - 1]?.number;
+        const rangeText =
+          first && last
+            ? first === last
+              ? `ماده ${toPersian(first)}`
+              : `مواد ${toPersian(first)} تا ${toPersian(last)}`
+            : "—";
+        const firstSlug = articles[0]?.slug;
+        return (
+          <li key={chapter.id} className="relative">
+            {firstSlug ? (
+              <Link
+                href={`${basePath}/articles/${firstSlug}`}
+                className="group flex items-center gap-4 rounded-2xl border border-border bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-green/40 hover:bg-accent-green/[0.03] hover:shadow-md sm:p-4"
+              >
+                <ItemBadge number={chapter.number} toPersian={toPersian} />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-sm font-extrabold text-primary-navy transition-colors group-hover:text-accent-green lg:text-base">
+                      <span className="text-accent-green">باب {toOrdinalWord(chapter.number)}:</span>{" "}
+                      {chapter.title}
+                    </h3>
+                    <span className="rounded-full bg-accent-green/10 px-2 py-0.5 text-[10px] font-bold text-accent-green">
+                      {toPersian(articles.length)} ماده
+                    </span>
+                  </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-muted">
+                    <span className="inline-flex items-center gap-1">
+                      <FileText className="h-3 w-3" />
+                      {rangeText}
+                    </span>
+                    {publishedCount < articles.length && (
+                      <span className="inline-flex items-center gap-1 text-amber-600">
+                        <Layers className="h-3 w-3" />
+                        {toPersian(publishedCount)} از {toPersian(articles.length)} منتشر
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <ChevronLeft className="h-4 w-4 flex-shrink-0 text-text-muted transition-transform group-hover:-translate-x-1 group-hover:text-accent-green" />
+              </Link>
+            ) : (
+              <div className="flex items-center gap-4 rounded-2xl border border-dashed border-border bg-surface-background/50 p-3 sm:p-4">
+                <ItemBadge number={chapter.number} toPersian={toPersian} muted />
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-sm font-bold text-text-muted">
+                    {chapter.title}
+                  </h3>
+                  <p className="mt-1 text-[11px] text-text-muted">
+                    هنوز ماده‌ای در این فصل ثبت نشده است.
+                  </p>
+                </div>
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+function ProgressIndicator({
+  chapters,
+}: {
+  chapters: { articles: { published: boolean }[] }[];
+}) {
+  const total = chapters.reduce((s, c) => s + c.articles.length, 0);
+  const published = chapters.reduce(
+    (s, c) => s + c.articles.filter((a) => a.published).length,
+    0,
+  );
+  const pct = total === 0 ? 0 : Math.round((published / total) * 100);
+  return (
+    <div className="flex flex-col items-end gap-1.5">
+      <div className="inline-flex items-center gap-2 rounded-full border border-accent-green/20 bg-accent-green/[0.06] px-3 py-1 text-[11px] font-bold text-accent-green">
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent-green shadow shadow-accent-green/40" />
+        {toPersian(published)} از {toPersian(total)} ماده منتشر شده
+      </div>
+      <div
+        className="h-1 w-44 overflow-hidden rounded-full bg-accent-green/15"
+        role="progressbar"
+        aria-valuenow={pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="پیشرفت انتشار مواد"
+      >
+        <div
+          className="h-full rounded-full bg-gradient-to-l from-accent-green to-accent-green-light transition-all"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
     </div>
   );
 }

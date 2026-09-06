@@ -29,6 +29,7 @@ function parseCircular(fd: FormData): CircularInput {
   }
   return {
     title,
+    shortTitle: fd.get("shortTitle")?.toString() || undefined,
     slug,
     number: fd.get("number")?.toString() || undefined,
     date: parseDate(fd.get("date")),

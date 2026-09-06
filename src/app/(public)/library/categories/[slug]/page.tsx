@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   Library as LibraryIcon,
   Inbox,
@@ -7,14 +7,17 @@ import {
   Sparkles,
   ChevronLeft,
   Layers,
+  FileText,
 } from "lucide-react";
 import { getLibraryCategoryBySlug, getPublishedLibraryLaws } from "@/lib/queries/library";
 import { domains } from "@/lib/nav";
+import { ItemBadge, toPersianDigits } from "@/components/library/item-badge";
 import type { Metadata } from "next";
 
 export const revalidate = 600;
 
 const baseTitle = "کتابخانه قوانین و مقررات";
+const toPersian = toPersianDigits;
 
 export async function generateMetadata({
   params,
@@ -37,10 +40,6 @@ export async function generateMetadata({
   };
 }
 
-function toPersian(n: number): string {
-  return String(n).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
-}
-
 export default async function LibraryCategoryPage({
   params,
 }: {
@@ -54,6 +53,13 @@ export default async function LibraryCategoryPage({
   if (!category || !category.published) notFound();
 
   const laws = allLaws.filter((l) => l.categoryId === category.id);
+
+  // Single-law category: skip the law-list page and go straight to the
+  // law's chapter/باب list. Mirrors the single-article law → article
+  // redirect in src/app/(public)/library/laws/[lawSlug]/page.tsx.
+  if (laws.length === 1) {
+    redirect(`/library/laws/${laws[0].slug}`);
+  }
 
   return (
     <div className="min-h-screen bg-surface-background">
@@ -110,42 +116,57 @@ export default async function LibraryCategoryPage({
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {laws.map((law) => (
-              <Link
-                key={law.id}
-                href={`/library/laws/${law.slug}`}
-                className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent-green/40 hover:shadow-md"
-              >
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-accent-green/10 text-accent-green transition-colors group-hover:bg-accent-green group-hover:text-white">
-                    <LibraryIcon className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-base font-extrabold text-primary-navy group-hover:text-accent-green">
-                        {law.title}
-                      </h3>
-                      {law.status && (
-                        <span className="rounded-full bg-accent-green/10 px-2 py-0.5 text-[10px] font-bold text-accent-green">
-                          {law.status}
+          <ol className="relative space-y-2.5">
+            {laws.length > 1 && (
+              <span
+                aria-hidden
+                className="pointer-events-none absolute right-[27px] top-3 bottom-3 w-px bg-gradient-to-b from-accent-green/40 via-accent-green/20 to-transparent"
+              />
+            )}
+            {laws.map((law) => {
+              const chapterCount = law._count?.chapters ?? 0;
+              const articleCount = (law.chapters ?? []).reduce(
+                (s, c) => s + (c._count?.articles ?? 0),
+                0,
+              );
+              return (
+                <li key={law.id} className="relative">
+                  <Link
+                    href={`/library/laws/${law.slug}`}
+                    className="group flex items-center gap-4 rounded-2xl border border-border bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-green/40 hover:bg-accent-green/[0.03] hover:shadow-md sm:p-4"
+                  >
+                    <ItemBadge icon={LibraryIcon} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-sm font-extrabold text-primary-navy transition-colors group-hover:text-accent-green lg:text-base">
+                          {law.title}
+                        </h3>
+                        {law.status && (
+                          <span className="rounded-full bg-accent-green/10 px-2 py-0.5 text-[10px] font-bold text-accent-green">
+                            {law.status}
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-muted">
+                        <span className="inline-flex items-center gap-1">
+                          <Layers className="h-3 w-3" />
+                          {toPersian(chapterCount)} باب
                         </span>
-                      )}
+                        <span className="inline-flex items-center gap-1">
+                          <FileText className="h-3 w-3" />
+                          {toPersian(articleCount)} ماده
+                        </span>
+                      </div>
                     </div>
-                    {law.description && (
-                      <p className="mt-0.5 line-clamp-1 text-xs text-text-muted">
-                        {law.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <ChevronLeft className="h-4 w-4 flex-shrink-0 text-text-muted transition-transform group-hover:-translate-x-1 group-hover:text-accent-green" />
-              </Link>
-            ))}
-          </div>
+                    <ChevronLeft className="h-4 w-4 flex-shrink-0 text-text-muted transition-transform group-hover:-translate-x-1 group-hover:text-accent-green" />
+                  </Link>
+                </li>
+              );
+            })}
+          </ol>
         )}
 
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center">
           <Link
             href="/library"
             className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-accent-green"

@@ -50,7 +50,7 @@ export default async function AdminLibraryPage() {
               کتابخانه قوانین و مقررات
             </h1>
             <p className="mt-1.5 text-sm text-white/70">
-              مدیریت دسته‌بندی‌ها، قوانین، کتاب‌ها، فصل‌ها و مواد
+              مدیریت دسته‌بندی‌ها، قوانین، فصل‌ها و مواد
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -144,7 +144,7 @@ export default async function AdminLibraryPage() {
                 قوانین
               </h2>
               <p className="mt-0.5 text-xs text-text-muted">
-                مدیریت قوانین، کتاب‌ها، فصل‌ها و مواد ({toPersian(stats.laws)} مورد)
+                مدیریت قوانین، فصل‌ها و مواد ({toPersian(stats.laws)} مورد)
               </p>
             </div>
             <ArrowLeft className="h-5 w-5 text-text-muted transition-transform group-hover:-translate-x-1" />
@@ -188,9 +188,9 @@ export default async function AdminLibraryPage() {
                         <div className="text-sm font-bold text-primary-navy line-clamp-1">
                           {l.title}
                         </div>
-                        <div className="mt-0.5 text-xs text-text-muted">
-                          {l.category.title} · {toPersian(l._count.books)} کتاب
-                        </div>
+                    <div className="mt-0.5 text-xs text-text-muted">
+                      {l.category.title} · {toPersian(l._count.chapters)} باب
+                    </div>
                       </div>
                     </div>
                     <div className="flex flex-shrink-0 items-center gap-1.5">

@@ -15,10 +15,8 @@ export async function GET(req: Request) {
       slug: a.slug,
       excerpt: a.content.replace(/<[^>]+>/g, "").slice(0, 200),
       path: {
-        lawTitle: a.chapter.book.law.title,
-        lawSlug: a.chapter.book.law.slug,
-        bookTitle: a.chapter.book.title,
-        bookNumber: a.chapter.book.number,
+        lawTitle: a.chapter.law.title,
+        lawSlug: a.chapter.law.slug,
         chapterTitle: a.chapter.title,
         chapterNumber: a.chapter.number,
       },

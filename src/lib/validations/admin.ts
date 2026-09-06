@@ -77,6 +77,7 @@ export const articleSchema = z.object({
 
 export const circularSchema = z.object({
   title: z.string().min(2, "عنوان الزامی است").max(180),
+  shortTitle: z.string().max(120, "حداکثر ۱۲۰ کاراکتر").optional(),
   slug: z.string().max(180).optional(),
   number: z.string().optional(),
   date: z

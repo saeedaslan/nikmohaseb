@@ -6,6 +6,7 @@ import {
   listPublishedCirculars,
 } from "@/lib/actions/library";
 import { ArticleCircularsEditor } from "@/components/admin/article-circulars-editor";
+import { toOrdinalWord } from "@/lib/jalali";
 
 export const metadata = {
   title: "بخشنامه‌های مرتبط با ماده | ادمین | نیک محاسب سرو",
@@ -23,7 +24,7 @@ export default async function AdminArticleCircularsPage({
   ]);
   if (!article) notFound();
 
-  const backUrl = `/admin/library/laws/${article.chapter.book.law.id}`;
+  const backUrl = `/admin/library/laws/${article.chapter.law.id}`;
 
   return (
     <div className="space-y-4">
@@ -39,7 +40,7 @@ export default async function AdminArticleCircularsPage({
           بخشنامه‌های مرتبط با ماده {toPersian(article.number)}
         </h1>
         <p className="text-sm text-text-muted">
-          {article.chapter.book.law.title} · کتاب {toPersian(article.chapter.book.number)}، فصل {toPersian(article.chapter.number)}
+          {article.chapter.law.title} · باب {toOrdinalWord(article.chapter.number)}
           {article.title ? ` · ${article.title}` : ""}
         </p>
       </div>

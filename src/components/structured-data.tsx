@@ -405,43 +405,6 @@ export function ContactPageSchema() {
   );
 }
 
-export function LegislationSchema({
-  title,
-  description,
-  datePublished,
-  issuer,
-  number,
-  slug,
-  path,
-}: {
-  title: string;
-  description: string;
-  datePublished: Date;
-  issuer?: string;
-  number?: string;
-  slug: string;
-  path?: string;
-}) {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Legislation",
-    name: title,
-    description,
-    datePublished: datePublished.toISOString(),
-    url: `${domains.primary}${path ?? `/laws/${slug}`}`,
-    ...(issuer && { legislationPassedBy: { "@type": "Organization", name: issuer } }),
-    ...(number && { legislationIdentifier: number }),
-    inLanguage: "fa-IR",
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
-  );
-}
-
 export function LibraryLawSchema({
   title,
   description,

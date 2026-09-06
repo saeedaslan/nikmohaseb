@@ -52,6 +52,23 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(`/library/categories/${slug}`, req.url), 301);
   }
 
+  // Legacy /laws → /library migration
+  // The only legacy slug with a clear library equivalent is the one for
+  // قانون مالیات‌های مستقیم (m1 + m2). All other legacy laws have no library
+  // counterpart yet and are redirected to the library hub so they don't 404.
+  const legacyLawRedirects: Record<string, string> = {
+    "direct-tax-law-article-1-2": "/library/laws/direct-tax-law-article",
+  };
+  if (pathname === "/laws" || pathname === "/laws/") {
+    return NextResponse.redirect(new URL("/library", req.url), 301);
+  }
+  const legacyLawMatch = pathname.match(/^\/laws\/([^/]+)\/?$/);
+  if (legacyLawMatch) {
+    const legacySlug = legacyLawMatch[1];
+    const target = legacyLawRedirects[legacySlug] ?? "/library";
+    return NextResponse.redirect(new URL(target, req.url), 301);
+  }
+
   if (authRoutes.includes(pathname)) {
     if (isLoggedIn && (role === ADMIN || role === SUPPORT)) {
       return NextResponse.redirect(new URL("/admin", req.url));

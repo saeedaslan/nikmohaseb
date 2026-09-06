@@ -406,35 +406,39 @@
    ========================================================= */
 
 .article-content {
-  @apply text-lg text-text;
+  @apply text-[1.0625rem] leading-[2.05] text-text sm:text-lg;
 
   h1, h2, h3, h4, h5, h6 {
-    @apply mt-8 mb-4 font-bold text-primary-navy first:mt-0;
+    @apply mt-9 mb-4 font-extrabold text-primary-navy first:mt-0;
   }
 
   h1 {
-    @apply text-3xl;
+    @apply text-2xl sm:text-3xl;
   }
   h2 {
-    @apply text-2xl;
+    @apply text-xl sm:text-2xl;
   }
   h3 {
-    @apply text-xl;
+    @apply text-lg sm:text-xl;
   }
 
   p {
-    @apply mb-5 leading-relaxed;
+    @apply mb-6 leading-[2.05];
+  }
+
+  strong, b {
+    @apply font-extrabold text-primary-navy;
   }
 
   ul {
-    @apply mb-5 list-disc pr-6;
+    @apply mb-6 list-disc pr-6;
   }
   ol {
-    @apply mb-5 list-decimal pr-6;
+    @apply mb-6 list-decimal pr-6;
   }
 
   li {
-    @apply mb-1.5 last:mb-0;
+    @apply mb-2 leading-[2] last:mb-0;
   }
 
   a {
@@ -442,7 +446,7 @@
   }
 
   blockquote {
-    @apply border-l-4 border-accent-yellow/30 py-4 pl-4 italic text-accent-yellow;
+    @apply my-6 border-r-[3px] border-accent-yellow/40 bg-accent-yellow/[0.06] py-4 pr-4 pl-4 italic text-text;
   }
 
   img {
@@ -450,7 +454,7 @@
   }
 
   table {
-    @apply mb-5 w-full border-collapse;
+    @apply mb-6 w-full border-collapse;
   }
 
   th, td {
@@ -462,7 +466,25 @@
   }
 
   a.article-ref {
-    @apply inline-block rounded-md bg-accent-green/10 px-1.5 py-0.5 font-medium text-accent-green no-underline transition-colors hover:bg-accent-green/20;
+    @apply inline-block rounded-md bg-accent-green/10 px-1.5 py-0.5 font-bold text-accent-green no-underline transition-colors hover:bg-accent-green/20;
+  }
+}
+
+/* تبصره body — slightly different from main article */
+.tabareh-content {
+  @apply text-[0.95rem] leading-[2.1] text-text;
+
+  p {
+    @apply mb-4 last:mb-0;
+  }
+  strong, b {
+    @apply font-extrabold text-primary-navy;
+  }
+  a {
+    @apply text-accent-green hover:text-accent-green/80;
+  }
+  a.article-ref {
+    @apply inline-block rounded-md bg-accent-green/10 px-1.5 py-0.5 font-bold text-accent-green no-underline;
   }
 }
 
@@ -483,5 +505,9 @@
   .article-content {
     font-size: 14pt;
     line-height: 2;
+  }
+  .tabareh-content {
+    font-size: 12pt;
+    line-height: 1.9;
   }
 }

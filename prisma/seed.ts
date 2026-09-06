@@ -494,22 +494,11 @@ async function main() {
     },
   });
 
-  const book5 = await prisma.libraryBook.upsert({
-    where: { lawId_number: { lawId: directTaxLaw.id, number: 5 } },
+  const chapter1 = await prisma.libraryChapter.upsert({
+    where: { lawId_number: { lawId: directTaxLaw.id, number: 1 } },
     update: {},
     create: {
       lawId: directTaxLaw.id,
-      number: 5,
-      title: "باب پنجم - سازمان تشخیص و مراجع مالیاتی",
-      order: 5,
-    },
-  });
-
-  const chapter1 = await prisma.libraryChapter.upsert({
-    where: { bookId_number: { bookId: book5.id, number: 1 } },
-    update: {},
-    create: {
-      bookId: book5.id,
       number: 1,
       title: "فصل اول - مراجع تشخیص مالیات",
       order: 1,

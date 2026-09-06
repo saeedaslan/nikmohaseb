@@ -408,7 +408,6 @@ export const ModelName = {
   Faq: 'Faq',
   LibraryCategory: 'LibraryCategory',
   LibraryLaw: 'LibraryLaw',
-  LibraryBook: 'LibraryBook',
   LibraryChapter: 'LibraryChapter',
   LibraryArticle: 'LibraryArticle',
   LibraryArticleCircular: 'LibraryArticleCircular',
@@ -434,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "resetToken" | "category" | "service" | "article" | "circular" | "circularImage" | "law" | "faq" | "libraryCategory" | "libraryLaw" | "libraryBook" | "libraryChapter" | "libraryArticle" | "libraryArticleCircular" | "libraryArticleNote" | "libraryArticleRelation" | "libraryArticleHistory" | "banner" | "ticket" | "ticketMessage" | "ticketAttachment"
+    modelProps: "user" | "resetToken" | "category" | "service" | "article" | "circular" | "circularImage" | "law" | "faq" | "libraryCategory" | "libraryLaw" | "libraryChapter" | "libraryArticle" | "libraryArticleCircular" | "libraryArticleNote" | "libraryArticleRelation" | "libraryArticleHistory" | "banner" | "ticket" | "ticketMessage" | "ticketAttachment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1249,80 +1248,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LibraryLawCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LibraryLawCountAggregateOutputType> | number
-        }
-      }
-    }
-    LibraryBook: {
-      payload: Prisma.$LibraryBookPayload<ExtArgs>
-      fields: Prisma.LibraryBookFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.LibraryBookFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.LibraryBookFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload>
-        }
-        findFirst: {
-          args: Prisma.LibraryBookFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.LibraryBookFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload>
-        }
-        findMany: {
-          args: Prisma.LibraryBookFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload>[]
-        }
-        create: {
-          args: Prisma.LibraryBookCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload>
-        }
-        createMany: {
-          args: Prisma.LibraryBookCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.LibraryBookCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload>[]
-        }
-        delete: {
-          args: Prisma.LibraryBookDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload>
-        }
-        update: {
-          args: Prisma.LibraryBookUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload>
-        }
-        deleteMany: {
-          args: Prisma.LibraryBookDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.LibraryBookUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.LibraryBookUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload>[]
-        }
-        upsert: {
-          args: Prisma.LibraryBookUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$LibraryBookPayload>
-        }
-        aggregate: {
-          args: Prisma.LibraryBookAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateLibraryBook>
-        }
-        groupBy: {
-          args: Prisma.LibraryBookGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.LibraryBookGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.LibraryBookCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.LibraryBookCountAggregateOutputType> | number
         }
       }
     }
@@ -2189,6 +2114,7 @@ export type ArticleScalarFieldEnum = (typeof ArticleScalarFieldEnum)[keyof typeo
 export const CircularScalarFieldEnum = {
   id: 'id',
   title: 'title',
+  shortTitle: 'shortTitle',
   slug: 'slug',
   number: 'number',
   date: 'date',
@@ -2296,22 +2222,9 @@ export const LibraryLawScalarFieldEnum = {
 export type LibraryLawScalarFieldEnum = (typeof LibraryLawScalarFieldEnum)[keyof typeof LibraryLawScalarFieldEnum]
 
 
-export const LibraryBookScalarFieldEnum = {
-  id: 'id',
-  lawId: 'lawId',
-  title: 'title',
-  number: 'number',
-  order: 'order',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type LibraryBookScalarFieldEnum = (typeof LibraryBookScalarFieldEnum)[keyof typeof LibraryBookScalarFieldEnum]
-
-
 export const LibraryChapterScalarFieldEnum = {
   id: 'id',
-  bookId: 'bookId',
+  lawId: 'lawId',
   title: 'title',
   number: 'number',
   order: 'order',
@@ -2782,7 +2695,6 @@ export type GlobalOmitConfig = {
   faq?: Prisma.FaqOmit
   libraryCategory?: Prisma.LibraryCategoryOmit
   libraryLaw?: Prisma.LibraryLawOmit
-  libraryBook?: Prisma.LibraryBookOmit
   libraryChapter?: Prisma.LibraryChapterOmit
   libraryArticle?: Prisma.LibraryArticleOmit
   libraryArticleCircular?: Prisma.LibraryArticleCircularOmit

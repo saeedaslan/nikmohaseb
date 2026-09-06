@@ -3,7 +3,6 @@ import {
   Scale,
   BookOpen,
   FileText,
-  Library as LibraryIcon,
   Search,
   Sparkles,
   ArrowLeft,
@@ -18,9 +17,17 @@ import {
   ShieldCheck,
   Compass,
   GraduationCap,
+  Receipt,
+  Store,
+  Calculator,
+  Wallet,
+  Coins,
+  type LucideIcon,
 } from "lucide-react";
 import { getPublishedLibraryCategories } from "@/lib/queries/library";
 import { LibrarySearch } from "@/components/library/library-search";
+import { ItemBadge, toPersianDigits, type BadgeTone } from "@/components/library/item-badge";
+import { toJalali } from "@/lib/jalali";
 import { domains } from "@/lib/nav";
 import type { Metadata } from "next";
 
@@ -38,7 +45,7 @@ export const metadata: Metadata = {
   },
 };
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const iconMap: Record<string, LucideIcon> = {
   scale: Scale,
   book: BookOpen,
   file: FileText,
@@ -47,34 +54,132 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   building: Building2,
   landmark: Landmark,
   scroll: ScrollText,
+  receipt: Receipt,
+  store: Store,
+  calculator: Calculator,
+  wallet: Wallet,
+  coins: Coins,
 };
 
-const themeRing: string[] = [
-"ring-emerald-500/20 hover:ring-emerald-500/40",
-"ring-blue-500/20 hover:ring-blue-500/40",
-"ring-amber-500/20 hover:ring-amber-500/40",
-"ring-violet-500/20 hover:ring-violet-500/40",
-"ring-rose-500/20 hover:ring-rose-500/40",
-  "ring-cyan-500/20 hover:ring-cyan-500/40",
-];
+const accentMap: Record<string, { tone: BadgeTone; ring: string; chip: string; textColor: string; hoverText: string }> = {
+  scale: {
+    tone: "navy-green",
+    ring: "ring-primary-navy/15 hover:ring-primary-navy/30 hover:border-primary-navy/30",
+    chip: "bg-primary-navy/10 text-primary-navy",
+    textColor: "text-primary-navy",
+    hoverText: "group-hover:text-primary-navy",
+  },
+  landmark: {
+    tone: "navy-green",
+    ring: "ring-primary-navy/15 hover:ring-primary-navy/30 hover:border-primary-navy/30",
+    chip: "bg-primary-navy/10 text-primary-navy",
+    textColor: "text-primary-navy",
+    hoverText: "group-hover:text-primary-navy",
+  },
+  gavel: {
+    tone: "navy-green",
+    ring: "ring-primary-navy/15 hover:ring-primary-navy/30 hover:border-primary-navy/30",
+    chip: "bg-primary-navy/10 text-primary-navy",
+    textColor: "text-primary-navy",
+    hoverText: "group-hover:text-primary-navy",
+  },
+  receipt: {
+    tone: "green-yellow",
+    ring: "ring-accent-green/20 hover:ring-accent-green/40 hover:border-accent-green/40",
+    chip: "bg-accent-green/10 text-accent-green",
+    textColor: "text-accent-green",
+    hoverText: "group-hover:text-accent-green",
+  },
+  file: {
+    tone: "green-yellow",
+    ring: "ring-accent-green/20 hover:ring-accent-green/40 hover:border-accent-green/40",
+    chip: "bg-accent-green/10 text-accent-green",
+    textColor: "text-accent-green",
+    hoverText: "group-hover:text-accent-green",
+  },
+  coins: {
+    tone: "green-yellow",
+    ring: "ring-accent-green/20 hover:ring-accent-green/40 hover:border-accent-green/40",
+    chip: "bg-accent-green/10 text-accent-green",
+    textColor: "text-accent-green",
+    hoverText: "group-hover:text-accent-green",
+  },
+  store: {
+    tone: "yellow-navy",
+    ring: "ring-accent-yellow/25 hover:ring-accent-yellow/50 hover:border-accent-yellow/40",
+    chip: "bg-accent-yellow/15 text-accent-yellow",
+    textColor: "text-accent-yellow",
+    hoverText: "group-hover:text-accent-yellow",
+  },
+  calculator: {
+    tone: "yellow-navy",
+    ring: "ring-accent-yellow/25 hover:ring-accent-yellow/50 hover:border-accent-yellow/40",
+    chip: "bg-accent-yellow/15 text-accent-yellow",
+    textColor: "text-accent-yellow",
+    hoverText: "group-hover:text-accent-yellow",
+  },
+  wallet: {
+    tone: "yellow-navy",
+    ring: "ring-accent-yellow/25 hover:ring-accent-yellow/50 hover:border-accent-yellow/40",
+    chip: "bg-accent-yellow/15 text-accent-yellow",
+    textColor: "text-accent-yellow",
+    hoverText: "group-hover:text-accent-yellow",
+  },
+  book: {
+    tone: "navy-green",
+    ring: "ring-primary-navy/15 hover:ring-primary-navy/30 hover:border-primary-navy/30",
+    chip: "bg-primary-navy/10 text-primary-navy",
+    textColor: "text-primary-navy",
+    hoverText: "group-hover:text-primary-navy",
+  },
+  briefcase: {
+    tone: "green-yellow",
+    ring: "ring-accent-green/20 hover:ring-accent-green/40 hover:border-accent-green/40",
+    chip: "bg-accent-green/10 text-accent-green",
+    textColor: "text-accent-green",
+    hoverText: "group-hover:text-accent-green",
+  },
+  building: {
+    tone: "green-yellow",
+    ring: "ring-accent-green/20 hover:ring-accent-green/40 hover:border-accent-green/40",
+    chip: "bg-accent-green/10 text-accent-green",
+    textColor: "text-accent-green",
+    hoverText: "group-hover:text-accent-green",
+  },
+  scroll: {
+    tone: "yellow-navy",
+    ring: "ring-accent-yellow/25 hover:ring-accent-yellow/50 hover:border-accent-yellow/40",
+    chip: "bg-accent-yellow/15 text-accent-yellow",
+    textColor: "text-accent-yellow",
+    hoverText: "group-hover:text-accent-yellow",
+  },
+};
 
-const themeAccent: string[] = [
-"bg-emerald-500/10 text-emerald-600",
-"bg-blue-500/10 text-blue-600",
-"bg-amber-500/10 text-amber-600",
-"bg-violet-500/10 text-violet-600",
-"bg-rose-500/10 text-rose-600",
-  "bg-cyan-500/10 text-cyan-600",
-];
+const fallbackAccent: { tone: BadgeTone; ring: string; chip: string; textColor: string; hoverText: string } = {
+  tone: "navy-green",
+  ring: "ring-primary-navy/15 hover:ring-primary-navy/30 hover:border-primary-navy/30",
+  chip: "bg-primary-navy/10 text-primary-navy",
+  textColor: "text-primary-navy",
+  hoverText: "group-hover:text-primary-navy",
+};
 
-function toPersian(n: number): string {
-  return String(n).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[Number(d)]);
-}
+const toPersian = toPersianDigits;
 
 export default async function LibraryIndexPage() {
   const categories = await getPublishedLibraryCategories();
   const totalLaws = categories.reduce((s, c) => s + c._count.laws, 0);
-  const nonEmpty = categories.filter((c) => c._count.laws > 0);
+  const nonEmpty = categories
+    .filter((c) => c._count.laws > 0)
+    .map((c) => {
+      const articleCount = c.laws.reduce(
+        (s, l) => s + l.chapters.reduce((cs, ch) => cs + ch._count.articles, 0),
+        0,
+      );
+      const latestUpdate = c.laws
+        .map((l) => l.updatedAt)
+        .sort((a, b) => b.getTime() - a.getTime())[0] ?? null;
+      return { ...c, articleCount, latestUpdate };
+    });
 
   return (
     <div className="min-h-screen bg-surface-background">
@@ -129,35 +234,59 @@ export default async function LibraryIndexPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {nonEmpty.map((cat, idx) => {
+            {nonEmpty.map((cat) => {
               const Icon = iconMap[cat.icon ?? "file"] ?? FileText;
-              const accent = themeAccent[idx % themeAccent.length];
-              const ring = themeRing[idx % themeRing.length];
+              const accent = accentMap[cat.icon ?? "file"] ?? fallbackAccent;
               return (
                 <Link
                   key={cat.id}
                   href={`/library/categories/${cat.slug}`}
-                  className={`group flex items-start gap-4 rounded-2xl border border-border bg-white p-5 shadow-sm ring-1 ring-transparent transition-all hover:-translate-y-0.5 hover:shadow-md ${ring}`}
+                  className={`group relative flex h-full flex-col gap-4 overflow-hidden rounded-2xl border border-border bg-white p-5 shadow-sm ring-1 ring-transparent transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${accent.ring}`}
                 >
                   <div
-                    className={`inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl ${accent}`}
-                  >
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-base font-extrabold text-primary-navy group-hover:text-accent-green">
-                      {cat.title}
-                    </h3>
-                    {cat.description && (
-                      <p className="mt-1 line-clamp-2 text-xs text-text-muted">
-                        {cat.description}
-                      </p>
-                    )}
-                    <div className="mt-2 flex items-center gap-1 text-xs font-bold text-accent-green">
-                      {toPersian(cat._count.laws)} قانون
-                      <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+                    aria-hidden
+                    className="pointer-events-none absolute -left-12 -top-12 h-40 w-40 rounded-full bg-accent-green/0 blur-2xl transition-colors duration-300 group-hover:bg-accent-green/10"
+                  />
+                  <div className="relative flex items-start gap-4">
+                    <ItemBadge icon={Icon} tone={accent.tone} size="lg" />
+                    <div className="min-w-0 flex-1 pt-1">
+                      <h3
+                        className={`text-base font-extrabold transition-colors ${accent.textColor} ${accent.hoverText}`}
+                      >
+                        {cat.title}
+                      </h3>
+                      {cat.description && (
+                        <p className="mt-1 line-clamp-2 text-xs leading-6 text-text-muted">
+                          {cat.description}
+                        </p>
+                      )}
                     </div>
                   </div>
+                  <div className="relative mt-auto flex flex-wrap items-center justify-between gap-2 pt-3">
+                    <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-text-muted">
+                      <span
+                        className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-bold ${accent.chip}`}
+                      >
+                        <Layers className="h-3 w-3" />
+                        {toPersian(cat._count.laws)} قانون
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-surface-background px-2 py-0.5 font-bold text-text-muted">
+                        <FileText className="h-3 w-3" />
+                        {toPersian(cat.articleCount)} ماده
+                      </span>
+                    </div>
+                    {cat.latestUpdate && (
+                      <span className="text-[10px] text-text-muted">
+                        آخرین به‌روزرسانی: {toJalali(cat.latestUpdate)}
+                      </span>
+                    )}
+                  </div>
+                  <span
+                    className={`relative inline-flex items-center gap-1 self-end text-[11px] font-bold transition-all group-hover:gap-2 ${accent.textColor}`}
+                  >
+                    مشاهده قوانین
+                    <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
+                  </span>
                 </Link>
               );
             })}

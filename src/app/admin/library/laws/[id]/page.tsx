@@ -22,7 +22,7 @@ export default async function AdminLibraryLawPage({
   ]);
   if (!law) notFound();
 
-  const articles = law.books.flatMap((b) => b.chapters.flatMap((c) => c.articles));
+  const articles = law.chapters.flatMap((c) => c.articles);
   const articleIds = articles.map((a) => a.id);
   const attachedCirculars = articleIds.length
     ? await prisma.libraryArticleCircular.findMany({
@@ -87,22 +87,17 @@ export default async function AdminLibraryLawPage({
       <LibraryStructureManager
         lawId={law.id}
         lawSlug={law.slug}
-        initialBooks={law.books.map((b) => ({
-          id: b.id,
-          number: b.number,
-          title: b.title,
-          chapters: b.chapters.map((c) => ({
-            id: c.id,
-            number: c.number,
-            title: c.title,
-            articles: c.articles.map((a) => ({
-              id: a.id,
-              number: a.number,
-              title: a.title,
-              slug: a.slug,
-              content: a.content,
-              published: a.published,
-            })),
+        initialChapters={law.chapters.map((c) => ({
+          id: c.id,
+          number: c.number,
+          title: c.title,
+          articles: c.articles.map((a) => ({
+            id: a.id,
+            number: a.number,
+            title: a.title,
+            slug: a.slug,
+            content: a.content,
+            published: a.published,
           })),
         }))}
         allCirculars={allCirculars}

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [services, articles, circulars, laws, faqs, libraryLaws, libraryArticles] = await Promise.all([
+  const [services, articles, circulars, faqs, libraryLaws, libraryArticles] = await Promise.all([
     prisma.service.findMany({
       where: { published: true },
       select: { slug: true, updatedAt: true },
@@ -22,11 +22,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       select: { slug: true, updatedAt: true },
       orderBy: { updatedAt: "desc" },
     }),
-    prisma.law.findMany({
-      where: { published: true },
-      select: { slug: true, updatedAt: true },
-      orderBy: { updatedAt: "desc" },
-    }),
     prisma.faq.findMany({
       where: { published: true },
       select: { slug: true, updatedAt: true },
@@ -38,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
     prisma.libraryArticle.findMany({
       where: { published: true },
-      select: { slug: true, updatedAt: true, chapter: { select: { book: { select: { law: { select: { slug: true } } } } } } },
+      select: { slug: true, updatedAt: true, chapter: { select: { law: { select: { slug: true } } } } },
     }),
   ]);
 
@@ -67,12 +62,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${domains.primary}/circulars`,
       lastModified: now,
       changeFrequency: "weekly" as const,
-      priority: 0.8,
-    },
-    {
-      url: `${domains.primary}/laws`,
-      lastModified: now,
-      changeFrequency: "monthly" as const,
       priority: 0.8,
     },
     {
@@ -122,13 +111,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const lawPages: MetadataRoute.Sitemap = laws.map((l) => ({
-    url: `${domains.primary}/laws/${l.slug}`,
-    lastModified: l.updatedAt,
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
-
   const faqPages: MetadataRoute.Sitemap = faqs.map((f) => ({
     url: `${domains.primary}/faqs/${f.slug}`,
     lastModified: f.updatedAt,
@@ -144,7 +126,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const libraryArticlePages: MetadataRoute.Sitemap = libraryArticles.map((a) => ({
-    url: `${domains.primary}/library/laws/${a.chapter.book.law.slug}/articles/${a.slug}`,
+    url: `${domains.primary}/library/laws/${a.chapter.law.slug}/articles/${a.slug}`,
     lastModified: a.updatedAt,
     changeFrequency: "monthly" as const,
     priority: 0.6,
@@ -155,7 +137,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...articlePages,
     ...servicePages,
     ...circularPages,
-    ...lawPages,
     ...faqPages,
     ...libraryLawPages,
     ...libraryArticlePages,

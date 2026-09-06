@@ -129,6 +129,7 @@ model Article {
 model Circular {
   id             String   @id @default(cuid())
   title          String
+  shortTitle     String?
   slug           String   @unique
   number         String?
   date           DateTime? @db.Timestamptz(3)
@@ -234,13 +235,13 @@ model LibraryLaw {
   createdAt       DateTime @default(now()) @db.Timestamptz(3)
   updatedAt       DateTime @updatedAt @db.Timestamptz(3)
 
-  books LibraryBook[]
+  chapters LibraryChapter[]
 
   @@index([categoryId])
   @@index([published])
 }
 
-model LibraryBook {
+model LibraryChapter {
   id        String   @id @default(cuid())
   lawId     String
   law       LibraryLaw @relation(fields: [lawId], references: [id], onDelete: Cascade)
@@ -250,26 +251,10 @@ model LibraryBook {
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
-  chapters LibraryChapter[]
+  articles LibraryArticle[]
 
   @@unique([lawId, number])
   @@index([lawId])
-}
-
-model LibraryChapter {
-  id        String   @id @default(cuid())
-  bookId    String
-  book      LibraryBook @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  title     String
-  number    Int
-  order     Int      @default(0)
-  createdAt DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @db.Timestamptz(3)
-
-  articles LibraryArticle[]
-
-  @@unique([bookId, number])
-  @@index([bookId])
 }
 
 model LibraryArticle {

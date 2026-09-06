@@ -5,6 +5,8 @@ import { domains } from "@/lib/nav";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ItemListSchema } from "@/components/structured-data";
+import { SearchFilterBar } from "@/components/public/search-filter-bar";
+import { prisma } from "@/lib/prisma";
 
 export const revalidate = 300;
 
@@ -23,8 +25,31 @@ const features = [
   { icon: ShieldCheck, title: "ضمانت کیفیت", description: "رضایت مشتری" },
 ];
 
-export default async function ServicesPage() {
-  const services = await getPublishedServices(50);
+export default async function ServicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; category?: string }>;
+}) {
+  const { q, category } = await searchParams;
+
+  const where: any = { published: true };
+  if (q) {
+    where.OR = [
+      { title: { contains: q, mode: "insensitive" } },
+      { summary: { contains: q, mode: "insensitive" } },
+    ];
+  }
+  if (category) {
+    where.categoryId = category;
+  }
+
+  const [services, categories] = await Promise.all([
+    getPublishedServices(50, where),
+    prisma.category.findMany({
+      where: { type: "SERVICE" },
+      orderBy: { name: "asc" },
+    }),
+  ]);
 
   return (
     <div className="min-h-screen">
@@ -82,13 +107,25 @@ export default async function ServicesPage() {
         </div>
       </div>
 
+      {/* Search & Filter */}
+      <SearchFilterBar
+        basePath="/services"
+        searchValue={q}
+        categoryValue={category}
+        categories={categories}
+        placeholder="جستجو در خدمات..."
+        accent="green"
+      />
+
       {/* Services Grid */}
       <div className="py-12">
         <div className="container mx-auto max-w-6xl px-4">
           {services.length === 0 ? (
             <div className="rounded-2xl border border-white/20 bg-white/80 p-12 text-center shadow-lg backdrop-blur-lg">
               <HelpCircle className="mx-auto h-16 w-16 text-text-muted mb-4" />
-              <p className="text-lg text-text-muted">در حال حاضر سرویسی یافت نشد.</p>
+              <p className="text-lg text-text-muted">
+                {q || category ? "خدمتی با این مشخصات یافت نشد." : "در حال حاضر سرویسی یافت نشد."}
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

@@ -71,7 +71,7 @@ export async function listLibraryLaws() {
     orderBy: [{ order: "asc" }, { title: "asc" }],
     include: {
       category: true,
-      _count: { select: { books: true } },
+      _count: { select: { chapters: true } },
     },
   });
 }
@@ -81,23 +81,18 @@ export async function getLibraryLaw(id: string) {
     where: { id },
     include: {
       category: true,
-      books: {
+      chapters: {
         orderBy: { number: "asc" },
         include: {
-          chapters: {
+          articles: {
             orderBy: { number: "asc" },
-            include: {
-              articles: {
-                orderBy: { number: "asc" },
-                select: {
-                  id: true,
-                  number: true,
-                  title: true,
-                  slug: true,
-                  content: true,
-                  published: true,
-                },
-              },
+            select: {
+              id: true,
+              number: true,
+              title: true,
+              slug: true,
+              content: true,
+              published: true,
             },
           },
         },
@@ -184,32 +179,16 @@ export async function deleteLibraryLaw(id: string) {
   return { ok: true };
 }
 
-export async function createLibraryBook(lawId: string, fd: FormData) {
+export async function createLibraryChapter(lawId: string, fd: FormData) {
   const title = fd.get("title")?.toString() ?? "";
   const number = Number(fd.get("number") ?? 0);
   if (!title || !number) return { error: "عنوان و شماره الزامی است." };
   try {
-    await prisma.libraryBook.create({ data: { lawId, title, number } });
-  } catch (e) {
-    return { error: "خطا در ثبت کتاب." };
-  }
-  revalidatePath(`/admin/library/laws/${lawId}`);
-  return { ok: true };
-}
-
-export async function createLibraryChapter(bookId: string, fd: FormData) {
-  const title = fd.get("title")?.toString() ?? "";
-  const number = Number(fd.get("number") ?? 0);
-  if (!title || !number) return { error: "عنوان و شماره الزامی است." };
-  let lawId: string | undefined;
-  try {
-    const book = await prisma.libraryBook.findUnique({ where: { id: bookId } });
-    lawId = book?.lawId;
-    await prisma.libraryChapter.create({ data: { bookId, title, number } });
+    await prisma.libraryChapter.create({ data: { lawId, title, number } });
   } catch (e) {
     return { error: "خطا در ثبت فصل." };
   }
-  if (lawId) revalidatePath(`/admin/library/laws/${lawId}`);
+  revalidatePath(`/admin/library/laws/${lawId}`);
   return { ok: true };
 }
 
@@ -224,9 +203,8 @@ export async function createLibraryArticle(chapterId: string, fd: FormData) {
   try {
     const chapter = await prisma.libraryChapter.findUnique({
       where: { id: chapterId },
-      include: { book: true },
     });
-    lawId = chapter?.book.lawId;
+    lawId = chapter?.lawId;
     await prisma.libraryArticle.create({
       data: { chapterId, number, title, content, slug, published },
     });
@@ -244,9 +222,9 @@ export async function setArticleCirculars(articleId: string, circularIds: string
     const uniqueIds = Array.from(new Set(circularIds));
     const article = await prisma.libraryArticle.findUnique({
       where: { id: articleId },
-      include: { chapter: { include: { book: true } } },
+      include: { chapter: true },
     });
-    const lawId = article?.chapter.book.lawId;
+    const lawId = article?.chapter.lawId;
     await prisma.$transaction([
       prisma.libraryArticleCircular.deleteMany({ where: { articleId } }),
       ...(uniqueIds.length > 0
@@ -276,10 +254,10 @@ export async function updateLibraryArticle(articleId: string, fd: FormData) {
   try {
     const article = await prisma.libraryArticle.findUnique({
       where: { id: articleId },
-      include: { chapter: { include: { book: true } } },
+      include: { chapter: true },
     });
     if (!article) return { error: "ماده یافت نشد." };
-    lawId = article.chapter.book.lawId;
+    lawId = article.chapter.lawId;
     await prisma.libraryArticle.update({
       where: { id: articleId },
       data: { number, title, content, slug, published },
@@ -298,9 +276,9 @@ export async function deleteLibraryArticle(articleId: string) {
   try {
     const article = await prisma.libraryArticle.findUnique({
       where: { id: articleId },
-      include: { chapter: { include: { book: true } } },
+      include: { chapter: true },
     });
-    lawId = article?.chapter.book.lawId;
+    lawId = article?.chapter.lawId;
     await prisma.libraryArticle.delete({ where: { id: articleId } });
   } catch (e) {
     console.error("deleteLibraryArticle error", e);
@@ -316,27 +294,12 @@ export async function deleteLibraryChapter(chapterId: string) {
   try {
     const chapter = await prisma.libraryChapter.findUnique({
       where: { id: chapterId },
-      include: { book: true },
     });
-    lawId = chapter?.book.lawId;
+    lawId = chapter?.lawId;
     await prisma.libraryChapter.delete({ where: { id: chapterId } });
   } catch (e) {
     console.error("deleteLibraryChapter error", e);
     return { error: "خطا در حذف فصل." };
-  }
-  if (lawId) revalidatePath(`/admin/library/laws/${lawId}`);
-  return { ok: true };
-}
-
-export async function deleteLibraryBook(bookId: string) {
-  let lawId: string | undefined;
-  try {
-    const book = await prisma.libraryBook.findUnique({ where: { id: bookId } });
-    lawId = book?.lawId;
-    await prisma.libraryBook.delete({ where: { id: bookId } });
-  } catch (e) {
-    console.error("deleteLibraryBook error", e);
-    return { error: "خطا در حذف کتاب." };
   }
   if (lawId) revalidatePath(`/admin/library/laws/${lawId}`);
   return { ok: true };
@@ -366,7 +329,7 @@ export async function getArticleWithCirculars(articleId: string) {
         select: {
           number: true,
           title: true,
-          book: { select: { number: true, title: true, law: { select: { id: true, slug: true, title: true } } } },
+          law: { select: { id: true, slug: true, title: true } },
         },
       },
     },
@@ -379,7 +342,6 @@ export async function getLibraryStats() {
     publishedCategories,
     laws,
     publishedLaws,
-    books,
     chapters,
     articles,
     publishedArticles,
@@ -389,7 +351,6 @@ export async function getLibraryStats() {
     prisma.libraryCategory.count({ where: { published: true } }),
     prisma.libraryLaw.count(),
     prisma.libraryLaw.count({ where: { published: true } }),
-    prisma.libraryBook.count(),
     prisma.libraryChapter.count(),
     prisma.libraryArticle.count(),
     prisma.libraryArticle.count({ where: { published: true } }),
@@ -400,7 +361,6 @@ export async function getLibraryStats() {
     publishedCategories,
     laws,
     publishedLaws,
-    books,
     chapters,
     articles,
     publishedArticles,
@@ -414,7 +374,7 @@ export async function getRecentLaws(limit = 5) {
     take: limit,
     include: {
       category: { select: { title: true, slug: true } },
-      _count: { select: { books: true } },
+      _count: { select: { chapters: true } },
     },
   });
 }
