@@ -43,7 +43,7 @@ export default async function ContactPage() {
             تماس با ما
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-white/70">
-            سوالی دارید یا نیاز به مشاوره دارید؟ تیم ما آمکان پاسخگویی است
+            سوالی دارید یا نیاز به مشاوره دارید؟ تیم ما آماده پاسخگویی است
           </p>
         </div>
       </div>
